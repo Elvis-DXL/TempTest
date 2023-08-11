@@ -1,10 +1,8 @@
 package com.elvis.test;
 
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.elvis.commons.utils.NumberUtil;
+import com.elvis.commons.utils.StrUtil;
 
 /**
  * @author : Elvis
@@ -13,21 +11,39 @@ import java.util.Map;
 public class ElvisTest {
 
     public static void main(String[] args) {
-        List<String> arr = Arrays.asList("代企帆", "何春清", "代小龙", "杨超", "林顺华", "杨皓");
         int index = 1;
-        Map<String, Integer> result = new HashMap<>();
         while (true) {
-            String res = arr.get((int) Math.floor(Math.random() * arr.size()));
-            System.out.println(res);
-            Integer count = result.get(res);
-            result.put(res, null == count ? 1 : count + 1);
+            double result = NumberUtil.doubleFmt((((double) ((int) Math.round(Math.random() * 4 + 2))) * 0.1D + (Math.random() * 0.1D)) * 0.001D, 8) + 104.102997D;
+            System.out.println(NumberUtil.doubleFmt(result, 8));
             index++;
-            if (index >= 1000) {
+            if (index > 100) {
                 break;
             }
         }
-        System.out.println(result);
+    }
 
-        System.out.println(arr.get((int) Math.floor(Math.random() * arr.size())));
+    private static void nextFx(Integer fx) {
+        Integer nextFx = null;
+        while (null == nextFx) {
+            int round = (int) Math.round(Math.random() * 3 + 1);
+            if (null == fx) {
+                nextFx = round;
+                break;
+            }
+            if (fx == 1 && round == 3) {
+                continue;
+            }
+            if (fx == 3 && round == 1) {
+                continue;
+            }
+            if (fx == 2 && round == 4) {
+                continue;
+            }
+            if (fx == 4 && round == 2) {
+                continue;
+            }
+            nextFx = round;
+        }
+        System.out.println(fx + "=====================" + nextFx);
     }
 }
