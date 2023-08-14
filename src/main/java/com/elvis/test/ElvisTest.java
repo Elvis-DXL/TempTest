@@ -21,29 +21,4 @@ public class ElvisTest {
             }
         }
     }
-
-    private static void nextFx(Integer fx) {
-        Integer nextFx = null;
-        while (null == nextFx) {
-            int round = (int) Math.round(Math.random() * 3 + 1);
-            if (null == fx) {
-                nextFx = round;
-                break;
-            }
-            if (fx == 1 && round == 3) {
-                continue;
-            }
-            if (fx == 3 && round == 1) {
-                continue;
-            }
-            if (fx == 2 && round == 4) {
-                continue;
-            }
-            if (fx == 4 && round == 2) {
-                continue;
-            }
-            nextFx = round;
-        }
-        System.out.println(fx + "=====================" + nextFx);
-    }
 }
