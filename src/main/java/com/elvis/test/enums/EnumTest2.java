@@ -4,7 +4,10 @@ import com.zx.core.tool.utils.JsonUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author : 慕君Dxl
@@ -30,11 +33,10 @@ public class EnumTest2 {
             }
 
             Map<String, String> itemMap = new HashMap<>();
-            Object[] enumItems = item.getEnumConstants();
             try {
                 Method fontTran = item.getMethod("fontTran");
                 Method name = item.getMethod("name");
-                for (Object enumItem : enumItems) {
+                for (Object enumItem : item.getEnumConstants()) {
                     itemMap.put((String) name.invoke(enumItem), (String) fontTran.invoke(enumItem));
                 }
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {

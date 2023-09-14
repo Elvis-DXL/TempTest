@@ -30,27 +30,17 @@ public class EnumTest {
             if (!item.isEnum()) {
                 throw new IllegalArgumentException(item.getName() + " is not Enum");
             }
-            EnumTranPo enumTran = new EnumTranPo();
-            enumTran.setEnumName(item.getSimpleName());
-
             List<EnumTranItemPo> itemList = new ArrayList<>();
-            enumTran.setItemList(itemList);
-
-            Object[] enumItems = item.getEnumConstants();
             try {
                 Method fontTran = item.getMethod("fontTran");
                 Method name = item.getMethod("name");
-                for (Object enumItem : enumItems) {
-                    EnumTranItemPo tranItem = new EnumTranItemPo();
-                    itemList.add(tranItem);
-
-                    tranItem.setItemName((String) name.invoke(enumItem));
-                    tranItem.setTranStr((String) fontTran.invoke(enumItem));
+                for (Object enumItem : item.getEnumConstants()) {
+                    itemList.add(new EnumTranItemPo((String) name.invoke(enumItem), (String) fontTran.invoke(enumItem)));
                 }
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
-            enumTrans.add(enumTran);
+            enumTrans.add(new EnumTranPo(item.getSimpleName(), itemList));
         }
     }
 }
