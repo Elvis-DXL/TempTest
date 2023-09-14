@@ -28,7 +28,6 @@ public class EnumTest2 {
             if (!item.isEnum()) {
                 throw new IllegalArgumentException(item.getName() + " is not Enum");
             }
-            String enumName = item.getName().substring(item.getName().lastIndexOf(".") + 1);
 
             Map<String, String> itemMap = new HashMap<>();
             Object[] enumItems = item.getEnumConstants();
@@ -41,7 +40,7 @@ public class EnumTest2 {
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
-            enumTrans.put(enumName, itemMap);
+            enumTrans.put(item.getSimpleName(), itemMap);
         }
     }
 }

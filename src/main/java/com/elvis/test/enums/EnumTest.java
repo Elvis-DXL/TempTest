@@ -31,9 +31,7 @@ public class EnumTest {
                 throw new IllegalArgumentException(item.getName() + " is not Enum");
             }
             EnumTranPo enumTran = new EnumTranPo();
-
-            String enumName = item.getName().substring(item.getName().lastIndexOf(".") + 1);
-            enumTran.setEnumName(enumName);
+            enumTran.setEnumName(item.getSimpleName());
 
             List<EnumTranItemPo> itemList = new ArrayList<>();
             enumTran.setItemList(itemList);
