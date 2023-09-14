@@ -21,12 +21,12 @@ public class EnumTest {
 
     static {
         //需要翻译的目标枚举类集合
-        List<Class<?>> classList = Arrays
+        List<Class<?>> enumClassList = Arrays
                 .asList(TypeOne.class, TypeTwo.class);
 
         //进行反射翻译
         enumTrans = new ArrayList<>();
-        for (Class<?> item : classList) {
+        for (Class<?> item : enumClassList) {
             if (!item.isEnum()) {
                 throw new IllegalArgumentException(item.getName() + " is not Enum");
             }
