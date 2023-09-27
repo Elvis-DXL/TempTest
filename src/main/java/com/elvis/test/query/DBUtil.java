@@ -1,7 +1,7 @@
 package com.elvis.test.query;
 
 import cn.hutool.core.collection.CollUtil;
-import com.zx.core.tool.utils.JsonUtil;
+import com.google.gson.Gson;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import java.util.Map;
 public class DBUtil {
     @Autowired
     private EntityManager entityManager;
+    private final static Gson gson = new Gson();
 
     public <T> List<T> getList(String sql, Class<T> clazz) {
         return this.getList(sql, null, clazz);
@@ -65,6 +66,6 @@ public class DBUtil {
     }
 
     private <T> T objMapToObj(Object objMap, Class<T> clazz) {
-        return JsonUtil.parse(JsonUtil.toJson(objMap), clazz);
+        return gson.fromJson(gson.toJson(objMap), clazz);
     }
 }
