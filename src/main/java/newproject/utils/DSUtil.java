@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
  * @Author : 慕君Dxl
  * @CreateTime : 2023/8/24 17:50
  */
-public final class STool {
+public final class DSUtil {
 
     //私有化构造器，不允许创建对象 ↓
-    private STool() {
+    private DSUtil() {
         throw new AssertionError("Utility classes do not allow instantiation");
     }
 
@@ -226,7 +226,8 @@ public final class STool {
         if (isEmpty(srcFields) || isEmpty(aimFields)) {
             return;
         }
-        Map<String, Field> srcMap = srcFields.stream().collect(Collectors.toMap(Field::getName, it -> it, (k1, k2) -> k1));
+        Map<String, Field> srcMap = srcFields
+                .stream().collect(Collectors.toMap(Field::getName, it -> it, (k1, k2) -> k1));
         for (Field aimField : aimFields) {
             if (ignore.contains(aimField.getName())) {
                 continue;
