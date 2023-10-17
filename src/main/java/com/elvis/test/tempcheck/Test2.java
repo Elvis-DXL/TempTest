@@ -18,31 +18,25 @@ import java.util.stream.Collectors;
  */
 public class Test2 {
     public static void main(String[] args) throws Exception {
-        String headStr = "C:/Elvis/公司文件/眉山医保/文档/仁寿盛吉堂大药房/";
+        String headStr = "D:/TDDOWN/眉山市国健大药房连锁有限公司中二山店/";
+        //读取数据
         List<YpmxPo> ypmxPos = ExcelUtil
                 .excelToData(new FileInputStream(new File(headStr + "表1：药品报销明细（医保端）.xlsx")), YpmxPo.class);
+        System.out.println("表一，药品报销明细数据读取完成。共：【" + ypmxPos.size() + "】条");
+
         List<XsmxPo> xsmxPos = ExcelUtil
                 .excelToData(new FileInputStream(new File(headStr + "表2：销售明细（药店端）.xlsx")), XsmxPo.class);
+        System.out.println("表二，销售明细数据读取完成。共：【" + xsmxPos.size() + "】条");
+
         List<JsdPo> jsdPos = ExcelUtil
                 .excelToData(new FileInputStream(new File(headStr + "表3：结算单数据（医保数据）.xlsx")), JsdPo.class);
-        if (CollUtil.isEmpty(ypmxPos)) {
-            throw new IllegalArgumentException("药品报销明细数据读取为空");
-        }
-        if (CollUtil.isEmpty(xsmxPos)) {
-            throw new IllegalArgumentException("销售明细数据读取为空");
-        }
-        if (CollUtil.isEmpty(jsdPos)) {
-            throw new IllegalArgumentException("结算单数据读取为空");
-        }
-
-        System.out.println("数据读取完毕！" + ypmxPos.size() + ":" + xsmxPos.size() + ":" + jsdPos.size());
-
+        System.out.println("表三，结算单数据读取完成。共：【" + jsdPos.size() + "】条");
+        //数据预处理
         ypmxPos.sort(Comparator.comparing(YpmxPo::getFyfssj));
         Map<String, JsdPo> jsdMap = jsdPos.stream().collect(Collectors.toMap(JsdPo::getJsh, it -> it, (k1, k2) -> k1));
-
+        //结果存储集合
         List<YbbzAndXsxtError> ybbzAndXsxtErrors = new ArrayList<>();
         //进行校验
-
         System.out.println("开始校验");
         int index = 1;
         int index2 = 1;
@@ -65,8 +59,8 @@ public class Test2 {
             }
 
             List<XsmxPo> collect = xsmxPos.stream().filter(it ->
-                    StrUtil.isNotEmpty(it.getGjybbm())
-                            && po.getYbxmbm().equals(it.getGjybbm())
+//                    StrUtil.isNotEmpty(it.getGjybbm()) && po.getYbxmbm().equals(it.getGjybbm())
+                    it.getSpmc().contains(po.getYbxmmc())
                             && startTime.getTime() <= it.getXssj().getTime()
                             && endTime.getTime() >= it.getXssj().getTime()).collect(Collectors.toList());
             if (CollUtil.isNotEmpty(collect)) {
@@ -79,7 +73,9 @@ public class Test2 {
         }
         System.out.println("数据核对完毕！共" + ybbzAndXsxtErrors.size() + "条问题数据");
 
-        FileOutputStream fos = new FileOutputStream(new File(headStr + "核算结果2.xlsx"));
+        String fileName = headStr.substring(10, headStr.length() - 1);
+
+        FileOutputStream fos = new FileOutputStream(new File(headStr + fileName + ".xlsx"));
         ExcelUtil.dataToExcel(ybbzAndXsxtErrors, YbbzAndXsxtError.class, "核算结果", fos);
         System.out.println("数据核对结果输出完毕！");
     }
