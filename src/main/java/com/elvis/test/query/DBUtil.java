@@ -2,6 +2,7 @@ package com.elvis.test.query;
 
 import cn.hutool.core.collection.CollUtil;
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.Map;
  * @Author : 慕君Dxl
  * @CreateTime : 2023/9/27 13:49
  */
+@Slf4j
 @Component
 public class DBUtil {
     @Autowired
@@ -32,8 +34,11 @@ public class DBUtil {
     }
 
     public <T> List<T> getList(String sql, Map<String, Object> parameterMap, Class<T> clazz) {
-        List resultList = this.constructorQuery(sql, parameterMap).getResultList();
-        if (null == resultList || resultList.size() == 0) {
+        List resultList = null;
+        try {
+            resultList = this.constructorQuery(sql, parameterMap).getResultList();
+        } catch (Exception e) {
+            log.error("数据查询失败：" + sql + "|参数：" + gson.toJson(parameterMap) + "|异常：" + e.getMessage());
             return new ArrayList<>();
         }
         List<T> result = new ArrayList<>();
@@ -44,7 +49,13 @@ public class DBUtil {
     }
 
     public <T> T getSingle(String sql, Map<String, Object> parameterMap, Class<T> clazz) {
-        Object singleResult = this.constructorQuery(sql, parameterMap).getSingleResult();
+        Object singleResult = null;
+        try {
+            singleResult = this.constructorQuery(sql, parameterMap).getSingleResult();
+        } catch (Exception e) {
+            log.error("数据查询失败：" + sql + "|参数：" + gson.toJson(parameterMap) + "|异常：" + e.getMessage());
+            return null;
+        }
         if (null == singleResult) {
             return null;
         }
