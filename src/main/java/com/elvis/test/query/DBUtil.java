@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 public class DBUtil {
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private DataSource dataSource;
     private final static Gson gson = new Gson();
 
     public <T> List<T> getList(String sql, Class<T> clazz) {
@@ -69,10 +71,8 @@ public class DBUtil {
     }
 
     private Query constructorQuery(String sql, Map<String, Object> parameterMap) {
-        Query query = entityManager
-                .createNativeQuery(sql)
-                .unwrap(SQLQuery.class)
-                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+        Query query = entityManager.createNativeQuery(sql)
+                .unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         if (CollUtil.isEmpty(parameterMap)) {
             return query;
         }
@@ -85,9 +85,6 @@ public class DBUtil {
     private <T> T objMapToObj(Object objMap, Class<T> clazz) {
         return gson.fromJson(gson.toJson(objMap), clazz);
     }
-
-    @Autowired
-    private DataSource dataSource;
 
     public <T> void updSomeFieldById(T aim, String... fieldName) {
         this.updSomeFieldById(Collections.singletonList(aim), fieldName);
@@ -192,19 +189,19 @@ public class DBUtil {
     private <T> void addPsParam(PreparedStatement ps, int idx, Field colField, T obj) {
         try {
             colField.setAccessible(true);
+            Object fieldVal = colField.get(obj);
+            if (null == fieldVal) {
+                ps.setNull(idx, JDBCType.NULL.getVendorTypeNumber());
+                return;
+            }
             if (colField.getType().isEnum()) {
-                Object fieldVal = colField.get(obj);
-                if (null == fieldVal) {
-                    ps.setNull(idx, JDBCType.NULL.getVendorTypeNumber());
+                Enumerated enumerated = colField.getAnnotation(Enumerated.class);
+                EnumType enumType = null == enumerated ? EnumType.ORDINAL : enumerated.value();
+                Enum fieldEnumVal = (Enum) fieldVal;
+                if (EnumType.ORDINAL.equals(enumType)) {
+                    ps.setInt(idx, fieldEnumVal.ordinal());
                 } else {
-                    Enumerated enumerated = colField.getAnnotation(Enumerated.class);
-                    EnumType enumType = null == enumerated ? EnumType.ORDINAL : enumerated.value();
-                    Enum fieldEnumVal = (Enum) fieldVal;
-                    if (EnumType.ORDINAL.equals(enumType)) {
-                        ps.setInt(idx, fieldEnumVal.ordinal());
-                    } else {
-                        ps.setString(idx, fieldEnumVal.name());
-                    }
+                    ps.setString(idx, fieldEnumVal.name());
                 }
             } else {
                 ps.setObject(idx, colField.get(obj));
