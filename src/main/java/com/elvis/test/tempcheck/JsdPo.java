@@ -19,7 +19,7 @@ public class JsdPo implements Serializable {
     private String jsh;
     @ExcelProperty(value = {"患者姓名"}, index = 3)
     private String xm;
-    @ExcelProperty(value = {"身份证号码"}, index = 4)
+    @ExcelProperty(value = {"身份证号"}, index = 4)
     private String sfzh;
 
 

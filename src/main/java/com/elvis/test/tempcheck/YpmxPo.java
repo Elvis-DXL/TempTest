@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 @ApiModel("药品报销明细数据PO")
 public class YpmxPo implements Serializable {
-    @ExcelProperty(value = {"费用发生时间"}, index = 8)
+    @ExcelProperty(value = {"费用发生时间"}, index = 4)
     private Date fyfssj;
     @ExcelProperty(value = {"医保项目编码"}, index = 1)
     private String ybxmbm;
@@ -23,7 +23,7 @@ public class YpmxPo implements Serializable {
     private String ybxmmc;
     @ExcelProperty(value = {"结算单据号"}, index = 0)
     private String jsh;
-    @ExcelProperty(value = {"金额"}, index = 6)
+    @ExcelProperty(value = {"金额"}, index = 7)
     private BigDecimal je;
 
 

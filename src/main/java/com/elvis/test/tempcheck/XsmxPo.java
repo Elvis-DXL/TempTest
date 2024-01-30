@@ -15,11 +15,13 @@ import java.util.Date;
 @Data
 @ApiModel("销售明细数据PO")
 public class XsmxPo implements Serializable {
-//    @ExcelProperty(value = {"国家医保编码"}, index = 1)
+    //    @ExcelProperty(value = {"国家医保编码"}, index = 1)
 //    private String gjybbm;
-    @ExcelProperty(value = {"销售时间"}, index = 1)
+    @ExcelProperty(value = {"销售时间"}, index = 0)
+    private String xssjStr;
+//    @ExcelProperty(value = {"销售时间"}, index = 0)
     private Date xssj;
-    @ExcelProperty(value = {"商品名称"}, index = 0)
+    @ExcelProperty(value = {"通用名"}, index = 1)
     private String spmc;
     /*****************************************************************************/
 

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  */
 public class Test2 {
     public static void main(String[] args) throws Exception {
-        String headStr = "D:/TDDOWN/眉山市国健大药房连锁有限公司中二山店/";
+        String headStr = "D:/TDDOWN/彭山红新诊所/";
         //读取数据
         List<YpmxPo> ypmxPos = ExcelUtil
                 .excelToData(Files.newInputStream(new File(headStr + "表1：药品报销明细（医保端）.xlsx").toPath()), YpmxPo.class);
@@ -37,6 +37,9 @@ public class Test2 {
         List<YbbzAndXsxtError> ybbzAndXsxtErrors = new ArrayList<>();
         //进行校验
         System.out.println("开始校验");
+//        xsmxPos.forEach(it->{
+//            it.setXssj(DateUtil.parseDate(it.getXssjStr(),DPEnum.x_yyyy_MM_dd_HH_mm));
+//        });
         int count = 1;
         int errorCount = 1;
         Date jyStartTime = DateUtil.parseDate("2022-01-01 00:00:00", DPEnum.yyyy_MM_dd_HH_mm_ss);

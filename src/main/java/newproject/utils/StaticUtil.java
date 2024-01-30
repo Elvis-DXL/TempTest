@@ -308,6 +308,11 @@ public final class StaticUtil {
         return calendar.get(Calendar.DATE);
     }
 
+    public static int dateMinutesOfDay(Date date) {
+        Calendar calendar = dateToCalendar(date);
+        return calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
+    }
+
     public static Date dateStartTime(Date date) {
         Calendar calendar = dateToCalendar(date);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
