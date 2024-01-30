@@ -18,10 +18,6 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * @Author : 慕君Dxl
- * @CreateTime : 2023/9/27 13:49
- */
 @Slf4j
 @Component
 public class DBUtil {
