@@ -165,20 +165,7 @@ public class DBUtil {
             log.error("数据更新入库异常", e);
             throw new IllegalArgumentException("数据更新入库失败");
         } finally {
-            if (null != connection) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if (null != ps) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            closeStream(connection, ps);
         }
     }
 
@@ -188,6 +175,7 @@ public class DBUtil {
             Object fieldVal = colField.get(obj);
             if (null == fieldVal) {
                 ps.setNull(idx, JDBCType.NULL.getVendorTypeNumber());
+                colField.setAccessible(false);
                 return;
             }
             if (colField.getType().isEnum()) {
@@ -203,9 +191,7 @@ public class DBUtil {
                 ps.setObject(idx, colField.get(obj));
             }
             colField.setAccessible(false);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (SQLException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -239,5 +225,21 @@ public class DBUtil {
             clazz = clazz.getSuperclass();
         } while (null != clazz && !clazz.equals(Object.class));
         return result;
+    }
+
+    public static void closeStream(AutoCloseable... streams) {
+        if (null == streams || streams.length == 0) {
+            return;
+        }
+        for (AutoCloseable item : streams) {
+            if (null == item) {
+                continue;
+            }
+            try {
+                item.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
