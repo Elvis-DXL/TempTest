@@ -1,6 +1,5 @@
 package com.elvis.test.query;
 
-import cn.hutool.core.collection.CollUtil;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SQLQuery;
@@ -69,7 +68,7 @@ public class DBUtil {
     private Query constructorQuery(String sql, Map<String, Object> parameterMap) {
         Query query = entityManager.createNativeQuery(sql)
                 .unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-        if (CollUtil.isEmpty(parameterMap)) {
+        if (null == parameterMap || parameterMap.isEmpty()) {
             return query;
         }
         for (String key : parameterMap.keySet()) {
@@ -97,8 +96,9 @@ public class DBUtil {
             return;
         }
         String tableName = table.name();
-        List<Field> fields = this.allFields(clazz);
-        Map<String, Field> fieldMap = fields.stream().collect(Collectors.toMap(Field::getName, it -> it, (k1, k2) -> k1));
+        List<Field> fields = allFields(clazz);
+        Map<String, Field> fieldMap = fields
+                .stream().collect(Collectors.toMap(Field::getName, it -> it, (k1, k2) -> k1));
         Map<String, String> fieldColMap = this.consFieldColMap(fields);
         String idCol = fieldColMap.get("id");
         if (null == idCol) {
@@ -215,7 +215,7 @@ public class DBUtil {
         return map;
     }
 
-    private List<Field> allFields(Class clazz) {
+    public static List<Field> allFields(Class clazz) {
         List<Field> result = new ArrayList();
         do {
             Field[] fields = clazz.getDeclaredFields();
