@@ -32,6 +32,10 @@ public class ExcelTest {
         InputStream input4 = new FileInputStream(new File("D:/TDDOWN/005.xlsx"));
         List<ExcelPojo> dataList4 = ExcelRW.reader(input4, ExcelPojo.class);
         System.out.println(JsonUtil.toJson(dataList4));
+
+        File file2 = new File("D:/TDDOWN/006.xlsx");
+        OutputStream output = new FileOutputStream(file2);
+        ExcelRW.writer(dataList4, ExcelPojo.class, "hhhh", output);
     }
 
     public static void test1() throws Exception {
