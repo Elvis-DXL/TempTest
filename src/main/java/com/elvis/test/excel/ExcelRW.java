@@ -30,6 +30,8 @@ import java.util.Map;
 
 public class ExcelRW {
 
+    public final static String TITLE_ERROR = "表头错误";
+
     public static <T> List<T> reader(InputStream iStream, Class<T> clazz) {
         return reader(iStream, clazz, 0);
     }
@@ -71,7 +73,7 @@ public class ExcelRW {
                 //校验表头
                 for (String it : titleList) {
                     if (!obsTitle.contains(it)) {
-                        throw new IllegalArgumentException("表头错误");
+                        throw new IllegalArgumentException(TITLE_ERROR);
                     }
                 }
             }
