@@ -36,19 +36,15 @@ public abstract class BaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO, A
     }
 
     protected ENTITY_VO save(ADD_CMD cmd) {
-        //由添加命令构建实体对象
         ENTITY entity = this.addToEntity(cmd);
-        //校验实体对象是否重复
         this.authExist(entity);
         entity = this.newObjSetId(entity);
-        //调用数据库操作DAO
         dao.save(entity);
         return this.entityToVo(Collections.singletonList(entity)).get(0);
     }
 
     protected ENTITY_VO remove(ID id) {
         ENTITY entity = this.getById(id);
-        //执行自定义的删除操作，打标识逻辑删除或者物理删除
         entity = this.dealRemove(entity);
         return this.entityToVo(Collections.singletonList(entity)).get(0);
     }
@@ -56,7 +52,6 @@ public abstract class BaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO, A
     protected ENTITY_VO modify(MODIFY_CMD cmd) {
         ENTITY entity = this.modifyToOldEntity(cmd, this.getById(this.getModifyCmdId(cmd)));
         this.authExist(entity);
-        //调用数据库操作DAO
         dao.save(entity);
         return this.entityToVo(Collections.singletonList(entity)).get(0);
     }
