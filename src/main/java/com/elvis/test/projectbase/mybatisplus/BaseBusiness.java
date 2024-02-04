@@ -39,6 +39,7 @@ public abstract class BaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO,
         ENTITY entity = this.addToEntity(cmd);
         //校验实体对象是否重复
         this.authExist(entity);
+        entity = this.newObjSetId(entity);
         //调用数据库操作DAO
         dao.insert(entity);
         return this.entityToVo(Collections.singletonList(entity)).get(0);
@@ -88,6 +89,8 @@ public abstract class BaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO,
     }
 
     /*************************************************抽象方法*************************************************/
+    protected abstract ENTITY newObjSetId(ENTITY entity);
+
     protected abstract ENTITY addToEntity(ADD_CMD cmd);
 
     protected abstract ENTITY modifyToOldEntity(MODIFY_CMD cmd, ENTITY oldEntity);
