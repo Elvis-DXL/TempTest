@@ -38,7 +38,7 @@ public abstract class BaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO, A
         //调用数据库操作DAO
         Optional<ENTITY> optional = dao.findById(id);
         if (!optional.isPresent()) {
-            throw new IllegalArgumentException("传入ID错误");
+            this.throwBusinessException("传入ID错误");
         }
         ENTITY entity = optional.get();
         //执行自定义的删除操作，打标识逻辑删除或者物理删除
@@ -49,7 +49,7 @@ public abstract class BaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO, A
     protected ENTITY_VO modify(MODIFY_CMD cmd) {
         Optional<ENTITY> optional = dao.findById(this.getModifyCmdId(cmd));
         if (!optional.isPresent()) {
-            throw new IllegalArgumentException("传入ID错误");
+            this.throwBusinessException("传入ID错误");
         }
         ENTITY oldEntity = optional.get();
         ENTITY entity = this.modifyToOldEntity(cmd, oldEntity);
@@ -62,7 +62,7 @@ public abstract class BaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO, A
     protected ENTITY_VO query(ID id) {
         Optional<ENTITY> optional = dao.findById(id);
         if (!optional.isPresent()) {
-            throw new IllegalArgumentException("传入ID错误");
+            this.throwBusinessException("传入ID错误");
         }
         return this.entityToVo(Collections.singletonList(optional.get())).get(0);
     }
@@ -81,6 +81,10 @@ public abstract class BaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO, A
         result.setPageIndex(page.getNumber() + 1);
         result.setList(this.entityToVo(page.getContent()));
         return result;
+    }
+
+    protected void throwBusinessException(String msgStr) {
+        throw new IllegalArgumentException(msgStr);
     }
 
     /*************************************************抽象方法*************************************************/
