@@ -23,6 +23,17 @@ public abstract class BaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO,
     @Autowired
     protected DAO dao;
 
+    protected ENTITY getById(ID id) {
+        if (null == id) {
+            this.throwBusinessException("传入ID为空");
+        }
+        ENTITY entity = dao.selectById(id);
+        if (null == entity) {
+            this.throwBusinessException("传入ID错误");
+        }
+        return entity;
+    }
+
     protected ENTITY_VO save(ADD_CMD cmd) {
         //由添加命令构建实体对象
         ENTITY entity = this.addToEntity(cmd);
@@ -34,22 +45,14 @@ public abstract class BaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO,
     }
 
     protected ENTITY_VO remove(ID id) {
-        //调用数据库操作DAO
-        ENTITY entity = dao.selectById(id);
-        if (null == entity) {
-            this.throwBusinessException("传入ID错误");
-        }
+        ENTITY entity = this.getById(id);
         //执行自定义的删除操作，打标识逻辑删除或者物理删除
         entity = this.dealRemove(entity);
         return this.entityToVo(Collections.singletonList(entity)).get(0);
     }
 
     protected ENTITY_VO modify(MODIFY_CMD cmd) {
-        ENTITY oldEntity = dao.selectById(this.getModifyCmdId(cmd));
-        if (null == oldEntity) {
-            this.throwBusinessException("传入ID错误");
-        }
-        ENTITY entity = this.modifyToOldEntity(cmd, oldEntity);
+        ENTITY entity = this.modifyToOldEntity(cmd, this.getById(this.getModifyCmdId(cmd)));
         this.authExist(entity);
         //调用数据库操作DAO
         dao.updateById(entity);
@@ -57,11 +60,7 @@ public abstract class BaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO,
     }
 
     protected ENTITY_VO query(ID id) {
-        ENTITY entity = dao.selectById(id);
-        if (null == entity) {
-            this.throwBusinessException("传入ID错误");
-        }
-        return this.entityToVo(Collections.singletonList(entity)).get(0);
+        return this.entityToVo(Collections.singletonList(this.getById(id))).get(0);
     }
 
     protected List<ENTITY_VO> list(LIST_CMD cmd) {

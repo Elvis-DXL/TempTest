@@ -24,6 +24,17 @@ public abstract class BaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO, A
     @Autowired
     protected DAO dao;
 
+    protected ENTITY getById(ID id) {
+        if (null == id) {
+            this.throwBusinessException("传入ID为空");
+        }
+        Optional<ENTITY> optional = dao.findById(id);
+        if (!optional.isPresent()) {
+            this.throwBusinessException("传入ID错误");
+        }
+        return optional.get();
+    }
+
     protected ENTITY_VO save(ADD_CMD cmd) {
         //由添加命令构建实体对象
         ENTITY entity = this.addToEntity(cmd);
@@ -35,24 +46,14 @@ public abstract class BaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO, A
     }
 
     protected ENTITY_VO remove(ID id) {
-        //调用数据库操作DAO
-        Optional<ENTITY> optional = dao.findById(id);
-        if (!optional.isPresent()) {
-            this.throwBusinessException("传入ID错误");
-        }
-        ENTITY entity = optional.get();
+        ENTITY entity = this.getById(id);
         //执行自定义的删除操作，打标识逻辑删除或者物理删除
         entity = this.dealRemove(entity);
         return this.entityToVo(Collections.singletonList(entity)).get(0);
     }
 
     protected ENTITY_VO modify(MODIFY_CMD cmd) {
-        Optional<ENTITY> optional = dao.findById(this.getModifyCmdId(cmd));
-        if (!optional.isPresent()) {
-            this.throwBusinessException("传入ID错误");
-        }
-        ENTITY oldEntity = optional.get();
-        ENTITY entity = this.modifyToOldEntity(cmd, oldEntity);
+        ENTITY entity = this.modifyToOldEntity(cmd, this.getById(this.getModifyCmdId(cmd)));
         this.authExist(entity);
         //调用数据库操作DAO
         dao.save(entity);
@@ -60,11 +61,7 @@ public abstract class BaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO, A
     }
 
     protected ENTITY_VO query(ID id) {
-        Optional<ENTITY> optional = dao.findById(id);
-        if (!optional.isPresent()) {
-            this.throwBusinessException("传入ID错误");
-        }
-        return this.entityToVo(Collections.singletonList(optional.get())).get(0);
+        return this.entityToVo(Collections.singletonList(this.getById(id))).get(0);
     }
 
     protected List<ENTITY_VO> list(LIST_CMD cmd) {
