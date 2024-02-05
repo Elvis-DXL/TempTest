@@ -1,6 +1,7 @@
 package tool;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 
 /**
@@ -71,27 +72,35 @@ public final class DSUtil {
         }
     }
 
-    public LocalDateTime dayStart(LocalDateTime time) {
+    public static LocalDateTime dayStart(LocalDateTime time) {
         return time.withHour(0).withMinute(0).withSecond(0).withNano(0);
     }
 
-    public LocalDateTime dayEnd(LocalDateTime time) {
+    public static LocalDateTime dayEnd(LocalDateTime time) {
         return time.withHour(23).withMinute(59).withSecond(59).withNano(999999999);
     }
 
-    public LocalDateTime monthStart(LocalDateTime time) {
+    public static LocalDateTime monthStart(LocalDateTime time) {
         return dayStart(time.with(TemporalAdjusters.firstDayOfMonth()));
     }
 
-    public LocalDateTime monthEnd(LocalDateTime time) {
+    public static LocalDateTime monthEnd(LocalDateTime time) {
         return dayEnd(time.with(TemporalAdjusters.lastDayOfMonth()));
     }
 
-    public LocalDateTime yearStart(LocalDateTime time) {
+    public static LocalDateTime yearStart(LocalDateTime time) {
         return dayStart(time.with(TemporalAdjusters.firstDayOfYear()));
     }
 
-    public LocalDateTime yearEnd(LocalDateTime time) {
-        return dayStart(time.with(TemporalAdjusters.lastDayOfYear()));
+    public static LocalDateTime yearEnd(LocalDateTime time) {
+        return dayEnd(time.with(TemporalAdjusters.lastDayOfYear()));
+    }
+
+    public static String formatTime(LocalDateTime time, Pattern pattern) {
+        return DateTimeFormatter.ofPattern(pattern.val()).format(time);
+    }
+
+    public static LocalDateTime parseTime(String timeStr, Pattern pattern) {
+        return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern.val()));
     }
 }
