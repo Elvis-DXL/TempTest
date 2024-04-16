@@ -15,6 +15,8 @@ import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -200,10 +202,7 @@ public class DBUtil {
         Map<String, String> map = new HashMap<>();
         for (Field it : fields) {
             Column column = it.getAnnotation(Column.class);
-            if (null == column) {
-                continue;
-            }
-            String colName = column.name();
+            String colName = null != column ? column.name() : this.getColNameByFieldName(it.getName());
             Id id = it.getAnnotation(Id.class);
             if (null != id) {
                 map.put("id", colName);
@@ -215,8 +214,18 @@ public class DBUtil {
         return map;
     }
 
+    private String getColNameByFieldName(String fieldName) {
+        Matcher matcher = Pattern.compile("[A-Z]").matcher(fieldName);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, "_" + matcher.group(0).toLowerCase());
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
+
     public static List<Field> allFields(Class clazz) {
-        List<Field> result = new ArrayList();
+        List<Field> result = new ArrayList<>();
         do {
             Field[] fields = clazz.getDeclaredFields();
             if (null != fields && fields.length > 0) {

@@ -15,11 +15,9 @@ import java.util.Date;
 @Table(name = "bus_medical_record")
 public class DBObj implements Serializable {
 
-
     @Column(name = "create_time", columnDefinition = "datetime COMMENT '创建时间'")
     private Date createTime;
 
-    @Column(name = "update_time", columnDefinition = "datetime COMMENT '更新时间'")
     private Date updateTime;
 
     @Id
