@@ -83,6 +83,97 @@ public class DBUtil {
         return gson.fromJson(gson.toJson(objMap), clazz);
     }
 
+    public <T> void saveObjSomeField(T aim, String... fieldName) {
+        this.saveObjSomeField(Collections.singletonList(aim), fieldName);
+    }
+
+    public <T> void saveObjSomeField(List<T> aimList, String... fieldName) {
+        if (null == aimList || aimList.size() == 0) {
+            return;
+        }
+        Class<?> clazz = aimList.get(0).getClass();
+        Table table = clazz.getAnnotation(Table.class);
+        if (null == table) {
+            log.info("实体对象没有Table注解");
+            return;
+        }
+        String tableName = table.name();
+        List<Field> fields = allFields(clazz);
+        Map<String, Field> fieldMap = fields
+                .stream().collect(Collectors.toMap(Field::getName, it -> it, (k1, k2) -> k1));
+        Map<String, String> fieldColMap = this.consSaveFieldColMap(fields);
+        List<String> srcFields = new ArrayList<>(fieldColMap.keySet());
+        List<String> aimFieldList = null;
+        if (null != fieldName && fieldName.length != 0) {
+            List<String> aim = Arrays.asList(fieldName);
+            aimFieldList = srcFields.stream().filter(aim::contains).collect(Collectors.toList());
+        } else {
+            aimFieldList = srcFields;
+        }
+        if (null == aimFieldList || aimFieldList.size() == 0) {
+            log.info("要保存的目标字段为空");
+            return;
+        }
+        StringBuilder sb = new StringBuilder("INSERT INTO ");
+        StringBuilder sb2 = new StringBuilder();
+        sb.append(tableName);
+        sb.append("(");
+        for (String it : aimFieldList) {
+            sb.append(fieldColMap.get(it)).append(",");
+            sb2.append("?,");
+        }
+        String saveStr = sb.toString();
+        String str2 = sb2.toString();
+        str2 = str2.substring(0, str2.length() - 1);
+        saveStr = saveStr.substring(0, saveStr.length() - 1);
+        saveStr = saveStr + ") VALUES (" + str2 + ")";
+        log.info("执行的SQL【{}】", saveStr);
+        int count = 0;
+        int step = 1000;
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = dataSource.getConnection();
+            connection.setAutoCommit(false);
+            ps = connection.prepareStatement(saveStr);
+            for (T it : aimList) {
+                int idx = 1;
+                for (String item : aimFieldList) {
+                    Field colField = fieldMap.get(item);
+                    this.addPsParam(ps, idx, colField, it);
+                    idx++;
+                }
+                count++;
+                ps.addBatch();
+                if (count % step == 0) {
+                    ps.executeBatch();
+                    connection.commit();
+                    log.info("保存入库完成数量：" + count);
+                }
+            }
+            if (aimList.size() % step != 0) {
+                ps.executeBatch();
+                connection.commit();
+            }
+            log.info("数据保存入库完成");
+        } catch (Exception e) {
+            log.error("数据保存入库异常", e);
+            throw new IllegalArgumentException("数据保存入库失败");
+        } finally {
+            closeStream(connection, ps);
+        }
+    }
+
+    private Map<String, String> consSaveFieldColMap(List<Field> fields) {
+        Map<String, String> map = new HashMap<>();
+        for (Field it : fields) {
+            Column column = it.getAnnotation(Column.class);
+            String colName = null != column ? column.name() : this.getColNameByFieldName(it.getName());
+            map.put(it.getName(), colName);
+        }
+        return map;
+    }
+
     public <T> void updSomeFieldById(T aim, String... fieldName) {
         this.updSomeFieldById(Collections.singletonList(aim), fieldName);
     }
@@ -101,7 +192,7 @@ public class DBUtil {
         List<Field> fields = allFields(clazz);
         Map<String, Field> fieldMap = fields
                 .stream().collect(Collectors.toMap(Field::getName, it -> it, (k1, k2) -> k1));
-        Map<String, String> fieldColMap = this.consFieldColMap(fields);
+        Map<String, String> fieldColMap = this.consUpdFieldColMap(fields);
         String idCol = fieldColMap.get("id");
         if (null == idCol) {
             log.info("实体对象没有标注主键ID字段");
@@ -123,11 +214,9 @@ public class DBUtil {
             return;
         }
         StringBuilder sb = new StringBuilder("UPDATE ");
-        sb.append(tableName);
-        sb.append(" SET ");
+        sb.append(tableName).append(" SET ");
         for (String it : aimFieldList) {
-            sb.append(fieldColMap.get(it));
-            sb.append("=?,");
+            sb.append(fieldColMap.get(it)).append("=?,");
         }
         String upStr = sb.toString();
         upStr = upStr.substring(0, upStr.length() - 1);
@@ -198,7 +287,7 @@ public class DBUtil {
         }
     }
 
-    private Map<String, String> consFieldColMap(List<Field> fields) {
+    private Map<String, String> consUpdFieldColMap(List<Field> fields) {
         Map<String, String> map = new HashMap<>();
         for (Field it : fields) {
             Column column = it.getAnnotation(Column.class);
