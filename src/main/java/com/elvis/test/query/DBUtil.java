@@ -122,9 +122,9 @@ public class DBUtil {
             sb.append(fieldColMap.get(it)).append(",");
             sb2.append("?,");
         }
-        String saveStr = sb.toString();
         String str2 = sb2.toString();
         str2 = str2.substring(0, str2.length() - 1);
+        String saveStr = sb.toString();
         saveStr = saveStr.substring(0, saveStr.length() - 1);
         saveStr = saveStr + ") VALUES (" + str2 + ")";
         log.info("执行的SQL【{}】", saveStr);
