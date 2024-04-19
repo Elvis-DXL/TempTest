@@ -1,4 +1,4 @@
-package com.elvis.test;
+package com.elvis.test.tool;
 
 /**
  * Dxl静态工具类

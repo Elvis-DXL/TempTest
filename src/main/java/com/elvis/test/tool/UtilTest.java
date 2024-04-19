@@ -1,4 +1,4 @@
-package com.elvis.test;
+package com.elvis.test.tool;
 
 import com.elvis.test.newproject.enums.DatePattern;
 import com.elvis.test.newproject.utils.StaticUtil;
