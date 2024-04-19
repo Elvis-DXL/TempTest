@@ -1,4 +1,4 @@
-package newproject.utils;
+package com.elvis.test.newproject.utils;
 
 import org.springframework.stereotype.Component;
 

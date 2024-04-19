@@ -1,7 +1,7 @@
 package com.elvis.test.file;
 
 import com.elvis.commons.utils.IOUtil;
-import newproject.utils.StaticUtil;
+import com.elvis.test.newproject.utils.StaticUtil;
 
 import java.io.File;
 import java.io.FileInputStream;

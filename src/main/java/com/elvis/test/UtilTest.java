@@ -1,7 +1,7 @@
 package com.elvis.test;
 
-import newproject.enums.DatePattern;
-import newproject.utils.StaticUtil;
+import com.elvis.test.newproject.enums.DatePattern;
+import com.elvis.test.newproject.utils.StaticUtil;
 
 import java.util.Calendar;
 import java.util.Date;

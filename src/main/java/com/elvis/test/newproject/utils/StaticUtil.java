@@ -1,7 +1,7 @@
-package newproject.utils;
+package com.elvis.test.newproject.utils;
 
 import com.elvis.commons.utils.ClassUtil;
-import newproject.enums.DatePattern;
+import com.elvis.test.newproject.enums.DatePattern;
 
 import java.io.Closeable;
 import java.io.IOException;

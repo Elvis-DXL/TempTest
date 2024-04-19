@@ -1,4 +1,4 @@
-package newproject.utils;
+package com.elvis.test.newproject.utils;
 
 /**
  * @Author : 慕君Dxl
