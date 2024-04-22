@@ -1,4 +1,4 @@
-package com.elvis.test.tool;
+package project.base;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -6,14 +6,14 @@ import java.time.temporal.TemporalAdjusters;
 
 /**
  * @Author : 慕君Dxl
+ * @CreateTime : 2024/4/19 16:45
  */
-public final class DSUtil {
-
+public class DSUtil {
     private DSUtil() {
         throw new AssertionError("Utility classes do not allow instantiation");
     }
 
-    public enum Pattern {
+    public enum DatePattern {
         yyyy_MM_dd_HH_mm_ss_SSS("yyyy-MM-dd HH:mm:ss.SSS"),
         yyyy_MM_dd_HH_mm_ss("yyyy-MM-dd HH:mm:ss"),
         yyyy_MM_dd_HH_mm("yyyy-MM-dd HH:mm"),
@@ -60,15 +60,14 @@ public final class DSUtil {
         ss("ss"),
         SSS("SSS"),
         ;
+        private final String val;
 
-        private final String pattern;
-
-        Pattern(String pattern) {
-            this.pattern = pattern;
+        DatePattern(String val) {
+            this.val = val;
         }
 
         public String val() {
-            return pattern;
+            return val;
         }
     }
 
@@ -96,11 +95,11 @@ public final class DSUtil {
         return dayEnd(time.with(TemporalAdjusters.lastDayOfYear()));
     }
 
-    public static String formatTime(LocalDateTime time, Pattern pattern) {
-        return DateTimeFormatter.ofPattern(pattern.val()).format(time);
+    public static String formatTime(LocalDateTime time, DatePattern datePattern) {
+        return DateTimeFormatter.ofPattern(datePattern.val()).format(time);
     }
 
-    public static LocalDateTime parseTime(String timeStr, Pattern pattern) {
-        return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern.val()));
+    public static LocalDateTime parseTime(String timeStr, DatePattern datePattern) {
+        return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(datePattern.val()));
     }
 }
