@@ -371,7 +371,7 @@ public final class DSUtil {
         return Double.parseDouble(df.format(value));
     }
 
-    public static String get32UUID() {
+    public static String UUID32() {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         return new UUID(random.nextLong(), random.nextLong()).toString().replace("-", "");
     }
