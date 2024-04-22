@@ -153,11 +153,11 @@ public final class DSUtil {
         }
 
         public String join(Collection<String> srcList) {
-            return this.join(srcList, false);
+            return this.join(srcList, true);
         }
 
         public <T, R> String join(Collection<T> srcList, Function<? super T, ? extends R> function) {
-            return this.join(srcList, function, false);
+            return this.join(srcList, function, true);
         }
 
         public String join(Collection<String> srcList, boolean includeStartAndEnd) {
