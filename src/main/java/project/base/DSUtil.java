@@ -141,7 +141,7 @@ public final class DSUtil {
         }
 
         public List<String> split(String aimStr) {
-            if (this.notIncluded(aimStr)) {
+            if (isEmpty(aimStr)) {
                 return new ArrayList<>();
             }
             StringTokenizer st = new StringTokenizer(aimStr, this.val);
@@ -153,7 +153,7 @@ public final class DSUtil {
         }
 
         public List<Long> splitToLong(String aimStr) {
-            if (this.notIncluded(aimStr)) {
+            if (isEmpty(aimStr)) {
                 return new ArrayList<>();
             }
             StringTokenizer st = new StringTokenizer(aimStr, this.val);
@@ -166,7 +166,7 @@ public final class DSUtil {
         }
 
         public List<Integer> splitToInteger(String aimStr) {
-            if (this.notIncluded(aimStr)) {
+            if (isEmpty(aimStr)) {
                 return new ArrayList<>();
             }
             StringTokenizer st = new StringTokenizer(aimStr, this.val);
