@@ -106,6 +106,23 @@ public final class DSUtil {
             return val;
         }
 
+        /***************************************工具方法*************************************/
+        public static String likeSQL(String aimStr) {
+            return BFH.val + aimStr + BFH.val;
+        }
+
+        public static String likeSQL(String aimStr, Symbol symbol) {
+            return likeSQL(symbol.val + aimStr + symbol.val);
+        }
+
+        public static String leftLikeSQL(String aimStr) {
+            return aimStr + BFH.val;
+        }
+
+        public static String rightLikeSQL(String aimStr) {
+            return BFH.val + aimStr;
+        }
+
         public Boolean included(String aimStr) {
             return null != aimStr && aimStr.length() != 0 && aimStr.trim().contains(this.val);
         }
