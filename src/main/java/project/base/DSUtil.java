@@ -409,11 +409,4 @@ public final class DSUtil {
     public static <T> T randomGetOne(List<T> srcList) {
         return srcList.get(ThreadLocalRandom.current().nextInt(srcList.size()));
     }
-
-    public static <T, K> T mapGet(Map<K, T> srcMap, K aimKey) {
-        if (null == srcMap || srcMap.isEmpty() || null == aimKey) {
-            return null;
-        }
-        return srcMap.get(aimKey);
-    }
 }
