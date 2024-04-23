@@ -415,6 +415,9 @@ public final class DSUtil {
     }
 
     public static String desStr(String aimStr, int start, int mid, int end) {
+        if (isEmpty(aimStr)) {
+            return aimStr;
+        }
         String midStr = "";
         while (midStr.length() < mid) {
             midStr = midStr.concat("*");
