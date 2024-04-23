@@ -131,13 +131,13 @@ public final class DSUtil {
             return !this.included(aimStr);
         }
 
-        public Boolean srcContainAim(String src, String aim) {
-            return null != src && src.length() != 0 && null != aim && aim.length() != 0
-                    && src.contains(this.val + aim + this.val);
+        public Boolean spliceSrcContainAim(String spliceSrc, String aim) {
+            return null != spliceSrc && spliceSrc.length() != 0 && null != aim && aim.length() != 0
+                    && spliceSrc.contains(this.val + aim + this.val);
         }
 
-        public Boolean srcNotContainAim(String src, String aim) {
-            return !this.srcContainAim(src, aim);
+        public Boolean spliceSrcNotContainAim(String spliceSrc, String aim) {
+            return !this.spliceSrcContainAim(spliceSrc, aim);
         }
 
         public List<String> split(String aimStr) {
