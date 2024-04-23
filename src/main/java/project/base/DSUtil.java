@@ -398,8 +398,12 @@ public final class DSUtil {
     }
 
     public static String UUID32() {
+        return UUID36().replace("-", "");
+    }
+
+    public static String UUID36() {
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        return new UUID(random.nextLong(), random.nextLong()).toString().replace("-", "");
+        return new UUID(random.nextLong(), random.nextLong()).toString();
     }
 
     public static <T> T randomGetOne(List<T> srcList) {
