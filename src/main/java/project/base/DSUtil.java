@@ -411,9 +411,6 @@ public final class DSUtil {
     }
 
     public static <T, K> T mapGet(Map<K, T> srcMap, K aimKey) {
-        if (null == srcMap || srcMap.isEmpty() || null == aimKey) {
-            return null;
-        }
-        return srcMap.get(aimKey);
+        return null == srcMap || srcMap.isEmpty() || null == aimKey ? null : srcMap.get(aimKey);
     }
 }
