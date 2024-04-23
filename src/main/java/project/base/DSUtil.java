@@ -30,7 +30,7 @@ public final class DSUtil {
     public static final List<String> ZERO_TO_NINE = Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
 
     //时间格式化枚举
-    public enum DatePattern {
+    public enum Pattern {
         yyyy_MM_dd_HH_mm_ss_SSS("yyyy-MM-dd HH:mm:ss.SSS"),
         yyyy_MM_dd_HH_mm_ss("yyyy-MM-dd HH:mm:ss"),
         yyyy_MM_dd_HH_mm("yyyy-MM-dd HH:mm"),
@@ -74,7 +74,7 @@ public final class DSUtil {
         ;
         private final String val;
 
-        DatePattern(String val) {
+        Pattern(String val) {
             this.val = val;
         }
 
@@ -260,20 +260,20 @@ public final class DSUtil {
         return dayEnd(time.with(TemporalAdjusters.lastDayOfYear()));
     }
 
-    public static String formatTime(LocalDateTime time, String datePattern) {
-        return DateTimeFormatter.ofPattern(datePattern).format(time);
+    public static String formatTime(LocalDateTime time, String pattern) {
+        return DateTimeFormatter.ofPattern(pattern).format(time);
     }
 
-    public static String formatTime(LocalDateTime time, DatePattern datePattern) {
-        return DateTimeFormatter.ofPattern(datePattern.val()).format(time);
+    public static String formatTime(LocalDateTime time, Pattern pattern) {
+        return DateTimeFormatter.ofPattern(pattern.val()).format(time);
     }
 
-    public static LocalDateTime parseTime(String timeStr, String datePattern) {
-        return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(datePattern));
+    public static LocalDateTime parseTime(String timeStr, String pattern) {
+        return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern));
     }
 
-    public static LocalDateTime parseTime(String timeStr, DatePattern datePattern) {
-        return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(datePattern.val()));
+    public static LocalDateTime parseTime(String timeStr, Pattern pattern) {
+        return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern.val()));
     }
 
     public static LocalDateTime dateToLocal(Date date) {
