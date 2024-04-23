@@ -413,4 +413,12 @@ public final class DSUtil {
     public static <T, K> T mapGet(Map<K, T> srcMap, K aimKey) {
         return null == srcMap || srcMap.isEmpty() || null == aimKey ? null : srcMap.get(aimKey);
     }
+
+    public static String desStr(String aimStr, int start, int mid, int end) {
+        String midStr = "";
+        while (midStr.length() < mid) {
+            midStr = midStr.concat("*");
+        }
+        return aimStr.substring(0, start) + midStr + aimStr.substring(aimStr.length() - end);
+    }
 }
