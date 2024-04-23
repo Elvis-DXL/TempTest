@@ -119,6 +119,10 @@ public final class DSUtil {
                     && src.contains(this.val + aim + this.val);
         }
 
+        public Boolean srcNotContainAim(String src, String aim) {
+            return !this.srcContainAim(src, aim);
+        }
+
         public List<String> split(String aimStr) {
             if (this.notIncluded(aimStr)) {
                 return new ArrayList<>();
