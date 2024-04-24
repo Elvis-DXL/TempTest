@@ -1,5 +1,6 @@
 package project.base;
 
+import javax.persistence.criteria.*;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -423,5 +424,68 @@ public final class DSUtil {
             midStr = midStr.concat("*");
         }
         return aimStr.substring(0, start) + midStr + aimStr.substring(aimStr.length() - end);
+    }
+
+    /*****************************************以上为工具函数，以下为内部类*****************************************/
+    public static class JPATool {
+        public static Predicate tjlToPredicate(List<Predicate> tjList, CriteriaQuery<?> query) {
+            Predicate[] tjPredicate = new Predicate[tjList.size()];
+            return query.where(tjList.toArray(tjPredicate)).getRestriction();
+        }
+
+        private static Order[] getOrderArr(OrderItem defaultSort, List<OrderItem> sortList, Root<?> root, CriteriaBuilder cb) {
+            List<Order> orderList = new ArrayList<>();
+            if (isEmpty(sortList)) {
+                orderList.add(defaultSort.isAsc() ?
+                        cb.asc(root.get(defaultSort.column())) : cb.desc(root.get(defaultSort.column())));
+            } else {
+                for (OrderItem item : sortList) {
+                    orderList.add(item.isAsc() ? cb.asc(root.get(item.column())) : cb.desc(root.get(item.column())));
+                }
+            }
+            Order[] orderArr = new Order[orderList.size()];
+            return orderList.toArray(orderArr);
+        }
+
+        public static Predicate tjlToPredicate(List<Predicate> tjList, OrderItem defaultSort, List<OrderItem> sortList,
+                                               Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            Predicate[] tjPredicate = new Predicate[tjList.size()];
+            return query.where(tjList.toArray(tjPredicate)).orderBy(getOrderArr(defaultSort, sortList, root, cb))
+                    .getRestriction();
+        }
+
+        public static Predicate listToOnePredicate(List<Predicate> list, CriteriaBuilder cb, boolean isAnd) {
+            Predicate[] predicateArr = new Predicate[list.size()];
+            return isAnd ? cb.and(list.toArray(predicateArr)) : cb.or(list.toArray(predicateArr));
+        }
+    }
+
+    public static class OrderItem {
+        private String column;
+        private boolean asc = true;
+
+        public OrderItem() {
+        }
+
+        public OrderItem(String column, boolean asc) {
+            this.column = column;
+            this.asc = asc;
+        }
+
+        public String column() {
+            return column;
+        }
+
+        public boolean isAsc() {
+            return asc;
+        }
+
+        public void setColumn(String column) {
+            this.column = column;
+        }
+
+        public void setAsc(boolean asc) {
+            this.asc = asc;
+        }
     }
 }
