@@ -488,4 +488,34 @@ public final class DSUtil {
             this.asc = asc;
         }
     }
+
+    public static class BasePage {
+        protected Integer pageNum;
+        protected Integer pageSize;
+        protected List<OrderItem> orderList;
+
+        public Integer getPageNum() {
+            return pageNum;
+        }
+
+        public void setPageNum(Integer pageNum) {
+            this.pageNum = pageNum;
+        }
+
+        public Integer getPageSize() {
+            return pageSize;
+        }
+
+        public void setPageSize(Integer pageSize) {
+            this.pageSize = pageSize;
+        }
+
+        public List<OrderItem> getOrderList() {
+            return orderList;
+        }
+
+        public void setOrderList(List<OrderItem> orderList) {
+            this.orderList = orderList;
+        }
+    }
 }
