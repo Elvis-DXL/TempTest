@@ -426,6 +426,31 @@ public final class DSUtil {
         return aimStr.substring(0, start) + midStr + aimStr.substring(aimStr.length() - end);
     }
 
+    public static <T> void judgeAdd(List<T> aimList, T aimObj) {
+        if (null == aimList) {
+            throw new NullPointerException("aimList is null");
+        }
+        if (null == aimObj || aimList.contains(aimObj)) {
+            return;
+        }
+        aimList.add(aimObj);
+    }
+
+    public static <T> void judgeAddAll(List<T> aimList, List<T> aims) {
+        if (null == aimList) {
+            throw new NullPointerException("aimList is null");
+        }
+        if (isEmpty(aims)) {
+            return;
+        }
+        for (T item : aims) {
+            if (aimList.contains(item)) {
+                continue;
+            }
+            aimList.add(item);
+        }
+    }
+
     /*****************************************以上为工具函数，以下为内部类*****************************************/
     public static class JPATool {
         public static Predicate tjlToPredicate(List<Predicate> tjList, CriteriaQuery<?> query) {
