@@ -237,54 +237,6 @@ public final class DSUtil {
     }
 
     /*****************************************以上为常量，以下为工具函数*****************************************/
-    public static LocalDateTime dayStart(LocalDateTime time) {
-        return time.withHour(0).withMinute(0).withSecond(0).withNano(0);
-    }
-
-    public static LocalDateTime dayEnd(LocalDateTime time) {
-        return time.withHour(23).withMinute(59).withSecond(59).withNano(999999999);
-    }
-
-    public static LocalDateTime monthStart(LocalDateTime time) {
-        return dayStart(time.with(TemporalAdjusters.firstDayOfMonth()));
-    }
-
-    public static LocalDateTime monthEnd(LocalDateTime time) {
-        return dayEnd(time.with(TemporalAdjusters.lastDayOfMonth()));
-    }
-
-    public static LocalDateTime yearStart(LocalDateTime time) {
-        return dayStart(time.with(TemporalAdjusters.firstDayOfYear()));
-    }
-
-    public static LocalDateTime yearEnd(LocalDateTime time) {
-        return dayEnd(time.with(TemporalAdjusters.lastDayOfYear()));
-    }
-
-    public static String formatTime(LocalDateTime time, String pattern) {
-        return DateTimeFormatter.ofPattern(pattern).format(time);
-    }
-
-    public static String formatTime(LocalDateTime time, Pattern pattern) {
-        return DateTimeFormatter.ofPattern(pattern.val()).format(time);
-    }
-
-    public static LocalDateTime parseTime(String timeStr, String pattern) {
-        return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern));
-    }
-
-    public static LocalDateTime parseTime(String timeStr, Pattern pattern) {
-        return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern.val()));
-    }
-
-    public static LocalDateTime dateToLocal(Date date) {
-        return null != date ? date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime() : null;
-    }
-
-    public static Date localToDate(LocalDateTime localDateTime) {
-        return null != localDateTime ? Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()) : null;
-    }
-
     public static double lngLatMeter(double srcLng, double srcLat, double aimLng, double aimLat) {
         return EARTH_RADIUS * Math.acos(Math.cos(Math.toRadians(srcLat)) * Math.cos(Math.toRadians(aimLat))
                 * Math.cos(Math.toRadians(srcLng) - Math.toRadians(aimLng))
@@ -452,7 +404,7 @@ public final class DSUtil {
     }
 
     /*****************************************以上为工具函数，以下为内部类*****************************************/
-    public static class JPATool {
+    public final static class JPATool {
         public static Predicate tjlToPredicate(List<Predicate> tjList, CriteriaQuery<?> query) {
             Predicate[] tjPredicate = new Predicate[tjList.size()];
             return query.where(tjList.toArray(tjPredicate)).getRestriction();
@@ -485,7 +437,57 @@ public final class DSUtil {
         }
     }
 
-    public static class OrderItem {
+    public final static class TimeTool {
+        public static LocalDateTime dayStart(LocalDateTime time) {
+            return time.withHour(0).withMinute(0).withSecond(0).withNano(0);
+        }
+
+        public static LocalDateTime dayEnd(LocalDateTime time) {
+            return time.withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+        }
+
+        public static LocalDateTime monthStart(LocalDateTime time) {
+            return dayStart(time.with(TemporalAdjusters.firstDayOfMonth()));
+        }
+
+        public static LocalDateTime monthEnd(LocalDateTime time) {
+            return dayEnd(time.with(TemporalAdjusters.lastDayOfMonth()));
+        }
+
+        public static LocalDateTime yearStart(LocalDateTime time) {
+            return dayStart(time.with(TemporalAdjusters.firstDayOfYear()));
+        }
+
+        public static LocalDateTime yearEnd(LocalDateTime time) {
+            return dayEnd(time.with(TemporalAdjusters.lastDayOfYear()));
+        }
+
+        public static String formatTime(LocalDateTime time, String pattern) {
+            return DateTimeFormatter.ofPattern(pattern).format(time);
+        }
+
+        public static String formatTime(LocalDateTime time, Pattern pattern) {
+            return DateTimeFormatter.ofPattern(pattern.val()).format(time);
+        }
+
+        public static LocalDateTime parseTime(String timeStr, String pattern) {
+            return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern));
+        }
+
+        public static LocalDateTime parseTime(String timeStr, Pattern pattern) {
+            return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern.val()));
+        }
+
+        public static LocalDateTime dateToLocal(Date date) {
+            return null != date ? date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime() : null;
+        }
+
+        public static Date localToDate(LocalDateTime localDateTime) {
+            return null != localDateTime ? Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()) : null;
+        }
+    }
+
+    public final static class OrderItem {
         private String column;
         private boolean asc = true;
 
@@ -544,7 +546,7 @@ public final class DSUtil {
         }
     }
 
-    public static class PageResp<T> {
+    public final static class PageResp<T> {
         private Integer pageNum;
         private Integer pageSize;
         private Integer totalNum;
