@@ -514,7 +514,7 @@ public final class DSUtil {
         }
     }
 
-    public static class BasePage {
+    public static class PageReq {
         protected Integer pageNum;
         protected Integer pageSize;
         protected List<OrderItem> orderList;
@@ -541,6 +541,54 @@ public final class DSUtil {
 
         public void setOrderList(List<OrderItem> orderList) {
             this.orderList = orderList;
+        }
+    }
+
+    public static class PageResp<T> {
+        private Integer pageNum;
+        private Integer pageSize;
+        private Integer totalNum;
+        private Integer totalPage;
+        private List<T> dataList;
+
+        public Integer getPageNum() {
+            return pageNum;
+        }
+
+        public void setPageNum(Integer pageNum) {
+            this.pageNum = pageNum;
+        }
+
+        public Integer getPageSize() {
+            return pageSize;
+        }
+
+        public void setPageSize(Integer pageSize) {
+            this.pageSize = pageSize;
+        }
+
+        public Integer getTotalNum() {
+            return totalNum;
+        }
+
+        public void setTotalNum(Integer totalNum) {
+            this.totalNum = totalNum;
+        }
+
+        public Integer getTotalPage() {
+            return totalPage;
+        }
+
+        public void setTotalPage(Integer totalPage) {
+            this.totalPage = totalPage;
+        }
+
+        public List<T> getDataList() {
+            return dataList;
+        }
+
+        public void setDataList(List<T> dataList) {
+            this.dataList = dataList;
         }
     }
 }
