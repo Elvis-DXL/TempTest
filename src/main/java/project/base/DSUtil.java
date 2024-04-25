@@ -109,23 +109,23 @@ public final class DSUtil {
 
         /***************************************工具方法*************************************/
         public static String likeSQL(String aimStr) {
-            return BFH.val + aimStr + BFH.val;
+            return BFH.val() + aimStr + BFH.val();
         }
 
         public static String likeSQL(String aimStr, Symbol symbol) {
-            return likeSQL(symbol.val + aimStr + symbol.val);
+            return likeSQL(symbol.val() + aimStr + symbol.val());
         }
 
         public static String leftLikeSQL(String aimStr) {
-            return aimStr + BFH.val;
+            return aimStr + BFH.val();
         }
 
         public static String rightLikeSQL(String aimStr) {
-            return BFH.val + aimStr;
+            return BFH.val() + aimStr;
         }
 
         public Boolean included(String aimStr) {
-            return null != aimStr && aimStr.length() != 0 && aimStr.trim().contains(this.val);
+            return null != aimStr && aimStr.length() != 0 && aimStr.trim().contains(this.val());
         }
 
         public Boolean notIncluded(String aimStr) {
@@ -134,7 +134,7 @@ public final class DSUtil {
 
         public Boolean spliceSrcContainAim(String spliceSrc, String aim) {
             return null != spliceSrc && spliceSrc.length() != 0 && null != aim && aim.length() != 0
-                    && spliceSrc.contains(this.val + aim + this.val);
+                    && spliceSrc.contains(this.val() + aim + this.val());
         }
 
         public Boolean spliceSrcNotContainAim(String spliceSrc, String aim) {
@@ -145,7 +145,7 @@ public final class DSUtil {
             if (isEmpty(aimStr)) {
                 return new ArrayList<>();
             }
-            StringTokenizer st = new StringTokenizer(aimStr, this.val);
+            StringTokenizer st = new StringTokenizer(aimStr, this.val());
             List<String> result = new ArrayList<>();
             while (st.hasMoreTokens()) {
                 result.add(st.nextToken());
@@ -157,7 +157,7 @@ public final class DSUtil {
             if (isEmpty(aimStr)) {
                 return new ArrayList<>();
             }
-            StringTokenizer st = new StringTokenizer(aimStr, this.val);
+            StringTokenizer st = new StringTokenizer(aimStr, this.val());
             List<Long> result = new ArrayList<>();
             while (st.hasMoreTokens()) {
                 String temp = st.nextToken();
@@ -170,7 +170,7 @@ public final class DSUtil {
             if (isEmpty(aimStr)) {
                 return new ArrayList<>();
             }
-            StringTokenizer st = new StringTokenizer(aimStr, this.val);
+            StringTokenizer st = new StringTokenizer(aimStr, this.val());
             List<Integer> result = new ArrayList<>();
             while (st.hasMoreTokens()) {
                 String temp = st.nextToken();
@@ -194,12 +194,12 @@ public final class DSUtil {
             StringBuilder sb = new StringBuilder();
             for (String str : srcList) {
                 sb.append(str);
-                sb.append(this.val);
+                sb.append(this.val());
             }
             String result = sb.toString();
-            result = result.substring(0, result.length() - this.val.length());
+            result = result.substring(0, result.length() - this.val().length());
             if (includeStartAndEnd) {
-                result = this.val + result + this.val;
+                result = this.val() + result + this.val();
             }
             return result;
         }
@@ -227,8 +227,16 @@ public final class DSUtil {
             this.desc = desc;
         }
 
+        public String getRegexStr() {
+            return regexStr;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
         public boolean verify(String aimStr) {
-            return null != aimStr && aimStr.length() != 0 && aimStr.matches(this.regexStr);
+            return null != aimStr && aimStr.length() != 0 && aimStr.matches(this.getRegexStr());
         }
 
         public boolean verifyFail(String aimStr) {
