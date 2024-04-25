@@ -414,10 +414,10 @@ public final class DSUtil {
             List<Order> orderList = new ArrayList<>();
             if (isEmpty(sortList)) {
                 orderList.add(defaultSort.isAsc() ?
-                        cb.asc(root.get(defaultSort.column())) : cb.desc(root.get(defaultSort.column())));
+                        cb.asc(root.get(defaultSort.getColumn())) : cb.desc(root.get(defaultSort.getColumn())));
             } else {
                 for (OrderItem item : sortList) {
-                    orderList.add(item.isAsc() ? cb.asc(root.get(item.column())) : cb.desc(root.get(item.column())));
+                    orderList.add(item.isAsc() ? cb.asc(root.get(item.getColumn())) : cb.desc(root.get(item.getColumn())));
                 }
             }
             Order[] orderArr = new Order[orderList.size()];
@@ -499,7 +499,7 @@ public final class DSUtil {
             this.asc = asc;
         }
 
-        public String column() {
+        public String getColumn() {
             return column;
         }
 
