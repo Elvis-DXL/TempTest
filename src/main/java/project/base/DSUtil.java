@@ -1,6 +1,9 @@
 package project.base;
 
 import javax.persistence.criteria.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -22,7 +25,7 @@ public final class DSUtil {
         throw new AssertionError("Utility classes do not allow instantiation");
     }
 
-    public static final double EARTH_RADIUS = 6371393;
+    public static final double EARTH_RADIUS_METER = 6371393;
 
     public static final List<String> ZERO_TO_NINE = Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
 
@@ -135,7 +138,7 @@ public final class DSUtil {
         }
 
         public List<String> split(String aimStr) {
-            if (isEmpty(aimStr)) {
+            if (EmptyTool.isEmpty(aimStr)) {
                 return new ArrayList<>();
             }
             StringTokenizer st = new StringTokenizer(aimStr, this.val());
@@ -147,7 +150,7 @@ public final class DSUtil {
         }
 
         public List<Long> splitToLong(String aimStr) {
-            if (isEmpty(aimStr)) {
+            if (EmptyTool.isEmpty(aimStr)) {
                 return new ArrayList<>();
             }
             StringTokenizer st = new StringTokenizer(aimStr, this.val());
@@ -160,7 +163,7 @@ public final class DSUtil {
         }
 
         public List<Integer> splitToInteger(String aimStr) {
-            if (isEmpty(aimStr)) {
+            if (EmptyTool.isEmpty(aimStr)) {
                 return new ArrayList<>();
             }
             StringTokenizer st = new StringTokenizer(aimStr, this.val());
@@ -237,42 +240,12 @@ public final class DSUtil {
     }
 
     public static double lngLatMeter(double srcLng, double srcLat, double aimLng, double aimLat) {
-        return EARTH_RADIUS * Math.acos(Math.cos(Math.toRadians(srcLat)) * Math.cos(Math.toRadians(aimLat))
+        return EARTH_RADIUS_METER * Math.acos(Math.cos(Math.toRadians(srcLat)) * Math.cos(Math.toRadians(aimLat))
                 * Math.cos(Math.toRadians(srcLng) - Math.toRadians(aimLng))
                 + Math.sin(Math.toRadians(srcLat)) * Math.sin(Math.toRadians(aimLat)));
     }
 
-    public static boolean isEmpty(Collection<?> coll) {
-        return coll == null || coll.isEmpty();
-    }
-
-    public static boolean isEmpty(CharSequence cs) {
-        return cs == null || cs.length() == 0;
-    }
-
-    public static boolean isNotEmpty(Collection<?> coll) {
-        return !isEmpty(coll);
-    }
-
-    public static void isNotEmpty(Collection<?> coll, Consumer<Collection<?>> consumer) {
-        if (isEmpty(coll)) {
-            return;
-        }
-        consumer.accept(coll);
-    }
-
-    public static boolean isNotEmpty(CharSequence cs) {
-        return !isEmpty(cs);
-    }
-
-    public static void isNotEmpty(String str, Consumer<String> consumer) {
-        if (isEmpty(str)) {
-            return;
-        }
-        consumer.accept(str);
-    }
-
-    public static List<Field> allFields(Class clazz) {
+    public static List<Field> classAllFields(Class clazz) {
         List<Field> result = new ArrayList<>();
         do {
             Field[] fields = clazz.getDeclaredFields();
@@ -285,9 +258,9 @@ public final class DSUtil {
     }
 
     public static <T, K> K copySomeFields(T src, K aim, String... fields) {
-        Map<String, Field> srcMap = allFields(src.getClass())
+        Map<String, Field> srcMap = classAllFields(src.getClass())
                 .stream().collect(Collectors.toMap(Field::getName, it -> it, (k1, k2) -> k1));
-        Map<String, Field> aimMap = allFields(aim.getClass())
+        Map<String, Field> aimMap = classAllFields(aim.getClass())
                 .stream().collect(Collectors.toMap(Field::getName, it -> it, (k1, k2) -> k1));
         List<String> fieldList = Arrays.asList(fields);
         if (fieldList.size() == 0) {
@@ -367,7 +340,7 @@ public final class DSUtil {
     }
 
     public static String desStr(String aimStr, int start, int mid, int end) {
-        if (isEmpty(aimStr)) {
+        if (EmptyTool.isEmpty(aimStr)) {
             return aimStr;
         }
         String midStr = "";
@@ -391,7 +364,7 @@ public final class DSUtil {
         if (null == aimList) {
             throw new NullPointerException("aimList is null");
         }
-        if (isEmpty(aims)) {
+        if (EmptyTool.isEmpty(aims)) {
             return;
         }
         for (T item : aims) {
@@ -410,7 +383,7 @@ public final class DSUtil {
 
         private static Order[] getOrderArr(OrderItem defaultSort, List<OrderItem> sortList, Root<?> root, CriteriaBuilder cb) {
             List<Order> orderList = new ArrayList<>();
-            if (isEmpty(sortList)) {
+            if (EmptyTool.isEmpty(sortList)) {
                 orderList.add(defaultSort.isAsc() ?
                         cb.asc(root.get(defaultSort.getColumn())) : cb.desc(root.get(defaultSort.getColumn())));
             } else {
@@ -482,6 +455,73 @@ public final class DSUtil {
 
         public static Date localToDate(LocalDateTime localDateTime) {
             return null != localDateTime ? Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()) : null;
+        }
+    }
+
+    public final static class IOTool {
+        public static void inToOut(InputStream inStream, OutputStream outStream) {
+            byte[] cache = new byte[1024 * 1024 * 20];
+            try {
+                int len = inStream.read(cache);
+                while (len > 0) {
+                    outStream.write(cache, 0, len);
+                    outStream.flush();
+                    len = inStream.read(cache);
+                }
+                outStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                closeStream(inStream, outStream);
+            }
+        }
+
+        public static void closeStream(AutoCloseable... autoCloseables) {
+            if (null == autoCloseables) {
+                return;
+            }
+            for (AutoCloseable autoCloseable : autoCloseables) {
+                if (null == autoCloseable) {
+                    continue;
+                }
+                try {
+                    autoCloseable.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public final static class EmptyTool {
+        public static boolean isEmpty(Collection<?> coll) {
+            return coll == null || coll.isEmpty();
+        }
+
+        public static boolean isEmpty(CharSequence cs) {
+            return cs == null || cs.length() == 0;
+        }
+
+        public static boolean isNotEmpty(Collection<?> coll) {
+            return !isEmpty(coll);
+        }
+
+        public static void isNotEmpty(Collection<?> coll, Consumer<Collection<?>> consumer) {
+            if (isEmpty(coll)) {
+                return;
+            }
+            consumer.accept(coll);
+        }
+
+        public static boolean isNotEmpty(CharSequence cs) {
+            return !isEmpty(cs);
+        }
+
+        public static void isNotEmpty(String str, Consumer<String> consumer) {
+            if (isEmpty(str)) {
+                return;
+            }
+            consumer.accept(str);
         }
     }
 
