@@ -376,7 +376,7 @@ public final class DSUtil {
         }
     }
 
-    public static int birthdayStrToAge(String birthdayStr) {
+    public static int birthdayStrToCurrAge(String birthdayStr) {
         return birthdayStrToAgeByTime(birthdayStr, LocalDate.now());
     }
 
@@ -393,14 +393,10 @@ public final class DSUtil {
         } catch (Exception e) {
             throw new IllegalArgumentException("birthdayStr format error");
         }
-        int bYear = birthday.getYear();
-        int bMonth = birthday.getMonthValue();
-        int bDay = birthday.getDayOfMonth();
-        int lYear = localDate.getYear();
-        int lMonth = localDate.getMonthValue();
-        int lDay = localDate.getDayOfMonth();
-        int age = lYear - bYear;
-        return lMonth < bMonth ? age - 1 : (lMonth > bMonth ? age : (lDay < bDay ? age - 1 : age));
+        return localDate.getMonthValue() < birthday.getMonthValue() ? localDate.getYear() - birthday.getYear() - 1
+                : (localDate.getMonthValue() > birthday.getMonthValue() ? localDate.getYear() - birthday.getYear()
+                : (localDate.getDayOfMonth() < birthday.getDayOfMonth() ?
+                localDate.getYear() - birthday.getYear() - 1 : localDate.getYear() - birthday.getYear()));
     }
 
     public final static class JPATool {
