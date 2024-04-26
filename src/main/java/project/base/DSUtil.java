@@ -344,6 +344,9 @@ public final class DSUtil {
         if (EmptyTool.isEmpty(aimStr)) {
             return aimStr;
         }
+        if (aimStr.length() < Math.max(start, end)) {
+            return aimStr;
+        }
         String midStr = "";
         while (midStr.length() < mid) {
             midStr = midStr.concat("*");
