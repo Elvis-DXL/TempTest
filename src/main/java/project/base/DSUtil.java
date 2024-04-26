@@ -18,19 +18,14 @@ import java.util.stream.Collectors;
  * @CreateTime : 2024/4/19 16:45
  */
 public final class DSUtil {
-    //私有化构造器，禁止创建对象
     private DSUtil() {
         throw new AssertionError("Utility classes do not allow instantiation");
     }
 
-    /****************************************以上为私有构造器，以下为常量****************************************/
-    //地球半径,单位:m
     public static final double EARTH_RADIUS = 6371393;
 
-    //零到九字符串集合
     public static final List<String> ZERO_TO_NINE = Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
 
-    //时间格式化枚举
     public enum Pattern {
         yyyy_MM_dd_HH_mm_ss_SSS("yyyy-MM-dd HH:mm:ss.SSS"),
         yyyy_MM_dd_HH_mm_ss("yyyy-MM-dd HH:mm:ss"),
@@ -84,7 +79,6 @@ public final class DSUtil {
         }
     }
 
-    //特殊符号枚举
     public enum Symbol {
         DH(","),
         FH(";"),
@@ -107,7 +101,6 @@ public final class DSUtil {
             return val;
         }
 
-        /***************************************工具方法*************************************/
         public static String likeSQL(String aimStr) {
             return BFH.val() + aimStr + BFH.val();
         }
@@ -213,10 +206,9 @@ public final class DSUtil {
         }
     }
 
-    //正则表达式
     public enum Regex {
         ID_CARD("(^[0-9]{18}$)|(^[0-9]{17}(X|x)$)", "身份证号码"),
-        PHONE("(^(1)[0-9]{10}$)", "手机号"),
+        PHONE("(^1[0-9]{10}$)", "手机号"),
         ;
 
         private final String regexStr;
@@ -244,7 +236,6 @@ public final class DSUtil {
         }
     }
 
-    /*****************************************以上为常量，以下为工具函数*****************************************/
     public static double lngLatMeter(double srcLng, double srcLat, double aimLng, double aimLat) {
         return EARTH_RADIUS * Math.acos(Math.cos(Math.toRadians(srcLat)) * Math.cos(Math.toRadians(aimLat))
                 * Math.cos(Math.toRadians(srcLng) - Math.toRadians(aimLng))
@@ -411,7 +402,6 @@ public final class DSUtil {
         }
     }
 
-    /*****************************************以上为工具函数，以下为内部类*****************************************/
     public final static class JPATool {
         public static Predicate tjlToPredicate(List<Predicate> tjList, CriteriaQuery<?> query) {
             Predicate[] tjPredicate = new Predicate[tjList.size()];
