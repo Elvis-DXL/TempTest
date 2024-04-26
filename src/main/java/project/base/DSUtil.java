@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -375,6 +376,33 @@ public final class DSUtil {
         }
     }
 
+    public static int birthdayStrToAge(String birthdayStr) {
+        return birthdayStrToAgeByTime(birthdayStr, LocalDate.now());
+    }
+
+    public static int birthdayStrToAgeByTime(String birthdayStr, LocalDate localDate) {
+        if (EmptyTool.isEmpty(birthdayStr)) {
+            throw new NullPointerException("birthdayStr is null");
+        }
+        if (null == localDate) {
+            throw new NullPointerException("localDate is null");
+        }
+        LocalDate birthday = null;
+        try {
+            birthday = TimeTool.parseLD(birthdayStr, Pattern.yyyy_MM_dd);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("birthdayStr format error");
+        }
+        int bYear = birthday.getYear();
+        int bMonth = birthday.getMonthValue();
+        int bDay = birthday.getDayOfMonth();
+        int lYear = localDate.getYear();
+        int lMonth = localDate.getMonthValue();
+        int lDay = localDate.getDayOfMonth();
+        int age = lYear - bYear;
+        return lMonth < bMonth ? age - 1 : (lMonth > bMonth ? age : (lDay < bDay ? age - 1 : age));
+    }
+
     public final static class JPATool {
         public static Predicate tjlToPredicate(List<Predicate> tjList, CriteriaQuery<?> query) {
             Predicate[] tjPredicate = new Predicate[tjList.size()];
@@ -433,20 +461,60 @@ public final class DSUtil {
             return dayEnd(time.with(TemporalAdjusters.lastDayOfYear()));
         }
 
-        public static String formatTime(LocalDateTime time, String pattern) {
+        public static LocalDateTime dayStart(LocalDate time) {
+            return dayStart(time.atStartOfDay());
+        }
+
+        public static LocalDateTime dayEnd(LocalDate time) {
+            return dayEnd(time.atStartOfDay());
+        }
+
+        public static LocalDateTime monthStart(LocalDate time) {
+            return monthStart(time.atStartOfDay());
+        }
+
+        public static LocalDateTime monthEnd(LocalDate time) {
+            return monthEnd(time.atStartOfDay());
+        }
+
+        public static LocalDateTime yearStart(LocalDate time) {
+            return yearStart(time.atStartOfDay());
+        }
+
+        public static LocalDateTime yearEnd(LocalDate time) {
+            return yearEnd(time.atStartOfDay());
+        }
+
+        public static String formatLDT(LocalDateTime time, String pattern) {
             return DateTimeFormatter.ofPattern(pattern).format(time);
         }
 
-        public static String formatTime(LocalDateTime time, Pattern pattern) {
+        public static String formatLDT(LocalDateTime time, Pattern pattern) {
             return DateTimeFormatter.ofPattern(pattern.val()).format(time);
         }
 
-        public static LocalDateTime parseTime(String timeStr, String pattern) {
+        public static String formatLD(LocalDate time, String pattern) {
+            return DateTimeFormatter.ofPattern(pattern).format(time);
+        }
+
+        public static String formatLD(LocalDate time, Pattern pattern) {
+            return DateTimeFormatter.ofPattern(pattern.val()).format(time);
+        }
+
+        public static LocalDateTime parseLDT(String timeStr, String pattern) {
             return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern));
         }
 
-        public static LocalDateTime parseTime(String timeStr, Pattern pattern) {
+        public static LocalDateTime parseLDT(String timeStr, Pattern pattern) {
             return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern.val()));
+        }
+
+        public static LocalDate parseLD(String timeStr, String pattern) {
+            return LocalDate.parse(timeStr, DateTimeFormatter.ofPattern(pattern));
+        }
+
+        public static LocalDate parseLD(String timeStr, Pattern pattern) {
+            return LocalDate.parse(timeStr, DateTimeFormatter.ofPattern(pattern.val()));
         }
 
         public static LocalDateTime dateToLocal(Date date) {
