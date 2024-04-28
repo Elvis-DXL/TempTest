@@ -396,10 +396,10 @@ public final class DSUtil {
         } catch (Exception e) {
             throw new IllegalArgumentException("birthdayStr format error");
         }
-        return localDate.getMonthValue() < birthday.getMonthValue() ? localDate.getYear() - birthday.getYear() - 1
+        return Math.max(localDate.getMonthValue() < birthday.getMonthValue() ? localDate.getYear() - birthday.getYear() - 1
                 : (localDate.getMonthValue() > birthday.getMonthValue() ? localDate.getYear() - birthday.getYear()
                 : (localDate.getDayOfMonth() < birthday.getDayOfMonth() ?
-                localDate.getYear() - birthday.getYear() - 1 : localDate.getYear() - birthday.getYear()));
+                localDate.getYear() - birthday.getYear() - 1 : localDate.getYear() - birthday.getYear())), 0);
     }
 
     public final static class JPATool {
