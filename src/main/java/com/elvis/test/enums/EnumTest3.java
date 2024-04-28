@@ -1,7 +1,7 @@
 package com.elvis.test.enums;
 
+import com.alibaba.fastjson.JSONObject;
 import com.elvis.test.anno.FontTransMethod;
-import com.zx.core.tool.utils.JsonUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class EnumTest3 {
     public static void main(String[] args) {
-        System.out.println(JsonUtil.toJson(enumTrans));
+        System.out.println(JSONObject.toJSON(enumTrans));
     }
 
     private static final List<EnumTranPo> enumTrans;

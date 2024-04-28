@@ -1,7 +1,7 @@
 package com.elvis.test.newproject.utils;
 
-import com.elvis.commons.utils.ClassUtil;
 import com.elvis.test.newproject.enums.DatePattern;
+import project.base.DSUtil;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -72,8 +72,8 @@ public final class StaticUtil {
     }
 
     public static <T, K> K copySomeField(T src, K aim, String... fields) {
-        List<Field> srcFields = ClassUtil.allFields(src.getClass());
-        List<Field> aimFields = ClassUtil.allFields(aim.getClass());
+        List<Field> srcFields = DSUtil.classAllFields(src.getClass());
+        List<Field> aimFields = DSUtil.classAllFields(aim.getClass());
         Map<String, Field> srcMap = srcFields
                 .stream().collect(Collectors.toMap(Field::getName, it -> it, (k1, k2) -> k1));
         Map<String, Field> aimMap = aimFields

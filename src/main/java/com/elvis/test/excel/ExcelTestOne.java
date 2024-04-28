@@ -3,7 +3,7 @@ package com.elvis.test.excel;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
-import com.elvis.commons.utils.CollUtil;
+import project.base.DSUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,7 +42,7 @@ public class ExcelTestOne {
     }
 
     private static void multipleSheetExport(List<MultipleSheetExport> dataList, OutputStream outStream) {
-        if (CollUtil.isEmpty(dataList)) {
+        if (DSUtil.EmptyTool.isEmpty(dataList)) {
             return;
         }
         ExcelWriter excelWriter = EasyExcel.write(outStream).build();

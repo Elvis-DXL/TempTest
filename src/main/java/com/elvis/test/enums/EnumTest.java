@@ -1,6 +1,6 @@
 package com.elvis.test.enums;
 
-import com.zx.core.tool.utils.JsonUtil;
+import com.alibaba.fastjson.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class EnumTest {
     public static void main(String[] args) {
-        System.out.println(JsonUtil.toJson(enumTrans));
+        System.out.println(JSONObject.toJSON(enumTrans));
     }
 
     private static final List<EnumTranPo> enumTrans;

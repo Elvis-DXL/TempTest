@@ -1,6 +1,5 @@
 package com.elvis.test.file;
 
-import com.elvis.commons.utils.IOUtil;
 import com.elvis.test.newproject.utils.StaticUtil;
 
 import java.io.File;
@@ -10,6 +9,8 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static project.base.DSUtil.IOTool;
 
 /**
  * @Author : 慕君Dxl
@@ -41,7 +42,7 @@ public class FileTest {
 
             FileInputStream fis = new FileInputStream(item);
             FileOutputStream fos = new FileOutputStream(aimDir + newName);
-            IOUtil.inToOut(fis, fos);
+            IOTool.inToOut(fis, fos);
             index++;
         }
         System.out.println("运行结束！");
@@ -55,9 +56,9 @@ public class FileTest {
     }
 
     private static String constrNewName(String name) {
-        List<String> aimList = Arrays.asList("(18禁アニメ)", "(無修正)", "(有修正)", "(中文无码)","(最新99bb)",
-                "(最新Queen8)","(最新虎虎虎)","(最新一本道)","[1月新番]","[次元字幕组]","[2月新番]","[魔穗字幕组]",
-                "[TMA]","[lancarter][sex8.cc]");
+        List<String> aimList = Arrays.asList("(18禁アニメ)", "(無修正)", "(有修正)", "(中文无码)", "(最新99bb)",
+                "(最新Queen8)", "(最新虎虎虎)", "(最新一本道)", "[1月新番]", "[次元字幕组]", "[2月新番]", "[魔穗字幕组]",
+                "[TMA]", "[lancarter][sex8.cc]");
         int index = 0;
         while (true) {
             String aimStr = aimList.get(index);
@@ -96,7 +97,7 @@ public class FileTest {
             }
             FileInputStream fis = new FileInputStream(item);
             FileOutputStream fos = new FileOutputStream(aimDir + name);
-            IOUtil.inToOut(fis, fos);
+            IOTool.inToOut(fis, fos);
             index++;
         }
         System.out.println("运行结束！");
