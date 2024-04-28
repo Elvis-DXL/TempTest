@@ -408,6 +408,18 @@ public final class DSUtil {
             return query.where(tjList.toArray(tjPredicate)).getRestriction();
         }
 
+        public static Predicate tjlToPredicate(List<Predicate> tjList, OrderItem defaultSort, List<OrderItem> sortList,
+                                               Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            Predicate[] tjPredicate = new Predicate[tjList.size()];
+            return query.where(tjList.toArray(tjPredicate)).orderBy(getOrderArr(defaultSort, sortList, root, cb))
+                    .getRestriction();
+        }
+
+        public static Predicate listToOnePredicate(List<Predicate> list, CriteriaBuilder cb, boolean isAnd) {
+            Predicate[] predicateArr = new Predicate[list.size()];
+            return isAnd ? cb.and(list.toArray(predicateArr)) : cb.or(list.toArray(predicateArr));
+        }
+
         private static Order[] getOrderArr(OrderItem defaultSort, List<OrderItem> sortList, Root<?> root, CriteriaBuilder cb) {
             List<Order> orderList = new ArrayList<>();
             if (EmptyTool.isEmpty(sortList)) {
@@ -420,18 +432,6 @@ public final class DSUtil {
             }
             Order[] orderArr = new Order[orderList.size()];
             return orderList.toArray(orderArr);
-        }
-
-        public static Predicate tjlToPredicate(List<Predicate> tjList, OrderItem defaultSort, List<OrderItem> sortList,
-                                               Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-            Predicate[] tjPredicate = new Predicate[tjList.size()];
-            return query.where(tjList.toArray(tjPredicate)).orderBy(getOrderArr(defaultSort, sortList, root, cb))
-                    .getRestriction();
-        }
-
-        public static Predicate listToOnePredicate(List<Predicate> list, CriteriaBuilder cb, boolean isAnd) {
-            Predicate[] predicateArr = new Predicate[list.size()];
-            return isAnd ? cb.and(list.toArray(predicateArr)) : cb.or(list.toArray(predicateArr));
         }
     }
 
@@ -621,36 +621,6 @@ public final class DSUtil {
         }
     }
 
-    public static class PageReq {
-        protected Integer pageNum;
-        protected Integer pageSize;
-        protected List<OrderItem> orderList;
-
-        public Integer getPageNum() {
-            return pageNum;
-        }
-
-        public void setPageNum(Integer pageNum) {
-            this.pageNum = pageNum;
-        }
-
-        public Integer getPageSize() {
-            return pageSize;
-        }
-
-        public void setPageSize(Integer pageSize) {
-            this.pageSize = pageSize;
-        }
-
-        public List<OrderItem> getOrderList() {
-            return orderList;
-        }
-
-        public void setOrderList(List<OrderItem> orderList) {
-            this.orderList = orderList;
-        }
-    }
-
     public final static class PageResp<T> {
         private Integer pageNum;
         private Integer pageSize;
@@ -696,6 +666,37 @@ public final class DSUtil {
 
         public void setDataList(List<T> dataList) {
             this.dataList = dataList;
+        }
+
+    }
+
+    public static class PageReq {
+        protected Integer pageNum;
+        protected Integer pageSize;
+        protected List<OrderItem> orderList;
+
+        public Integer getPageNum() {
+            return pageNum;
+        }
+
+        public void setPageNum(Integer pageNum) {
+            this.pageNum = pageNum;
+        }
+
+        public Integer getPageSize() {
+            return pageSize;
+        }
+
+        public void setPageSize(Integer pageSize) {
+            this.pageSize = pageSize;
+        }
+
+        public List<OrderItem> getOrderList() {
+            return orderList;
+        }
+
+        public void setOrderList(List<OrderItem> orderList) {
+            this.orderList = orderList;
         }
     }
 }
