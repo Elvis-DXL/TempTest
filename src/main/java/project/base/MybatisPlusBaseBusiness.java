@@ -26,58 +26,58 @@ public abstract class MybatisPlusBaseBusiness<ID extends Serializable, ENTITY,
 
     protected ENTITY getById(ID id) {
         if (null == id) {
-            this.throwBusinessException("传入ID为空");
+            throwBusinessException("传入ID为空");
         }
         ENTITY entity = dao.selectById(id);
         if (null == entity) {
-            this.throwBusinessException("传入ID错误");
+            throwBusinessException("传入ID错误");
         }
         return entity;
     }
 
     protected ENTITY_VO add(ADD_CMD cmd) {
-        ENTITY entity = this.addToEntity(cmd);
-        this.authExist(entity);
-        entity = this.newObjSetId(entity);
+        ENTITY entity = addToEntity(cmd);
+        authExist(entity);
+        entity = newObjSetId(entity);
         dao.insert(entity);
-        return this.entityToVo(Collections.singletonList(entity), null).get(0);
+        return entityToVo(Collections.singletonList(entity), null).get(0);
     }
 
     protected ENTITY_VO delete(ID id) {
-        ENTITY entity = this.getById(id);
-        entity = this.dealDelete(entity);
-        return this.entityToVo(Collections.singletonList(entity), null).get(0);
+        ENTITY entity = getById(id);
+        entity = dealDelete(entity);
+        return entityToVo(Collections.singletonList(entity), null).get(0);
     }
 
     protected ENTITY_VO modify(MODIFY_CMD cmd) {
-        ENTITY entity = this.modifyInOldEntity(cmd, this.getById(this.getModifyCmdId(cmd)));
-        this.authExist(entity);
+        ENTITY entity = modifyInOldEntity(cmd, getById(getModifyCmdId(cmd)));
+        authExist(entity);
         dao.updateById(entity);
-        return this.entityToVo(Collections.singletonList(entity), null).get(0);
+        return entityToVo(Collections.singletonList(entity), null).get(0);
     }
 
     protected ENTITY_VO query(ID id) {
-        return this.entityToVo(Collections.singletonList(this.getById(id)), null).get(0);
+        return entityToVo(Collections.singletonList(getById(id)), null).get(0);
     }
 
     protected List<ENTITY_VO> list(QUERY_CMD cmd) {
-        return this.entityToVo(dao.selectList(this.cmdToWrapper(cmd)), cmd);
+        return entityToVo(dao.selectList(cmdToWrapper(cmd)), cmd);
     }
 
     protected DSUtil.PageResp<ENTITY_VO> page(QUERY_CMD cmd) {
-        IPage<ENTITY> page = dao.selectPage(new Page<>(cmd.getPageNum(), cmd.getPageSize()),
-                this.cmdToWrapper(cmd));
+        IPage<ENTITY> page = dao
+                .selectPage(new Page<>(cmd.getPageNum(), cmd.getPageSize()), cmdToWrapper(cmd));
         DSUtil.PageResp<ENTITY_VO> result = new DSUtil.PageResp<>();
         result.setPageNum((int) page.getCurrent());
         result.setPageSize((int) page.getSize());
         result.setTotalNum((int) page.getTotal());
         result.setTotalPage((int) page.getPages());
-        result.setDataList(this.entityToVo(page.getRecords(), cmd));
+        result.setDataList(entityToVo(page.getRecords(), cmd));
         return result;
     }
 
     protected LambdaQueryWrapper<ENTITY> cmdToWrapper(QUERY_CMD cmd) {
-        return this.cmdInWrapper(Wrappers.<ENTITY>lambdaQuery(), cmd);
+        return cmdInWrapper(Wrappers.<ENTITY>lambdaQuery(), cmd);
     }
 
     /*************************************************抽象方法*************************************************/
