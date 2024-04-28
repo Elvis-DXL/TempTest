@@ -211,8 +211,8 @@ public final class DSUtil {
             if (null == srcList || srcList.size() == 0) {
                 return null;
             }
-            List<String> strList = srcList.stream().map(function).map(Object::toString).collect(Collectors.toList());
-            return this.join(strList, includeStartAndEnd);
+            return this.join(srcList.stream().map(function).map(Object::toString).collect(Collectors.toList()),
+                    includeStartAndEnd);
         }
     }
 
