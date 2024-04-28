@@ -15,8 +15,8 @@ import java.util.List;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/4/25 14:54
  */
-public abstract class MybatisPlusBaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO,
-        ADD_CMD, MODIFY_CMD, QUERY_CMD extends DSUtil.PageReq, DAO extends BaseMapper<ENTITY>> {
+public abstract class MybatisPlusBaseBusiness<ID extends Serializable, ENTITY,
+        ENTITY_VO, ADD_CMD, MODIFY_CMD, QUERY_CMD extends DSUtil.PageReq, DAO extends BaseMapper<ENTITY>> {
     @Autowired
     protected DAO dao;
 
