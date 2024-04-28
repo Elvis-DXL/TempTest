@@ -1,4 +1,4 @@
-package com.elvis.test.projectbase.util;
+package project.base.handle;
 
 import org.springframework.stereotype.Component;
 
@@ -7,5 +7,6 @@ import org.springframework.stereotype.Component;
  * @CreateTime : 2024/4/11 17:16
  */
 @Component
-public class ETVHandle {
+public final class ETVHandle {
+
 }
