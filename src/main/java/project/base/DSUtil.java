@@ -667,7 +667,6 @@ public final class DSUtil {
         public void setDataList(List<T> dataList) {
             this.dataList = dataList;
         }
-
     }
 
     public static class PageReq {
