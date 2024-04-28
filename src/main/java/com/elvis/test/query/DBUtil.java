@@ -193,14 +193,14 @@ public class DBUtil {
         Map<String, Field> fieldMap = fields
                 .stream().collect(Collectors.toMap(Field::getName, it -> it, (k1, k2) -> k1));
         Map<String, String> fieldColMap = this.consUpdFieldColMap(fields);
-        String idCol = fieldColMap.get("id");
+        String idCol = fieldColMap.get("id_column");
         if (null == idCol) {
             log.info("实体对象没有标注主键ID字段");
             return;
         }
         Set<String> keySet = fieldColMap.keySet();
         List<String> srcFields = new ArrayList<>(keySet);
-        srcFields.remove("id");
+        srcFields.remove("id_column");
         srcFields.remove("id_field");
         List<String> aimFieldList = null;
         if (null != fieldName && fieldName.length != 0) {
@@ -294,7 +294,7 @@ public class DBUtil {
             String colName = null != column ? column.name() : this.getColNameByFieldName(it.getName());
             Id id = it.getAnnotation(Id.class);
             if (null != id) {
-                map.put("id", colName);
+                map.put("id_column", colName);
                 map.put("id_field", it.getName());
             } else {
                 map.put(it.getName(), colName);
