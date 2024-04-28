@@ -86,6 +86,10 @@ public final class DSUtil {
     public enum Symbol {
         DH(","),
         FH(";"),
+        XH("*"),
+        JH("#"),
+        BL("~"),
+        WH("?"),
         XHX("_"),
         ZHX("-"),
         YWD("."),
@@ -94,6 +98,8 @@ public final class DSUtil {
         RMB("￥"),
         ADF("@"),
         ZXX("/"),
+        HAT("^"),
+        ZDA("&"),
         ;
         private final String val;
 
