@@ -596,6 +596,13 @@ public final class DSUtil {
             }
             consumer.accept(str);
         }
+
+        public static <T> void isNotNull(T obj, Consumer<T> consumer) {
+            if (null == obj) {
+                return;
+            }
+            consumer.accept(obj);
+        }
     }
 
     public final static class OrderItem {

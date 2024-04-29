@@ -15,6 +15,8 @@ import java.util.Date;
 @Table(name = "bus_medical_record")
 public class DBObj implements Serializable {
 
+    private Integer id;
+
     @Column(name = "create_time", columnDefinition = "datetime COMMENT '创建时间'")
     private Date createTime;
 
