@@ -663,15 +663,17 @@ public final class DSUtil {
                 return null;
             }
             verifyIdCardStr(idCardStr);
-            return birthdayStrToCurrAge(TimeTool.formatLD(getBirthday(idCardStr), Pattern.yyyy_MM_dd));
+            return birthdayStrToCurrAge(TimeTool.formatLD(TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd),
+                    Pattern.yyyy_MM_dd));
         }
 
         public static Integer getAgeByTime(String idCardStr, LocalDate aimTime) {
-            if (EmptyTool.isEmpty(idCardStr)) {
+            if (EmptyTool.isEmpty(idCardStr) || null == aimTime) {
                 return null;
             }
             verifyIdCardStr(idCardStr);
-            return birthdayStrToAgeByTime(TimeTool.formatLD(getBirthday(idCardStr), Pattern.yyyy_MM_dd), aimTime);
+            return birthdayStrToAgeByTime(TimeTool.formatLD(TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd),
+                    Pattern.yyyy_MM_dd), aimTime);
         }
     }
 
