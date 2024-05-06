@@ -252,6 +252,15 @@ public final class DSUtil {
                 + Math.sin(Math.toRadians(srcLat)) * Math.sin(Math.toRadians(aimLat)));
     }
 
+    public static double lngLatMeter(String srcLng, String srcLat, String aimLng, String aimLat) {
+        if (EmptyTool.isEmpty(srcLng) || EmptyTool.isEmpty(srcLat)
+                || EmptyTool.isEmpty(aimLng) || EmptyTool.isEmpty(aimLat)) {
+            throw new IllegalArgumentException("lng or lat is empty");
+        }
+        return lngLatMeter(Double.parseDouble(srcLng), Double.parseDouble(srcLat),
+                Double.parseDouble(aimLng), Double.parseDouble(aimLat));
+    }
+
     public static List<Field> classAllFields(Class clazz) {
         List<Field> result = new ArrayList<>();
         do {
