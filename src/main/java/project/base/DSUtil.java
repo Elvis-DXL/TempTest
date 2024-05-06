@@ -202,8 +202,7 @@ public final class DSUtil {
 
     public enum Regex {
         ID_CARD("(^[0-9]{18}$)|(^[0-9]{17}(X|x)$)", "身份证号码"),
-        MOBILE_PHONE("(^1[0-9]{10}$)", "手机号"),
-        ;
+        MOBILE_PHONE("(^1[0-9]{10}$)", "手机号");
         private final String regexStr;
         private final String desc;
 
@@ -588,7 +587,7 @@ public final class DSUtil {
             }
         }
     }
-    
+
     public final static class EmptyTool {
         private EmptyTool() {
             throw new AssertionError("Tool classes do not allow instantiation");
