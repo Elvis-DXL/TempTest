@@ -70,8 +70,7 @@ public final class DSUtil {
         x_yyyy_MM("yyyy/MM"),
         xh_yyyy_MM_dd_HH("yyyy_MM_dd_HH"),
         xh_yyyy_MM_dd("yyyy_MM_dd"),
-        xh_yyyy_MM("yyyy_MM"),
-        ;
+        xh_yyyy_MM("yyyy_MM");
         private final String val;
 
         Pattern(String val) {
@@ -84,23 +83,8 @@ public final class DSUtil {
     }
 
     public enum Symbol {
-        DH(","),
-        FH(";"),
-        XH("*"),
-        JH("#"),
-        BL("~"),
-        WH("?"),
-        XHX("_"),
-        ZHX("-"),
-        YWD("."),
-        BFH("%"),
-        MYF("$"),
-        RMB("￥"),
-        ADF("@"),
-        ZXX("/"),
-        HAT("^"),
-        ZDA("&"),
-        ;
+        DH(","), FH(";"), XH("*"), JH("#"), BL("~"), WH("?"), XHX("_"), ZHX("-"),
+        YWD("."), BFH("%"), MYF("$"), RMB("￥"), ADF("@"), ZXX("/"), HAT("^"), ZDA("&");
         private final String val;
 
         Symbol(String val) {
@@ -242,6 +226,25 @@ public final class DSUtil {
 
         public boolean verifyFail(String aimStr) {
             return !this.verify(aimStr);
+        }
+    }
+
+    public enum Gender {
+        NAN(1, "男"), NV(0, "女");
+        private final Integer val;
+        private final String desc;
+
+        Gender(Integer val, String desc) {
+            this.val = val;
+            this.desc = desc;
+        }
+
+        public Integer val() {
+            return val;
+        }
+
+        public String desc() {
+            return desc;
         }
     }
 
@@ -397,12 +400,12 @@ public final class DSUtil {
         return birthdayStrToAgeByTime(birthdayStr, LocalDate.now());
     }
 
-    public static int birthdayStrToAgeByTime(String birthdayStr, LocalDate localDate) {
+    public static int birthdayStrToAgeByTime(String birthdayStr, LocalDate aimTime) {
         if (EmptyTool.isEmpty(birthdayStr)) {
             throw new NullPointerException("birthdayStr is null");
         }
-        if (null == localDate) {
-            throw new NullPointerException("localDate is null");
+        if (null == aimTime) {
+            throw new NullPointerException("aimTime is null");
         }
         LocalDate birthday = null;
         try {
@@ -410,13 +413,17 @@ public final class DSUtil {
         } catch (Exception e) {
             throw new IllegalArgumentException("birthdayStr format error");
         }
-        return Math.max(localDate.getMonthValue() < birthday.getMonthValue() ? localDate.getYear() - birthday.getYear() - 1
-                : (localDate.getMonthValue() > birthday.getMonthValue() ? localDate.getYear() - birthday.getYear()
-                : (localDate.getDayOfMonth() < birthday.getDayOfMonth() ?
-                localDate.getYear() - birthday.getYear() - 1 : localDate.getYear() - birthday.getYear())), 0);
+        return Math.max(aimTime.getMonthValue() < birthday.getMonthValue() ? aimTime.getYear() - birthday.getYear() - 1
+                : (aimTime.getMonthValue() > birthday.getMonthValue() ? aimTime.getYear() - birthday.getYear()
+                : (aimTime.getDayOfMonth() < birthday.getDayOfMonth() ?
+                aimTime.getYear() - birthday.getYear() - 1 : aimTime.getYear() - birthday.getYear())), 0);
     }
 
     public final static class JPATool {
+        private JPATool() {
+            throw new AssertionError("Tool classes do not allow instantiation");
+        }
+
         public static Predicate tjlToPredicate(List<Predicate> tjList, CriteriaQuery<?> query) {
             Predicate[] tjPredicate = new Predicate[tjList.size()];
             return query.where(tjList.toArray(tjPredicate)).getRestriction();
@@ -450,6 +457,10 @@ public final class DSUtil {
     }
 
     public final static class TimeTool {
+        private TimeTool() {
+            throw new AssertionError("Tool classes do not allow instantiation");
+        }
+
         public static LocalDateTime dayStart(LocalDateTime time) {
             return time.withHour(0).withMinute(0).withSecond(0).withNano(0);
         }
@@ -540,6 +551,10 @@ public final class DSUtil {
     }
 
     public final static class IOTool {
+        private IOTool() {
+            throw new AssertionError("Tool classes do not allow instantiation");
+        }
+
         public static void inToOut(InputStream inStream, OutputStream outStream) {
             byte[] cache = new byte[1024 * 1024 * 20];
             try {
@@ -573,8 +588,12 @@ public final class DSUtil {
             }
         }
     }
-
+    
     public final static class EmptyTool {
+        private EmptyTool() {
+            throw new AssertionError("Tool classes do not allow instantiation");
+        }
+
         public static boolean isEmpty(Collection<?> coll) {
             return coll == null || coll.isEmpty();
         }
@@ -610,6 +629,50 @@ public final class DSUtil {
                 return;
             }
             consumer.accept(obj);
+        }
+    }
+
+    public final static class IdCardTool {
+        private IdCardTool() {
+            throw new AssertionError("Tool classes do not allow instantiation");
+        }
+
+        private static void verifyIdCardStr(String idCardStr) {
+            if (Regex.ID_CARD.verifyFail(idCardStr)) {
+                throw new IllegalArgumentException("idCardStr format error");
+            }
+        }
+
+        public static Gender getSex(String idCardStr) {
+            if (EmptyTool.isEmpty(idCardStr)) {
+                return null;
+            }
+            verifyIdCardStr(idCardStr);
+            return Integer.parseInt(idCardStr.substring(16, 17)) % 2 == 0 ? Gender.NV : Gender.NAN;
+        }
+
+        public static LocalDate getBirthday(String idCardStr) {
+            if (EmptyTool.isEmpty(idCardStr)) {
+                return null;
+            }
+            verifyIdCardStr(idCardStr);
+            return TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd);
+        }
+
+        public static Integer getCurrAge(String idCardStr) {
+            if (EmptyTool.isEmpty(idCardStr)) {
+                return null;
+            }
+            verifyIdCardStr(idCardStr);
+            return birthdayStrToCurrAge(TimeTool.formatLD(getBirthday(idCardStr), Pattern.yyyy_MM_dd));
+        }
+
+        public static Integer getAgeByTime(String idCardStr, LocalDate aimTime) {
+            if (EmptyTool.isEmpty(idCardStr)) {
+                return null;
+            }
+            verifyIdCardStr(idCardStr);
+            return birthdayStrToAgeByTime(TimeTool.formatLD(getBirthday(idCardStr), Pattern.yyyy_MM_dd), aimTime);
         }
     }
 
