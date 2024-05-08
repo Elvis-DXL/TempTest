@@ -223,8 +223,16 @@ public final class DSUtil {
             return desc;
         }
 
+        public static boolean verify(String aimStr, String regexStr) {
+            return EmptyTool.isNotEmpty(aimStr) && EmptyTool.isNotEmpty(regexStr) && aimStr.matches(regexStr);
+        }
+
+        public static boolean verifyFail(String aimStr, String regexStr) {
+            return !verify(aimStr, regexStr);
+        }
+
         public boolean verify(String aimStr) {
-            return null != aimStr && aimStr.length() != 0 && aimStr.matches(this.getRegexStr());
+            return EmptyTool.isNotEmpty(aimStr) && aimStr.matches(this.getRegexStr());
         }
 
         public boolean verifyFail(String aimStr) {
