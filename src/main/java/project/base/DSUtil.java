@@ -71,6 +71,7 @@ public final class DSUtil {
         xh_yyyy_MM_dd_HH("yyyy_MM_dd_HH"),
         xh_yyyy_MM_dd("yyyy_MM_dd"),
         xh_yyyy_MM("yyyy_MM");
+
         private final String val;
 
         Pattern(String val) {
@@ -85,6 +86,7 @@ public final class DSUtil {
     public enum Symbol {
         DH(","), FH(";"), XH("*"), JH("#"), BL("~"), WH("?"), XHX("_"), ZHX("-"),
         YWD("."), BFH("%"), MYF("$"), RMB("￥"), ADF("@"), ZXX("/"), HAT("^"), ZDA("&");
+
         private final String val;
 
         Symbol(String val) {
@@ -203,6 +205,7 @@ public final class DSUtil {
     public enum Regex {
         ID_CARD("(^[0-9]{18}$)|(^[0-9]{17}(X|x)$)", "身份证号码"),
         MOBILE_PHONE("(^1[0-9]{10}$)", "手机号");
+
         private final String regexStr;
         private final String desc;
 
@@ -230,6 +233,7 @@ public final class DSUtil {
 
     public enum Gender {
         NAN(1, "男"), NV(0, "女");
+
         private final Integer val;
         private final String desc;
 
@@ -416,6 +420,28 @@ public final class DSUtil {
                 : (aimTime.getMonthValue() > birthday.getMonthValue() ? aimTime.getYear() - birthday.getYear()
                 : (aimTime.getDayOfMonth() < birthday.getDayOfMonth() ?
                 aimTime.getYear() - birthday.getYear() - 1 : aimTime.getYear() - birthday.getYear())), 0);
+    }
+
+    public static List<TreeNode> formatTree(List<TreeNode> treeNodeList) {
+        if (EmptyTool.isEmpty(treeNodeList)) {
+            return new ArrayList<>();
+        }
+        List<TreeNode> result = new ArrayList<>();
+        Map<String, TreeNode> tmpMap = treeNodeList
+                .stream().collect(Collectors.toMap(TreeNode::getSelfId, it -> it, (k1, k2) -> k1));
+        List<TreeNode> sunList;
+        for (TreeNode item : treeNodeList) {
+            if (EmptyTool.isNotEmpty(item.getParentId()) && null != mapGet(tmpMap, item.getParentId())
+                    && !item.getSelfId().equals(item.getParentId())) {
+                sunList = null == mapGet(tmpMap, item.getParentId()).getSunList() ?
+                        new ArrayList<>() : mapGet(tmpMap, item.getParentId()).getSunList();
+                sunList.add(item);
+                mapGet(tmpMap, item.getParentId()).setSunList(sunList);
+            } else {
+                result.add(item);
+            }
+        }
+        return result;
     }
 
     public final static class JPATool {
@@ -674,6 +700,94 @@ public final class DSUtil {
             verifyIdCardStr(idCardStr);
             return birthdayStrToAgeByTime(TimeTool.formatLD(TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd),
                     Pattern.yyyy_MM_dd), aimTime);
+        }
+    }
+
+    public final static class TreeNode {
+        private String selfId;
+        private String selfName;
+        private String selfType;
+        private String parentId;
+        private List<TreeNode> sunList;
+        private Object selfObj;
+
+        public TreeNode() {
+        }
+
+        public TreeNode(String selfId, String selfName, String parentId) {
+            this.selfId = selfId;
+            this.selfName = selfName;
+            this.parentId = parentId;
+        }
+
+        public TreeNode(String selfId, String selfName, String selfType, String parentId) {
+            this.selfId = selfId;
+            this.selfName = selfName;
+            this.selfType = selfType;
+            this.parentId = parentId;
+        }
+
+        public TreeNode(String selfId, String selfName, String selfType, String parentId, Object selfObj) {
+            this.selfId = selfId;
+            this.selfName = selfName;
+            this.selfType = selfType;
+            this.parentId = parentId;
+            this.selfObj = selfObj;
+        }
+
+        public TreeNode(String selfId, String selfName, String parentId, Object selfObj) {
+            this.selfId = selfId;
+            this.selfName = selfName;
+            this.parentId = parentId;
+            this.selfObj = selfObj;
+        }
+
+        public String getSelfId() {
+            return selfId;
+        }
+
+        public void setSelfId(String selfId) {
+            this.selfId = selfId;
+        }
+
+        public String getSelfName() {
+            return selfName;
+        }
+
+        public void setSelfName(String selfName) {
+            this.selfName = selfName;
+        }
+
+        public String getSelfType() {
+            return selfType;
+        }
+
+        public void setSelfType(String selfType) {
+            this.selfType = selfType;
+        }
+
+        public String getParentId() {
+            return parentId;
+        }
+
+        public void setParentId(String parentId) {
+            this.parentId = parentId;
+        }
+
+        public List<TreeNode> getSunList() {
+            return sunList;
+        }
+
+        public void setSunList(List<TreeNode> sunList) {
+            this.sunList = sunList;
+        }
+
+        public Object getSelfObj() {
+            return selfObj;
+        }
+
+        public void setSelfObj(Object selfObj) {
+            this.selfObj = selfObj;
         }
     }
 
