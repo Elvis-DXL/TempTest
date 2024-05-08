@@ -84,8 +84,9 @@ public final class DSUtil {
     }
 
     public enum Symbol {
-        DH(","), FH(";"), XH("*"), JH("#"), BL("~"), WH("?"), XHX("_"), ZHX("-"),
-        YWD("."), BFH("%"), MYF("$"), RMB("￥"), ADF("@"), ZXX("/"), HAT("^"), ZDA("&");
+        DH(","), FH(";"), XH("*"), SX("|"), JH("#"), BL("~"), WH("?"), DY(">"), XY("<"), DENGY("="), JIAH("+"),
+        XHX("_"), ZHX("-"), ZKH("("), YKH(")"), YWD("."), ZWZKH("（"), ZWYKH("）"), BFH("%"), MYF("$"), RMB("￥"),
+        ADF("@"), ZXX("/"), HAT("^"), ZDA("&"), ZZKH("["), YZKH("]"), ZDKH("{"), YDKH("}"), ZWZZKH("【"), ZWYZKH("】");
 
         private final String val;
 
