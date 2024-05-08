@@ -353,7 +353,7 @@ public final class DSUtil {
     }
 
     public static <T, K> T mapGet(Map<K, T> srcMap, K aimKey) {
-        return null == srcMap || srcMap.isEmpty() || null == aimKey ? null : srcMap.get(aimKey);
+        return null == srcMap || srcMap.isEmpty() ? null : srcMap.get(aimKey);
     }
 
     public static String desStr(String aimStr, int start, int mid, int end) {
