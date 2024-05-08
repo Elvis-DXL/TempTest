@@ -399,16 +399,30 @@ public final class DSUtil {
         }
     }
 
+    public static int birthdayToCurrAge(LocalDate birthday) {
+        return birthdayToAgeByTime(birthday, LocalDate.now());
+    }
+
+    public static int birthdayToAgeByTime(LocalDate birthday, LocalDate aimTime) {
+        if (null == birthday) {
+            throw new NullPointerException("birthday must not be null");
+        }
+        if (null == aimTime) {
+            throw new NullPointerException("aimTime must not be null");
+        }
+        return Math.max(aimTime.getMonthValue() < birthday.getMonthValue() ? aimTime.getYear() - birthday.getYear() - 1
+                : (aimTime.getMonthValue() > birthday.getMonthValue() ? aimTime.getYear() - birthday.getYear()
+                : (aimTime.getDayOfMonth() < birthday.getDayOfMonth() ?
+                aimTime.getYear() - birthday.getYear() - 1 : aimTime.getYear() - birthday.getYear())), 0);
+    }
+
     public static int birthdayStrToCurrAge(String birthdayStr) {
         return birthdayStrToAgeByTime(birthdayStr, LocalDate.now());
     }
 
     public static int birthdayStrToAgeByTime(String birthdayStr, LocalDate aimTime) {
         if (EmptyTool.isEmpty(birthdayStr)) {
-            throw new NullPointerException("birthdayStr must not be null");
-        }
-        if (null == aimTime) {
-            throw new NullPointerException("aimTime must not be null");
+            throw new NullPointerException("birthdayStr must not be empty");
         }
         LocalDate birthday = null;
         try {
@@ -416,10 +430,7 @@ public final class DSUtil {
         } catch (Exception e) {
             throw new IllegalArgumentException("birthdayStr format error");
         }
-        return Math.max(aimTime.getMonthValue() < birthday.getMonthValue() ? aimTime.getYear() - birthday.getYear() - 1
-                : (aimTime.getMonthValue() > birthday.getMonthValue() ? aimTime.getYear() - birthday.getYear()
-                : (aimTime.getDayOfMonth() < birthday.getDayOfMonth() ?
-                aimTime.getYear() - birthday.getYear() - 1 : aimTime.getYear() - birthday.getYear())), 0);
+        return birthdayToAgeByTime(birthday, aimTime);
     }
 
     public static List<TreeNode> formatTree(List<TreeNode> treeNodeList) {
@@ -689,8 +700,7 @@ public final class DSUtil {
                 return null;
             }
             verifyIdCardStr(idCardStr);
-            return birthdayStrToCurrAge(TimeTool.formatLD(TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd),
-                    Pattern.yyyy_MM_dd));
+            return birthdayToCurrAge(TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd));
         }
 
         public static Integer getAgeByTime(String idCardStr, LocalDate aimTime) {
@@ -698,8 +708,7 @@ public final class DSUtil {
                 return null;
             }
             verifyIdCardStr(idCardStr);
-            return birthdayStrToAgeByTime(TimeTool.formatLD(TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd),
-                    Pattern.yyyy_MM_dd), aimTime);
+            return birthdayToAgeByTime(TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd), aimTime);
         }
     }
 
