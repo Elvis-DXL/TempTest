@@ -456,6 +456,21 @@ public final class DSUtil {
         return result;
     }
 
+    public static int minLackOrNext(List<Integer> srcList) {
+        if (EmptyTool.isEmpty(srcList)) {
+            return 1;
+        }
+        srcList.sort(Integer::compare);
+        Integer max = srcList.get(srcList.size() - 1);
+        for (int idx = 1; idx <= max; idx++) {
+            if (srcList.contains(idx)) {
+                continue;
+            }
+            return idx;
+        }
+        return max + 1;
+    }
+
     public final static class JPATool {
         private JPATool() {
             throw new AssertionError("Tool classes do not allow instantiation");
