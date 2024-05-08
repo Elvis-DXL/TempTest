@@ -26,9 +26,9 @@ public final class DSUtil {
         throw new AssertionError("Utility classes do not allow instantiation");
     }
 
-    public static final double EARTH_RADIUS_METER = 6371393;
+    private static final double EARTH_RADIUS_METER = 6371393D;
 
-    public static final List<String> ZERO_TO_NINE = Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+    private static final List<String> ZERO_TO_NINE = Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
 
     public enum Pattern {
         yyyy_MM_dd_HH_mm_ss_SSS("yyyy-MM-dd HH:mm:ss.SSS"),
