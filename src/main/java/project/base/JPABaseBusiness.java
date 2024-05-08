@@ -66,8 +66,7 @@ public abstract class JPABaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO
     }
 
     protected DSUtil.PageResp<ENTITY_VO> page(QUERY_CMD cmd) {
-        Page<ENTITY> page = dao
-                .findAll(cmdToSpecification(cmd), PageRequest.of(cmd.getPageNum() - 1, cmd.getPageSize()));
+        Page<ENTITY> page = dao.findAll(cmdToSpecification(cmd), PageRequest.of(cmd.getPageNum() - 1, cmd.getPageSize()));
         DSUtil.PageResp<ENTITY_VO> result = new DSUtil.PageResp<>();
         result.setPageNum(page.getNumber() + 1);
         result.setPageSize(page.getSize());
@@ -77,16 +76,19 @@ public abstract class JPABaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO
         return result;
     }
 
-    /*************************************************抽象方法*************************************************/
-    protected abstract ENTITY newObjSetId(ENTITY entity);
+    protected ENTITY newObjSetId(ENTITY entity) {
+        return entity;
+    }
 
+    protected void authExist(ENTITY entity) {
+    }
+
+    /*************************************************抽象方法*************************************************/
     protected abstract ENTITY addToEntity(ADD_CMD cmd);
 
     protected abstract ENTITY modifyInOldEntity(MODIFY_CMD cmd, ENTITY oldEntity);
 
     protected abstract ID getModifyCmdId(MODIFY_CMD cmd);
-
-    protected abstract void authExist(ENTITY entity);
 
     protected abstract ENTITY dealDelete(ENTITY entity);
 

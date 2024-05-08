@@ -65,8 +65,7 @@ public abstract class MybatisPlusBaseBusiness<ID extends Serializable, ENTITY,
     }
 
     protected DSUtil.PageResp<ENTITY_VO> page(QUERY_CMD cmd) {
-        IPage<ENTITY> page = dao
-                .selectPage(new Page<>(cmd.getPageNum(), cmd.getPageSize()), cmdToWrapper(cmd));
+        IPage<ENTITY> page = dao.selectPage(new Page<>(cmd.getPageNum(), cmd.getPageSize()), cmdToWrapper(cmd));
         DSUtil.PageResp<ENTITY_VO> result = new DSUtil.PageResp<>();
         result.setPageNum((int) page.getCurrent());
         result.setPageSize((int) page.getSize());
@@ -80,6 +79,9 @@ public abstract class MybatisPlusBaseBusiness<ID extends Serializable, ENTITY,
         return cmdInWrapper(Wrappers.<ENTITY>lambdaQuery(), cmd);
     }
 
+    protected void authExist(ENTITY entity) {
+    }
+
     /*************************************************抽象方法*************************************************/
     protected abstract ENTITY newObjSetId(ENTITY entity);
 
@@ -88,8 +90,6 @@ public abstract class MybatisPlusBaseBusiness<ID extends Serializable, ENTITY,
     protected abstract ENTITY modifyInOldEntity(MODIFY_CMD cmd, ENTITY oldEntity);
 
     protected abstract ID getModifyCmdId(MODIFY_CMD cmd);
-
-    protected abstract void authExist(ENTITY entity);
 
     protected abstract ENTITY dealDelete(ENTITY entity);
 
