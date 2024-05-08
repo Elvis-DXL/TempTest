@@ -708,7 +708,7 @@ public final class DSUtil {
         private String selfName;
         private String selfType;
         private String parentId;
-        private Object selfObj;
+        private Object selfObject;
         private List<TreeNode> sunList;
 
         public TreeNode() {
@@ -727,19 +727,19 @@ public final class DSUtil {
             this.parentId = parentId;
         }
 
-        public TreeNode(String selfId, String selfName, String selfType, String parentId, Object selfObj) {
+        public TreeNode(String selfId, String selfName, String selfType, String parentId, Object selfObject) {
             this.selfId = selfId;
             this.selfName = selfName;
             this.selfType = selfType;
             this.parentId = parentId;
-            this.selfObj = selfObj;
+            this.selfObject = selfObject;
         }
 
-        public TreeNode(String selfId, String selfName, String parentId, Object selfObj) {
+        public TreeNode(String selfId, String selfName, String parentId, Object selfObject) {
             this.selfId = selfId;
             this.selfName = selfName;
             this.parentId = parentId;
-            this.selfObj = selfObj;
+            this.selfObject = selfObject;
         }
 
         public String getSelfId() {
@@ -782,12 +782,12 @@ public final class DSUtil {
             this.sunList = sunList;
         }
 
-        public Object getSelfObj() {
-            return selfObj;
+        public Object getSelfObject() {
+            return selfObject;
         }
 
-        public void setSelfObj(Object selfObj) {
-            this.selfObj = selfObj;
+        public void setSelfObject(Object selfObject) {
+            this.selfObject = selfObject;
         }
     }
 
