@@ -256,7 +256,7 @@ public final class DSUtil {
     public static double lngLatMeter(String srcLng, String srcLat, String aimLng, String aimLat) {
         if (EmptyTool.isEmpty(srcLng) || EmptyTool.isEmpty(srcLat)
                 || EmptyTool.isEmpty(aimLng) || EmptyTool.isEmpty(aimLat)) {
-            throw new IllegalArgumentException("lng or lat is empty");
+            throw new IllegalArgumentException("lng or lat must not be empty");
         }
         return lngLatMeter(Double.parseDouble(srcLng), Double.parseDouble(srcLat),
                 Double.parseDouble(aimLng), Double.parseDouble(aimLat));
@@ -372,7 +372,7 @@ public final class DSUtil {
 
     public static <T> void judgeAdd(List<T> aimList, T aimObj) {
         if (null == aimList) {
-            throw new NullPointerException("aimList is null");
+            throw new NullPointerException("aimList must not be null");
         }
         if (null == aimObj || aimList.contains(aimObj)) {
             return;
@@ -382,7 +382,7 @@ public final class DSUtil {
 
     public static <T> void judgeAddAll(List<T> aimList, List<T> aims) {
         if (null == aimList) {
-            throw new NullPointerException("aimList is null");
+            throw new NullPointerException("aimList must not be null");
         }
         if (EmptyTool.isEmpty(aims)) {
             return;
@@ -401,10 +401,10 @@ public final class DSUtil {
 
     public static int birthdayStrToAgeByTime(String birthdayStr, LocalDate aimTime) {
         if (EmptyTool.isEmpty(birthdayStr)) {
-            throw new NullPointerException("birthdayStr is null");
+            throw new NullPointerException("birthdayStr must not be null");
         }
         if (null == aimTime) {
-            throw new NullPointerException("aimTime is null");
+            throw new NullPointerException("aimTime must not be null");
         }
         LocalDate birthday = null;
         try {
