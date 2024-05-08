@@ -708,8 +708,8 @@ public final class DSUtil {
         private String selfName;
         private String selfType;
         private String parentId;
-        private List<TreeNode> sunList;
         private Object selfObj;
+        private List<TreeNode> sunList;
 
         public TreeNode() {
         }
