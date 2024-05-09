@@ -429,7 +429,7 @@ public final class DSUtil {
 
     public static int birthdayStrToAgeByTime(String birthdayStr, LocalDate aimTime) {
         if (EmptyTool.isEmpty(birthdayStr)) {
-            throw new NullPointerException("birthdayStr must not be empty");
+            throw new IllegalArgumentException("birthdayStr must not be empty");
         }
         LocalDate birthday = null;
         try {
