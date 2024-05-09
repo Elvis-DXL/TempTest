@@ -115,7 +115,7 @@ public final class DSUtil {
         }
 
         public Boolean included(String aimStr) {
-            return null != aimStr && aimStr.length() != 0 && aimStr.trim().contains(this.val());
+            return EmptyTool.isNotEmpty(aimStr) && aimStr.contains(this.val());
         }
 
         public Boolean notIncluded(String aimStr) {
@@ -123,8 +123,8 @@ public final class DSUtil {
         }
 
         public Boolean spliceSrcContainAim(String spliceSrc, String aim) {
-            return null != spliceSrc && spliceSrc.length() != 0 && null != aim && aim.length() != 0
-                    && spliceSrc.contains(this.val() + aim + this.val());
+            return EmptyTool.isNotEmpty(spliceSrc)
+                    && EmptyTool.isNotEmpty(aim) && spliceSrc.contains(this.val() + aim + this.val());
         }
 
         public Boolean spliceSrcNotContainAim(String spliceSrc, String aim) {
@@ -178,7 +178,7 @@ public final class DSUtil {
         }
 
         public String join(Collection<String> srcList, boolean includeStartAndEnd) {
-            if (null == srcList || srcList.isEmpty()) {
+            if (EmptyTool.isEmpty(srcList)) {
                 return null;
             }
             StringBuilder sb = new StringBuilder();
@@ -195,7 +195,7 @@ public final class DSUtil {
         }
 
         public <T, R> String join(Collection<T> srcList, Function<? super T, ? extends R> function, boolean includeStartAndEnd) {
-            if (null == srcList || srcList.size() == 0) {
+            if (EmptyTool.isEmpty(srcList)) {
                 return null;
             }
             return this.join(srcList.stream().map(function).map(Object::toString).collect(Collectors.toList()),
@@ -279,7 +279,7 @@ public final class DSUtil {
         List<Field> result = new ArrayList<>();
         do {
             Field[] fields = clazz.getDeclaredFields();
-            if (null != fields && fields.length > 0) {
+            if (fields.length > 0) {
                 result.addAll(Arrays.asList(fields));
             }
             clazz = clazz.getSuperclass();
@@ -293,7 +293,7 @@ public final class DSUtil {
         Map<String, Field> aimMap = classAllFields(aim.getClass())
                 .stream().collect(Collectors.toMap(Field::getName, it -> it, (k1, k2) -> k1));
         List<String> fieldList = Arrays.asList(fields);
-        if (fieldList.size() == 0) {
+        if (EmptyTool.isEmpty(fieldList)) {
             fieldList = new ArrayList<>(srcMap.keySet());
         }
         for (String field : fieldList) {
@@ -369,7 +369,7 @@ public final class DSUtil {
         return null == srcMap || srcMap.isEmpty() ? null : srcMap.get(aimKey);
     }
 
-    public static String desStr(String aimStr, int start, int mid, int end) {
+    public static String hypStr(String aimStr, int start, int mid, int end) {
         if (EmptyTool.isEmpty(aimStr)) {
             return aimStr;
         }
