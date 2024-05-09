@@ -288,10 +288,8 @@ public final class DSUtil {
     }
 
     public static <T, K> K copySomeFields(T src, K aim, String... fields) {
-        Map<String, Field> srcMap = classAllFields(src.getClass())
-                .stream().collect(Collectors.toMap(Field::getName, it -> it, (k1, k2) -> k1));
-        Map<String, Field> aimMap = classAllFields(aim.getClass())
-                .stream().collect(Collectors.toMap(Field::getName, it -> it, (k1, k2) -> k1));
+        Map<String, Field> srcMap = listToMap(classAllFields(src.getClass()), Field::getName, it -> it);
+        Map<String, Field> aimMap = listToMap(classAllFields(aim.getClass()), Field::getName, it -> it);
         List<String> fieldList = Arrays.asList(fields);
         if (EmptyTool.isEmpty(fieldList)) {
             fieldList = new ArrayList<>(srcMap.keySet());
@@ -447,8 +445,7 @@ public final class DSUtil {
             return new ArrayList<>();
         }
         List<TreeNode> result = new ArrayList<>();
-        Map<String, TreeNode> tmpMap = treeNodeList
-                .stream().collect(Collectors.toMap(TreeNode::getSelfId, it -> it, (k1, k2) -> k1));
+        Map<String, TreeNode> tmpMap = listToMap(treeNodeList, TreeNode::getSelfId, it -> it);
         List<TreeNode> sunList;
         for (TreeNode item : treeNodeList) {
             if (EmptyTool.isNotEmpty(item.getParentId()) && null != mapGet(tmpMap, item.getParentId())
@@ -477,6 +474,13 @@ public final class DSUtil {
             return idx;
         }
         return max + 1;
+    }
+
+    public static <T, K, U> Map<K, U> listToMap(List<T> srcList,
+                                                Function<? super T, ? extends K> keyMapper,
+                                                Function<? super T, ? extends U> valueMapper) {
+        return EmptyTool.isEmpty(srcList) ?
+                new HashMap<>() : srcList.stream().collect(Collectors.toMap(keyMapper, valueMapper, (k1, k2) -> k1));
     }
 
     public final static class JPATool {

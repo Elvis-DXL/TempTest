@@ -1,6 +1,7 @@
 package com.elvis.test.query;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,4 +26,12 @@ public class DBObj implements Serializable {
     @Id
     @Column(name = "check_result", columnDefinition = "varchar(1000) COMMENT '校验结果'")
     private String checkResult;
+
+    public DBObj() {
+    }
+
+    public DBObj(Integer id, String checkResult) {
+        this.id = id;
+        this.checkResult = checkResult;
+    }
 }
