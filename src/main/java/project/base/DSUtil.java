@@ -483,6 +483,10 @@ public final class DSUtil {
                 new HashMap<>() : srcList.stream().collect(Collectors.toMap(keyMapper, valueMapper, (k1, k2) -> k1));
     }
 
+    public static <T, K> Map<K, List<T>> listGroup(List<T> srcList, Function<? super T, ? extends K> keyMapper) {
+        return EmptyTool.isEmpty(srcList) ? new HashMap<>() : srcList.stream().collect(Collectors.groupingBy(keyMapper));
+    }
+
     public final static class JPATool {
         private JPATool() {
             throw new AssertionError("Tool classes do not allow instantiation");
