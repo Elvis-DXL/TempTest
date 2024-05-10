@@ -274,8 +274,8 @@ public final class DSUtil {
 
     public static Double lngLatMeter(String srcLng, String srcLat, String aimLng, String aimLat) {
         return EmptyTool.isEmpty(srcLng) || EmptyTool.isEmpty(srcLat)
-                || EmptyTool.isEmpty(aimLng) || EmptyTool.isEmpty(aimLat) ?
-                null : lngLatMeter(Double.parseDouble(srcLng), Double.parseDouble(srcLat),
+                || EmptyTool.isEmpty(aimLng) || EmptyTool.isEmpty(aimLat) ? null
+                : lngLatMeter(Double.parseDouble(srcLng), Double.parseDouble(srcLat),
                 Double.parseDouble(aimLng), Double.parseDouble(aimLat));
     }
 
@@ -364,7 +364,7 @@ public final class DSUtil {
     }
 
     public static <T> T randomGetOne(List<T> srcList) {
-        return srcList.get(ThreadLocalRandom.current().nextInt(srcList.size()));
+        return EmptyTool.isEmpty(srcList) ? null : srcList.get(ThreadLocalRandom.current().nextInt(srcList.size()));
     }
 
     public static <T, K> T mapGet(Map<K, T> srcMap, K aimKey) {
@@ -460,6 +460,10 @@ public final class DSUtil {
     }
 
     public static int minLackOrNext(List<Integer> srcList) {
+        if (EmptyTool.isEmpty(srcList)) {
+            return 1;
+        }
+        srcList = srcList.stream().filter(Objects::nonNull).collect(Collectors.toList());
         if (EmptyTool.isEmpty(srcList)) {
             return 1;
         }
@@ -771,7 +775,7 @@ public final class DSUtil {
 
         public static DBTool getInstance(DataSource dataSource) {
             if (null == dataSource) {
-                throw new RuntimeException("dataSource must not be null");
+                throw new NullPointerException("dataSource must not be null");
             }
             return new DBTool(dataSource);
         }
