@@ -47,7 +47,7 @@ public class ExcelRW {
             }
             String aim = excelProperty.value()[0];
             if (titleList.contains(aim)) {
-                throw new IllegalArgumentException("表头存在相同字段【" + aim + "】");
+                throw new RuntimeException("表头存在相同字段【" + aim + "】");
             }
             titleList.add(aim);
         }
@@ -73,7 +73,7 @@ public class ExcelRW {
                 //校验表头
                 for (String it : titleList) {
                     if (!obsTitle.contains(it)) {
-                        throw new IllegalArgumentException(TITLE_ERROR);
+                        throw new RuntimeException(TITLE_ERROR);
                     }
                 }
             }
@@ -94,7 +94,7 @@ public class ExcelRW {
     public static void writer(Workbook wb, String fileName,
                               HttpServletRequest request, HttpServletResponse response) {
         if (null == wb) {
-            throw new IllegalArgumentException("wb must not be null");
+            throw new NullPointerException("wb must not be null");
         }
         fileName = wb instanceof HSSFWorkbook ? (fileName + ".xls") : (fileName + ".xlsx");
         dealWebExportExcelResponseHeader(fileName, request, response);
