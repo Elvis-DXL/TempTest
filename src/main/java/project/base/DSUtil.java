@@ -459,11 +459,8 @@ public final class DSUtil {
         return result;
     }
 
-    public static int minLackOrNext(List<Integer> srcList) {
-        if (EmptyTool.isEmpty(srcList)) {
-            return 1;
-        }
-        srcList = srcList.stream().filter(Objects::nonNull).collect(Collectors.toList());
+    public static Integer minLackOrNext(List<Integer> srcList) {
+        srcList = listFilter(srcList, Objects::nonNull);
         if (EmptyTool.isEmpty(srcList)) {
             return 1;
         }
