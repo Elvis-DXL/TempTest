@@ -489,6 +489,18 @@ public final class DSUtil {
         return EmptyTool.isEmpty(srcList) ? new HashMap<>() : srcList.stream().collect(Collectors.groupingBy(keyMapper));
     }
 
+    public static <T, R> List<R> listGetField(List<T> srcList, Function<? super T, ? extends R> mapper) {
+        return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
+                srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+    }
+
+    public static <T, R> List<R> listGetFieldDistinct(List<T> srcList, Function<? super T, ? extends R> mapper) {
+        return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
+                srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull)
+                        .distinct().collect(Collectors.toList());
+    }
+
     public final static class JPATool {
         private JPATool() {
             throw new AssertionError("Tool classes do not allow instantiation");
