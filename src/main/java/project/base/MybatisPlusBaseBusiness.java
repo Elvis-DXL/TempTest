@@ -11,6 +11,9 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+import static project.base.DSUtil.PageReq;
+import static project.base.DSUtil.PageResp;
+
 /**
  * 慕君Dxl个人程序代码开发业务MYBATIS-PLUS基类，非本人，仅供参考使用，请勿修改
  *
@@ -18,7 +21,7 @@ import java.util.List;
  * @CreateTime : 2024/4/25 14:54
  */
 public abstract class MybatisPlusBaseBusiness<ID extends Serializable, ENTITY,
-        ENTITY_VO, ADD_CMD, MODIFY_CMD, QUERY_CMD extends DSUtil.PageReq, DAO extends BaseMapper<ENTITY>> {
+        ENTITY_VO, ADD_CMD, MODIFY_CMD, QUERY_CMD extends PageReq, DAO extends BaseMapper<ENTITY>> {
     @Autowired
     protected DAO dao;
 
@@ -66,9 +69,9 @@ public abstract class MybatisPlusBaseBusiness<ID extends Serializable, ENTITY,
         return entityToVo(dao.selectList(cmdToWrapper(cmd)), cmd);
     }
 
-    protected DSUtil.PageResp<ENTITY_VO> page(QUERY_CMD cmd) {
+    protected PageResp<ENTITY_VO> page(QUERY_CMD cmd) {
         IPage<ENTITY> page = dao.selectPage(new Page<>(cmd.getPageNum(), cmd.getPageSize()), cmdToWrapper(cmd));
-        DSUtil.PageResp<ENTITY_VO> result = new DSUtil.PageResp<>();
+        PageResp<ENTITY_VO> result = new DSUtil.PageResp<>();
         result.setPageNum((int) page.getCurrent());
         result.setPageSize((int) page.getSize());
         result.setTotalNum((int) page.getTotal());

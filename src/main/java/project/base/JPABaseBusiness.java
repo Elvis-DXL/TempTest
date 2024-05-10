@@ -12,6 +12,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static project.base.DSUtil.PageReq;
+import static project.base.DSUtil.PageResp;
+
 /**
  * 慕君Dxl个人程序代码开发业务JPA基类，非本人，仅供参考使用，请勿修改
  *
@@ -19,7 +22,7 @@ import java.util.Optional;
  * @CreateTime : 2024/4/25 11:31
  */
 public abstract class JPABaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO, ADD_CMD, MODIFY_CMD,
-        QUERY_CMD extends DSUtil.PageReq, DAO extends JpaRepository<ENTITY, ID> & JpaSpecificationExecutor<ENTITY>> {
+        QUERY_CMD extends PageReq, DAO extends JpaRepository<ENTITY, ID> & JpaSpecificationExecutor<ENTITY>> {
     @Autowired
     protected DAO dao;
 
@@ -67,9 +70,9 @@ public abstract class JPABaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO
         return entityToVo(dao.findAll(cmdToSpecification(cmd)), cmd);
     }
 
-    protected DSUtil.PageResp<ENTITY_VO> page(QUERY_CMD cmd) {
+    protected PageResp<ENTITY_VO> page(QUERY_CMD cmd) {
         Page<ENTITY> page = dao.findAll(cmdToSpecification(cmd), PageRequest.of(cmd.getPageNum() - 1, cmd.getPageSize()));
-        DSUtil.PageResp<ENTITY_VO> result = new DSUtil.PageResp<>();
+        PageResp<ENTITY_VO> result = new DSUtil.PageResp<>();
         result.setPageNum(page.getNumber() + 1);
         result.setPageSize(page.getSize());
         result.setTotalNum((int) page.getTotalElements());
