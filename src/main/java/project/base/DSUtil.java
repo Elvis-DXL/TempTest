@@ -132,8 +132,7 @@ public final class DSUtil {
         }
 
         public Boolean spliceSrcContainAim(String spliceSrc, String aim) {
-            return EmptyTool.isNotEmpty(spliceSrc)
-                    && EmptyTool.isNotEmpty(aim) && spliceSrc.contains(val() + aim + val());
+            return EmptyTool.isNotEmpty(spliceSrc) && EmptyTool.isNotEmpty(aim) && spliceSrc.contains(val() + aim + val());
         }
 
         public Boolean spliceSrcNotContainAim(String spliceSrc, String aim) {
@@ -204,11 +203,8 @@ public final class DSUtil {
         }
 
         public <T, R> String join(Collection<T> srcList, Function<? super T, ? extends R> function, boolean includeStartAndEnd) {
-            if (EmptyTool.isEmpty(srcList)) {
-                return null;
-            }
-            return join(srcList.stream().map(function).map(Object::toString).collect(Collectors.toList()),
-                    includeStartAndEnd);
+            return EmptyTool.isEmpty(srcList) ? null :
+                    join(srcList.stream().map(function).map(Object::toString).collect(Collectors.toList()), includeStartAndEnd);
         }
     }
 
@@ -269,18 +265,17 @@ public final class DSUtil {
         }
     }
 
-    public static double lngLatMeter(double srcLng, double srcLat, double aimLng, double aimLat) {
-        return EARTH_RADIUS_METER * Math.acos(Math.cos(Math.toRadians(srcLat)) * Math.cos(Math.toRadians(aimLat))
+    public static Double lngLatMeter(Double srcLng, Double srcLat, Double aimLng, Double aimLat) {
+        return null == srcLng || null == srcLat || null == aimLng || null == aimLat ? null
+                : EARTH_RADIUS_METER * Math.acos(Math.cos(Math.toRadians(srcLat)) * Math.cos(Math.toRadians(aimLat))
                 * Math.cos(Math.toRadians(srcLng) - Math.toRadians(aimLng))
                 + Math.sin(Math.toRadians(srcLat)) * Math.sin(Math.toRadians(aimLat)));
     }
 
-    public static double lngLatMeter(String srcLng, String srcLat, String aimLng, String aimLat) {
-        if (EmptyTool.isEmpty(srcLng) || EmptyTool.isEmpty(srcLat)
-                || EmptyTool.isEmpty(aimLng) || EmptyTool.isEmpty(aimLat)) {
-            throw new IllegalArgumentException("lng or lat must not be empty");
-        }
-        return lngLatMeter(Double.parseDouble(srcLng), Double.parseDouble(srcLat),
+    public static Double lngLatMeter(String srcLng, String srcLat, String aimLng, String aimLat) {
+        return EmptyTool.isEmpty(srcLng) || EmptyTool.isEmpty(srcLat)
+                || EmptyTool.isEmpty(aimLng) || EmptyTool.isEmpty(aimLat) ?
+                null : lngLatMeter(Double.parseDouble(srcLng), Double.parseDouble(srcLat),
                 Double.parseDouble(aimLng), Double.parseDouble(aimLat));
     }
 
@@ -377,10 +372,7 @@ public final class DSUtil {
     }
 
     public static String hypStr(String aimStr, int start, int mid, int end) {
-        if (EmptyTool.isEmpty(aimStr)) {
-            return aimStr;
-        }
-        if (aimStr.length() < Math.max(start, end)) {
+        if (EmptyTool.isEmpty(aimStr) || aimStr.length() < Math.max(start, end)) {
             return aimStr;
         }
         String midStr = "";
@@ -408,23 +400,20 @@ public final class DSUtil {
             return;
         }
         for (T item : aims) {
-            if (aimList.contains(item)) {
+            if (null == item || aimList.contains(item)) {
                 continue;
             }
             aimList.add(item);
         }
     }
 
-    public static int birthdayToCurrAge(LocalDate birthday) {
+    public static Integer birthdayToCurrAge(LocalDate birthday) {
         return birthdayToAgeByTime(birthday, LocalDate.now());
     }
 
-    public static int birthdayToAgeByTime(LocalDate birthday, LocalDate aimTime) {
-        if (null == birthday) {
-            throw new NullPointerException("birthday must not be null");
-        }
-        if (null == aimTime) {
-            throw new NullPointerException("aimTime must not be null");
+    public static Integer birthdayToAgeByTime(LocalDate birthday, LocalDate aimTime) {
+        if (null == birthday || null == aimTime) {
+            return null;
         }
         return Math.max(aimTime.getMonthValue() < birthday.getMonthValue() ? aimTime.getYear() - birthday.getYear() - 1
                 : (aimTime.getMonthValue() > birthday.getMonthValue() ? aimTime.getYear() - birthday.getYear()
@@ -432,19 +421,19 @@ public final class DSUtil {
                 aimTime.getYear() - birthday.getYear() - 1 : aimTime.getYear() - birthday.getYear())), 0);
     }
 
-    public static int birthdayStrToCurrAge(String birthdayStr) {
+    public static Integer birthdayStrToCurrAge(String birthdayStr) {
         return birthdayStrToAgeByTime(birthdayStr, LocalDate.now());
     }
 
-    public static int birthdayStrToAgeByTime(String birthdayStr, LocalDate aimTime) {
+    public static Integer birthdayStrToAgeByTime(String birthdayStr, LocalDate aimTime) {
         if (EmptyTool.isEmpty(birthdayStr)) {
-            throw new IllegalArgumentException("birthdayStr must not be empty");
+            return null;
         }
         LocalDate birthday = null;
         try {
             birthday = TimeTool.parseLD(birthdayStr, Pattern.yyyy_MM_dd);
         } catch (Exception e) {
-            throw new IllegalArgumentException("birthdayStr format error");
+            return null;
         }
         return birthdayToAgeByTime(birthday, aimTime);
     }
@@ -587,35 +576,39 @@ public final class DSUtil {
         }
 
         public static String formatLDT(LocalDateTime time, String pattern) {
-            return DateTimeFormatter.ofPattern(pattern).format(time);
+            return null == time || EmptyTool.isEmpty(pattern) ? null : DateTimeFormatter.ofPattern(pattern).format(time);
         }
 
         public static String formatLDT(LocalDateTime time, Pattern pattern) {
-            return DateTimeFormatter.ofPattern(pattern.val()).format(time);
+            return null == time || null == pattern ? null : DateTimeFormatter.ofPattern(pattern.val()).format(time);
         }
 
         public static String formatLD(LocalDate time, String pattern) {
-            return DateTimeFormatter.ofPattern(pattern).format(time);
+            return null == time || EmptyTool.isEmpty(pattern) ? null : DateTimeFormatter.ofPattern(pattern).format(time);
         }
 
         public static String formatLD(LocalDate time, Pattern pattern) {
-            return DateTimeFormatter.ofPattern(pattern.val()).format(time);
+            return null == time || null == pattern ? null : DateTimeFormatter.ofPattern(pattern.val()).format(time);
         }
 
         public static LocalDateTime parseLDT(String timeStr, String pattern) {
-            return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern));
+            return EmptyTool.isEmpty(timeStr) || EmptyTool.isEmpty(pattern) ?
+                    null : LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern));
         }
 
         public static LocalDateTime parseLDT(String timeStr, Pattern pattern) {
-            return LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern.val()));
+            return EmptyTool.isEmpty(timeStr) || null == pattern ?
+                    null : LocalDateTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern.val()));
         }
 
         public static LocalDate parseLD(String timeStr, String pattern) {
-            return LocalDate.parse(timeStr, DateTimeFormatter.ofPattern(pattern));
+            return EmptyTool.isEmpty(timeStr) || EmptyTool.isEmpty(pattern) ?
+                    null : LocalDate.parse(timeStr, DateTimeFormatter.ofPattern(pattern));
         }
 
         public static LocalDate parseLD(String timeStr, Pattern pattern) {
-            return LocalDate.parse(timeStr, DateTimeFormatter.ofPattern(pattern.val()));
+            return EmptyTool.isEmpty(timeStr) || null == pattern ?
+                    null : LocalDate.parse(timeStr, DateTimeFormatter.ofPattern(pattern.val()));
         }
 
         public static LocalDateTime dateToLocal(Date date) {
@@ -733,7 +726,11 @@ public final class DSUtil {
                 return null;
             }
             verifyIdCardStr(idCardStr);
-            return TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd);
+            try {
+                return TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd);
+            } catch (Exception e) {
+                return null;
+            }
         }
 
         public static Integer getCurrAge(String idCardStr) {
@@ -741,7 +738,13 @@ public final class DSUtil {
                 return null;
             }
             verifyIdCardStr(idCardStr);
-            return birthdayToCurrAge(TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd));
+            LocalDate birthday;
+            try {
+                birthday = TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd);
+            } catch (Exception e) {
+                return null;
+            }
+            return birthdayToCurrAge(birthday);
         }
 
         public static Integer getAgeByTime(String idCardStr, LocalDate aimTime) {
@@ -749,7 +752,13 @@ public final class DSUtil {
                 return null;
             }
             verifyIdCardStr(idCardStr);
-            return birthdayToAgeByTime(TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd), aimTime);
+            LocalDate birthday;
+            try {
+                birthday = TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd);
+            } catch (Exception e) {
+                return null;
+            }
+            return birthdayToAgeByTime(birthday, aimTime);
         }
     }
 
