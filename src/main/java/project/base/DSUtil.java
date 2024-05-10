@@ -124,27 +124,27 @@ public final class DSUtil {
         }
 
         public Boolean included(String aimStr) {
-            return EmptyTool.isNotEmpty(aimStr) && aimStr.contains(this.val());
+            return EmptyTool.isNotEmpty(aimStr) && aimStr.contains(val());
         }
 
         public Boolean notIncluded(String aimStr) {
-            return !this.included(aimStr);
+            return !included(aimStr);
         }
 
         public Boolean spliceSrcContainAim(String spliceSrc, String aim) {
             return EmptyTool.isNotEmpty(spliceSrc)
-                    && EmptyTool.isNotEmpty(aim) && spliceSrc.contains(this.val() + aim + this.val());
+                    && EmptyTool.isNotEmpty(aim) && spliceSrc.contains(val() + aim + val());
         }
 
         public Boolean spliceSrcNotContainAim(String spliceSrc, String aim) {
-            return !this.spliceSrcContainAim(spliceSrc, aim);
+            return !spliceSrcContainAim(spliceSrc, aim);
         }
 
         public List<String> split(String aimStr) {
             if (EmptyTool.isEmpty(aimStr)) {
                 return new ArrayList<>();
             }
-            StringTokenizer st = new StringTokenizer(aimStr, this.val());
+            StringTokenizer st = new StringTokenizer(aimStr, val());
             List<String> result = new ArrayList<>();
             while (st.hasMoreTokens()) {
                 result.add(st.nextToken());
@@ -156,7 +156,7 @@ public final class DSUtil {
             if (EmptyTool.isEmpty(aimStr)) {
                 return new ArrayList<>();
             }
-            StringTokenizer st = new StringTokenizer(aimStr, this.val());
+            StringTokenizer st = new StringTokenizer(aimStr, val());
             List<Long> result = new ArrayList<>();
             while (st.hasMoreTokens()) {
                 String temp = st.nextToken();
@@ -169,7 +169,7 @@ public final class DSUtil {
             if (EmptyTool.isEmpty(aimStr)) {
                 return new ArrayList<>();
             }
-            StringTokenizer st = new StringTokenizer(aimStr, this.val());
+            StringTokenizer st = new StringTokenizer(aimStr, val());
             List<Integer> result = new ArrayList<>();
             while (st.hasMoreTokens()) {
                 String temp = st.nextToken();
@@ -179,11 +179,11 @@ public final class DSUtil {
         }
 
         public String join(Collection<String> srcList) {
-            return this.join(srcList, true);
+            return join(srcList, true);
         }
 
         public <T, R> String join(Collection<T> srcList, Function<? super T, ? extends R> function) {
-            return this.join(srcList, function, true);
+            return join(srcList, function, true);
         }
 
         public String join(Collection<String> srcList, boolean includeStartAndEnd) {
@@ -193,12 +193,12 @@ public final class DSUtil {
             StringBuilder sb = new StringBuilder();
             for (String str : srcList) {
                 sb.append(str);
-                sb.append(this.val());
+                sb.append(val());
             }
             String result = sb.toString();
-            result = result.substring(0, result.length() - this.val().length());
+            result = result.substring(0, result.length() - val().length());
             if (includeStartAndEnd) {
-                result = this.val() + result + this.val();
+                result = val() + result + val();
             }
             return result;
         }
@@ -207,7 +207,7 @@ public final class DSUtil {
             if (EmptyTool.isEmpty(srcList)) {
                 return null;
             }
-            return this.join(srcList.stream().map(function).map(Object::toString).collect(Collectors.toList()),
+            return join(srcList.stream().map(function).map(Object::toString).collect(Collectors.toList()),
                     includeStartAndEnd);
         }
     }
@@ -241,11 +241,11 @@ public final class DSUtil {
         }
 
         public boolean verify(String aimStr) {
-            return EmptyTool.isNotEmpty(aimStr) && aimStr.matches(this.getRegexStr());
+            return EmptyTool.isNotEmpty(aimStr) && aimStr.matches(getRegexStr());
         }
 
         public boolean verifyFail(String aimStr) {
-            return !this.verify(aimStr);
+            return !verify(aimStr);
         }
     }
 
@@ -824,7 +824,7 @@ public final class DSUtil {
                     int idx = 1;
                     for (String item : aimFieldList) {
                         Field colField = fieldMap.get(item);
-                        this.addPsParam(ps, idx, colField, it);
+                        addPsParam(ps, idx, colField, it);
                         idx++;
                     }
                     count++;
@@ -896,11 +896,11 @@ public final class DSUtil {
                     int idx = 1;
                     for (String item : aimFieldList) {
                         Field colField = fieldMap.get(item);
-                        this.addPsParam(ps, idx, colField, it);
+                        addPsParam(ps, idx, colField, it);
                         idx++;
                     }
                     Field idField = fieldMap.get(fieldColMap.get("id_field"));
-                    this.addPsParam(ps, idx, idField, it);
+                    addPsParam(ps, idx, idField, it);
                     count++;
                     ps.addBatch();
                     if (count % step == 0) {
@@ -923,7 +923,7 @@ public final class DSUtil {
             Map<String, String> map = new HashMap<>();
             for (Field it : fields) {
                 Column column = it.getAnnotation(Column.class);
-                String colName = null != column ? column.name() : this.getColNameByFieldName(it.getName());
+                String colName = null != column ? column.name() : getColNameByFieldName(it.getName());
                 map.put(it.getName(), colName);
             }
             return map;
@@ -933,7 +933,7 @@ public final class DSUtil {
             Map<String, String> map = new HashMap<>();
             for (Field it : fields) {
                 Column column = it.getAnnotation(Column.class);
-                String colName = null != column ? column.name() : this.getColNameByFieldName(it.getName());
+                String colName = null != column ? column.name() : getColNameByFieldName(it.getName());
                 Id id = it.getAnnotation(Id.class);
                 if (null != id) {
                     map.put("id_column", colName);
