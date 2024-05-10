@@ -489,6 +489,11 @@ public final class DSUtil {
         return EmptyTool.isEmpty(srcList) ? new HashMap<>() : srcList.stream().collect(Collectors.groupingBy(keyMapper));
     }
 
+    public static <T> List<T> listFilter(List<T> srcList, java.util.function.Predicate<? super T> predicate) {
+        return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
+                srcList.stream().filter(predicate).collect(Collectors.toList());
+    }
+
     public static <T, R> List<R> listGetField(List<T> srcList, Function<? super T, ? extends R> mapper) {
         return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
                 srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull)
