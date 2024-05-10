@@ -25,6 +25,8 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 /**
+ * 慕君Dxl个人程序代码开发静态工具库类，非本人，仅供参考使用，请勿修改
+ *
  * @Author : 慕君Dxl
  * @CreateTime : 2024/4/19 16:45
  */

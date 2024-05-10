@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * 慕君Dxl个人程序代码开发业务MYBATIS-PLUS基类，非本人，仅供参考使用，请勿修改
+ *
  * @Author : 慕君Dxl
  * @CreateTime : 2024/4/25 14:54
  */
