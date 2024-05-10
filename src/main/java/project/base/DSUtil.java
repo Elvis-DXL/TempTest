@@ -250,7 +250,7 @@ public final class DSUtil {
     }
 
     public enum Gender {
-        NAN(1, "男"), NV(0, "女");
+        NV(0, "女"), NAN(1, "男");
 
         private final Integer val;
         private final String desc;
