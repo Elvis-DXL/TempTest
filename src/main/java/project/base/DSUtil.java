@@ -308,10 +308,13 @@ public final class DSUtil {
     }
 
     public static <T, K> K newObjByAimSomeFields(Class<K> clazz, T aimObj, String... fields) {
-        return copySomeFields(aimObj, newInstance(clazz), fields);
+        return null == clazz || null == aimObj ? null : copySomeFields(aimObj, newInstance(clazz), fields);
     }
 
     public static <T, K> K copySomeFields(T src, K aim, String... fields) {
+        if (null == src || null == aim) {
+            return aim;
+        }
         Map<String, Field> srcMap = listToMap(classAllFields(src.getClass()), Field::getName, it -> it);
         Map<String, Field> aimMap = listToMap(classAllFields(aim.getClass()), Field::getName, it -> it);
         List<String> fieldList = Arrays.asList(fields);
