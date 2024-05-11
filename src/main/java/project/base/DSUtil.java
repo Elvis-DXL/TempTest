@@ -279,6 +279,22 @@ public final class DSUtil {
                 Double.parseDouble(aimLng), Double.parseDouble(aimLat));
     }
 
+    public static <T> T newInstance(Class<T> clazz) {
+        if (null == clazz) {
+            throw new NullPointerException("class must not be null");
+        }
+        if (clazz.isInterface()) {
+            throw new IllegalArgumentException("specified class is an interface");
+        }
+        T obj = null;
+        try {
+            obj = clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
+
     public static List<Field> classAllFields(Class clazz) {
         List<Field> result = new ArrayList<>();
         do {
@@ -289,6 +305,10 @@ public final class DSUtil {
             clazz = clazz.getSuperclass();
         } while (null != clazz && !clazz.equals(Object.class));
         return result;
+    }
+
+    public static <T, K> K newObjByAimSomeFields(Class<K> clazz, T aimObj, String... fields) {
+        return copySomeFields(aimObj, newInstance(clazz), fields);
     }
 
     public static <T, K> K copySomeFields(T src, K aim, String... fields) {
