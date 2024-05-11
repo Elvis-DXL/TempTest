@@ -341,6 +341,42 @@ public final class DSUtil {
         return aim;
     }
 
+    public static <T, K> List<T> listClassChange(List<K> srcList, Class<T> clazz, String... fields) {
+        srcList = listFilter(srcList, Objects::nonNull);
+        if (EmptyTool.isEmpty(srcList) || null == clazz) {
+            return new ArrayList<>();
+        }
+        List<T> result = new ArrayList<>();
+        Map<String, Field> srcMap = listToMap(classAllFields(srcList.get(0).getClass()), Field::getName, it -> it);
+        Map<String, Field> aimMap = listToMap(classAllFields(clazz), Field::getName, it -> it);
+        List<String> fieldList = Arrays.asList(fields);
+        if (EmptyTool.isEmpty(fieldList)) {
+            fieldList = new ArrayList<>(srcMap.keySet());
+        }
+        for (K src : srcList) {
+            T aim = newInstance(clazz);
+            for (String field : fieldList) {
+                Field srcField = srcMap.get(field);
+                Field aimField = aimMap.get(field);
+                if (null == srcField || null == aimField) {
+                    continue;
+                }
+                srcField.setAccessible(true);
+                aimField.setAccessible(true);
+                try {
+                    aimField.set(aim, srcField.get(src));
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                } finally {
+                    srcField.setAccessible(false);
+                    aimField.setAccessible(false);
+                }
+            }
+            result.add(aim);
+        }
+        return result;
+    }
+
     public static String randomNumberStrByLength(int length) {
         StringBuilder sb = new StringBuilder();
         int count = 1;
