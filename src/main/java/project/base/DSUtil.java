@@ -560,7 +560,7 @@ public final class DSUtil {
                         .distinct().collect(Collectors.toList());
     }
 
-    public static <T, R> List<R> listGetFieldNoDistinct(List<T> srcList, Function<? super T, ? extends R> mapper) {
+    public static <T, R> List<R> listGetFieldNoDis(List<T> srcList, Function<? super T, ? extends R> mapper) {
         return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
                 srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull)
                         .collect(Collectors.toList());
