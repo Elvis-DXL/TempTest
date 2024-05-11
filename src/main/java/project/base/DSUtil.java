@@ -557,13 +557,13 @@ public final class DSUtil {
     public static <T, R> List<R> listGetField(List<T> srcList, Function<? super T, ? extends R> mapper) {
         return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
                 srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull)
-                        .collect(Collectors.toList());
+                        .distinct().collect(Collectors.toList());
     }
 
-    public static <T, R> List<R> listGetFieldDistinct(List<T> srcList, Function<? super T, ? extends R> mapper) {
+    public static <T, R> List<R> listGetFieldNoDistinct(List<T> srcList, Function<? super T, ? extends R> mapper) {
         return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
                 srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull)
-                        .distinct().collect(Collectors.toList());
+                        .collect(Collectors.toList());
     }
 
     public final static class JPATool {
