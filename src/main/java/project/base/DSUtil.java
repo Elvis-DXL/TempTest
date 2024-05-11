@@ -367,8 +367,8 @@ public final class DSUtil {
         return EmptyTool.isEmpty(srcList) ? null : srcList.get(ThreadLocalRandom.current().nextInt(srcList.size()));
     }
 
-    public static <T, R> R objGet(T srcObj, Function<? super T, ? extends R> mapper) {
-        return null == srcObj ? null : mapper.apply(srcObj);
+    public static <T, R> R objGet(T srcObj, Function<? super T, ? extends R> function) {
+        return null == srcObj ? null : function.apply(srcObj);
     }
 
     public static <T, K> T mapGet(Map<K, T> srcMap, K aimKey) {
