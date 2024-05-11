@@ -307,8 +307,8 @@ public final class DSUtil {
         return result;
     }
 
-    public static <T, K> K newObjByAimSomeFields(Class<K> clazz, T aimObj, String... fields) {
-        return null == clazz || null == aimObj ? null : copySomeFields(aimObj, newInstance(clazz), fields);
+    public static <T, K> K newByObj(Class<K> clazz, T srcObj, String... fields) {
+        return null == clazz || null == srcObj ? null : copySomeFields(srcObj, newInstance(clazz), fields);
     }
 
     public static <T, K> K copySomeFields(T src, K aim, String... fields) {
