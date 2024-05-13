@@ -71,13 +71,14 @@ public abstract class JPABaseBusiness<ID extends Serializable, ENTITY, ENTITY_VO
     }
 
     protected PageResp<ENTITY_VO> page(QUERY_CMD cmd) {
-        Page<ENTITY> page = dao.findAll(cmdToSpecification(cmd), PageRequest.of(cmd.getPageNum() - 1, cmd.getPageSize()));
+        Page<ENTITY> entityPage = dao
+                .findAll(cmdToSpecification(cmd), PageRequest.of(cmd.getPageNum() - 1, cmd.getPageSize()));
         PageResp<ENTITY_VO> result = new DSUtil.PageResp<>();
-        result.setPageNum(page.getNumber() + 1);
-        result.setPageSize(page.getSize());
-        result.setTotalNum((int) page.getTotalElements());
-        result.setTotalPage(page.getTotalPages());
-        result.setDataList(entityToVo(page.getContent(), cmd));
+        result.setPageNum(entityPage.getNumber() + 1);
+        result.setPageSize(entityPage.getSize());
+        result.setTotalNum((int) entityPage.getTotalElements());
+        result.setTotalPage(entityPage.getTotalPages());
+        result.setDataList(entityToVo(entityPage.getContent(), cmd));
         return result;
     }
 

@@ -70,13 +70,14 @@ public abstract class MybatisPlusBaseBusiness<ID extends Serializable, ENTITY,
     }
 
     protected PageResp<ENTITY_VO> page(QUERY_CMD cmd) {
-        IPage<ENTITY> page = dao.selectPage(new Page<>(cmd.getPageNum(), cmd.getPageSize()), cmdToWrapper(cmd));
+        IPage<ENTITY> entityPage = dao
+                .selectPage(new Page<>(cmd.getPageNum(), cmd.getPageSize()), cmdToWrapper(cmd));
         PageResp<ENTITY_VO> result = new DSUtil.PageResp<>();
-        result.setPageNum((int) page.getCurrent());
-        result.setPageSize((int) page.getSize());
-        result.setTotalNum((int) page.getTotal());
-        result.setTotalPage((int) page.getPages());
-        result.setDataList(entityToVo(page.getRecords(), cmd));
+        result.setPageNum((int) entityPage.getCurrent());
+        result.setPageSize((int) entityPage.getSize());
+        result.setTotalNum((int) entityPage.getTotal());
+        result.setTotalPage((int) entityPage.getPages());
+        result.setDataList(entityToVo(entityPage.getRecords(), cmd));
         return result;
     }
 
