@@ -1,5 +1,9 @@
 package project.base;
 
+import org.apache.commons.codec.binary.Base64;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
 import javax.persistence.*;
 import javax.persistence.criteria.*;
 import javax.sql.DataSource;
@@ -7,6 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.JDBCType;
 import java.sql.PreparedStatement;
@@ -1069,6 +1076,61 @@ public final class DSUtil {
                 colField.setAccessible(false);
             } catch (SQLException | IllegalAccessException e) {
                 throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public final static class DESTool {
+        private final Key key;
+
+        private DESTool(String secretKey) {
+            try {
+                SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+                secureRandom.setSeed(secretKey.getBytes());
+                KeyGenerator generator = KeyGenerator.getInstance("DES");
+                generator.init(secureRandom);
+                this.key = generator.generateKey();
+            } catch (Exception e) {
+                throw new RuntimeException("failed to construct encrypt key");
+            }
+        }
+
+        public static DESTool getInstance(String secretKey) {
+            if (EmptyTool.isEmpty(secretKey)) {
+                throw new IllegalArgumentException("secretKey must not be empty");
+            }
+            return new DESTool(secretKey);
+        }
+
+        public String encode(String aimStr) {
+            if (EmptyTool.isEmpty(aimStr)) {
+                return null;
+            }
+            try {
+                org.apache.commons.codec.binary.Base64 base64 = new org.apache.commons.codec.binary.Base64();
+                byte[] bytes = aimStr.getBytes(StandardCharsets.UTF_8);
+                Cipher cipher = Cipher.getInstance("DES");
+                cipher.init(Cipher.ENCRYPT_MODE, key);
+                byte[] doFinal = cipher.doFinal(bytes);
+                return new String(base64.encode(doFinal));
+            } catch (Exception e) {
+                throw new RuntimeException("failed to encode");
+            }
+        }
+
+        public String decode(String aimStr) {
+            if (EmptyTool.isEmpty(aimStr)) {
+                return null;
+            }
+            org.apache.commons.codec.binary.Base64 base64 = new Base64();
+            try {
+                byte[] bytes = base64.decode(aimStr);
+                Cipher cipher = Cipher.getInstance("DES");
+                cipher.init(Cipher.DECRYPT_MODE, key);
+                byte[] doFinal = cipher.doFinal(bytes);
+                return new String(doFinal, StandardCharsets.UTF_8);
+            } catch (Exception e) {
+                throw new RuntimeException("failed to decode");
             }
         }
     }
