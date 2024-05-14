@@ -441,7 +441,7 @@ public final class DSUtil {
         return null == srcMap || srcMap.isEmpty() ? null : srcMap.get(aimKey);
     }
 
-    public static <T, K, R> R mapObjGet(Map<K, T> srcMap, K aimKey, Function<? super T, ? extends R> function) {
+    public static <T, K, R> R mapObjGetField(Map<K, T> srcMap, K aimKey, Function<? super T, ? extends R> function) {
         return null == srcMap || srcMap.isEmpty() || null == srcMap.get(aimKey) ? null : function.apply(srcMap.get(aimKey));
     }
 
