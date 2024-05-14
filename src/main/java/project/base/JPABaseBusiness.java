@@ -45,7 +45,7 @@ public abstract class JPABaseBusiness<ID extends Serializable, EN, EN_VO, ADD_CM
         return optional.get();
     }
 
-    protected EN_VO add(ADD_CMD cmd) {
+    public EN_VO add(ADD_CMD cmd) {
         EN entity = addToEntity(cmd);
         authExist(entity);
         entity = newObjSetId(entity);
@@ -53,28 +53,28 @@ public abstract class JPABaseBusiness<ID extends Serializable, EN, EN_VO, ADD_CM
         return entityToVo(Collections.singletonList(entity), null).get(0);
     }
 
-    protected EN_VO delete(ID id) {
+    public EN_VO delete(ID id) {
         EN entity = getById(id);
         entity = dealDelete(entity);
         return entityToVo(Collections.singletonList(entity), null).get(0);
     }
 
-    protected EN_VO modify(MOD_CMD cmd) {
+    public EN_VO modify(MOD_CMD cmd) {
         EN entity = modifyInOldEntity(cmd, getById(getModifyCmdId(cmd)));
         authExist(entity);
         dao.save(entity);
         return entityToVo(Collections.singletonList(entity), null).get(0);
     }
 
-    protected EN_VO query(ID id) {
+    public EN_VO query(ID id) {
         return entityToVo(Collections.singletonList(getById(id)), null).get(0);
     }
 
-    protected List<EN_VO> list(QUERY_CMD cmd) {
+    public List<EN_VO> list(QUERY_CMD cmd) {
         return entityToVo(dao.findAll(cmdToSpecification(cmd)), cmd);
     }
 
-    protected PageResp<EN_VO> page(QUERY_CMD cmd) {
+    public PageResp<EN_VO> page(QUERY_CMD cmd) {
         Page<EN> entityPage = dao
                 .findAll(cmdToSpecification(cmd), PageRequest.of(cmd.getPageNum() - 1, cmd.getPageSize()));
         PageResp<EN_VO> result = new DSUtil.PageResp<>();
