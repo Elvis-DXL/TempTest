@@ -441,6 +441,10 @@ public final class DSUtil {
         return null == srcMap || srcMap.isEmpty() ? null : srcMap.get(aimKey);
     }
 
+    public static <T, K, R> R mapObjGet(Map<K, T> srcMap, K aimKey, Function<? super T, ? extends R> function) {
+        return null == srcMap || srcMap.isEmpty() || null == srcMap.get(aimKey) ? null : function.apply(srcMap.get(aimKey));
+    }
+
     public static String hypStr(String aimStr, int start, int mid, int end) {
         if (EmptyTool.isEmpty(aimStr) || aimStr.length() < Math.max(start, end)) {
             return aimStr;
