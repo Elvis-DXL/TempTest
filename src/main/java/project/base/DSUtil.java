@@ -1111,7 +1111,7 @@ public final class DSUtil {
                 return null;
             }
             try {
-                org.apache.commons.codec.binary.Base64 base64 = new org.apache.commons.codec.binary.Base64();
+                Base64 base64 = new Base64();
                 byte[] bytes = aimStr.getBytes(StandardCharsets.UTF_8);
                 Cipher cipher = Cipher.getInstance("DES");
                 cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -1126,7 +1126,7 @@ public final class DSUtil {
             if (EmptyTool.isEmpty(aimStr)) {
                 return null;
             }
-            org.apache.commons.codec.binary.Base64 base64 = new Base64();
+            Base64 base64 = new Base64();
             try {
                 byte[] bytes = base64.decode(aimStr);
                 Cipher cipher = Cipher.getInstance("DES");
