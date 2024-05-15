@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -87,7 +88,7 @@ public abstract class JPABaseBusiness<ID extends Serializable, EN, EN_VO, ADD_CM
     }
 
     protected Specification<EN> cmdToSpecification(QUERY_CMD cmd) {
-        return (root, query, cb) -> cmdToPredicate(cmd, root, query, cb);
+        return (root, query, cb) -> cmdToPredicate(cmd, new ArrayList<>(), root, query, cb);
     }
 
     protected EN newObjSetId(EN entity) {
@@ -108,5 +109,6 @@ public abstract class JPABaseBusiness<ID extends Serializable, EN, EN_VO, ADD_CM
 
     protected abstract List<EN_VO> entityToVo(List<EN> dataList, QUERY_CMD cmd);
 
-    protected abstract Predicate cmdToPredicate(QUERY_CMD cmd, Root<EN> root, CriteriaQuery<?> query, CriteriaBuilder cb);
+    protected abstract Predicate cmdToPredicate(QUERY_CMD cmd, List<Predicate> tjList,
+                                                Root<EN> root, CriteriaQuery<?> query, CriteriaBuilder cb);
 }
