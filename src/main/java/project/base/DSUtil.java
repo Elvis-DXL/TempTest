@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -1139,7 +1140,7 @@ public final class DSUtil {
         }
     }
 
-    public final static class TreeNode {
+    public final static class TreeNode implements Serializable {
         private String selfId;
         private String selfName;
         private String selfType;
@@ -1227,7 +1228,7 @@ public final class DSUtil {
         }
     }
 
-    public final static class OrderItem {
+    public final static class OrderItem implements Serializable {
         private String column;
         private boolean asc = true;
 
@@ -1256,7 +1257,7 @@ public final class DSUtil {
         }
     }
 
-    public final static class PageResp<T> {
+    public final static class PageResp<T> implements Serializable {
         private Integer pageNum;
         private Integer pageSize;
         private Integer totalNum;
@@ -1304,7 +1305,7 @@ public final class DSUtil {
         }
     }
 
-    public static class PageReq {
+    public static class PageReq implements Serializable {
         protected Integer pageNum;
         protected Integer pageSize;
         protected List<OrderItem> orderList;
