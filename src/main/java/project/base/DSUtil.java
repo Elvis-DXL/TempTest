@@ -591,7 +591,7 @@ public final class DSUtil {
         public static Predicate tjlToPredicate(List<Predicate> tjList, OrderItem defaultSort, List<OrderItem> sortList,
                                                Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
             Predicate[] tjPredicate = new Predicate[tjList.size()];
-            return query.where(tjList.toArray(tjPredicate)).orderBy(getOrderArr(defaultSort, sortList, root, cb))
+            return query.where(tjList.toArray(tjPredicate)).orderBy(getOrderArray(defaultSort, sortList, root, cb))
                     .getRestriction();
         }
 
@@ -600,7 +600,7 @@ public final class DSUtil {
             return isAnd ? cb.and(list.toArray(predicateArr)) : cb.or(list.toArray(predicateArr));
         }
 
-        private static Order[] getOrderArr(OrderItem defaultSort, List<OrderItem> sortList, Root<?> root, CriteriaBuilder cb) {
+        private static Order[] getOrderArray(OrderItem defaultSort, List<OrderItem> sortList, Root<?> root, CriteriaBuilder cb) {
             List<Order> orderList = new ArrayList<>();
             if (EmptyTool.isEmpty(sortList)) {
                 orderList.add(defaultSort.isAsc() ?
