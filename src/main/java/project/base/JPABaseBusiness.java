@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.sql.DataSource;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +29,8 @@ import static project.base.DSUtil.PageResp;
  */
 public abstract class JPABaseBusiness<ID extends Serializable, EN, EN_VO, ADD_CMD, MOD_CMD,
         QUERY_CMD extends PageReq, DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>> {
+    @Autowired
+    protected DataSource dataSource;
     @Autowired
     protected DAO dao;
 

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.sql.DataSource;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +23,8 @@ import static project.base.DSUtil.PageResp;
  */
 public abstract class MybatisPlusBaseBusiness<ID extends Serializable, EN,
         EN_VO, ADD_CMD, MOD_CMD, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>> {
+    @Autowired
+    protected DataSource dataSource;
     @Autowired
     protected DAO dao;
 
