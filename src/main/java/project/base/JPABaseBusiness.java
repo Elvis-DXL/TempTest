@@ -78,7 +78,7 @@ public abstract class JPABaseBusiness<ID extends Serializable, EN, EN_VO, ADD_CM
     public PageResp<EN_VO> page(QUERY_CMD cmd) {
         Page<EN> entityPage = dao
                 .findAll(cmdToSpecification(cmd), PageRequest.of(cmd.getPageNum() - 1, cmd.getPageSize()));
-        PageResp<EN_VO> result = new DSUtil.PageResp<>();
+        PageResp<EN_VO> result = new PageResp<>();
         result.setPageNum(entityPage.getNumber() + 1);
         result.setPageSize(entityPage.getSize());
         result.setTotalNum((int) entityPage.getTotalElements());

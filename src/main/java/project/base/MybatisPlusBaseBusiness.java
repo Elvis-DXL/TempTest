@@ -72,7 +72,7 @@ public abstract class MybatisPlusBaseBusiness<ID extends Serializable, EN,
     public PageResp<EN_VO> page(QUERY_CMD cmd) {
         IPage<EN> entityPage = dao
                 .selectPage(new Page<>(cmd.getPageNum(), cmd.getPageSize()), cmdToWrapper(cmd));
-        PageResp<EN_VO> result = new DSUtil.PageResp<>();
+        PageResp<EN_VO> result = new PageResp<>();
         result.setPageNum((int) entityPage.getCurrent());
         result.setPageSize((int) entityPage.getSize());
         result.setTotalNum((int) entityPage.getTotal());
