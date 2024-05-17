@@ -27,7 +27,8 @@ import static project.base.DSUtil.PageResp;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/4/25 11:31
  */
-public abstract class JPABaseBusiness<ID extends Serializable, EN, EN_VO, ADD_CMD, MOD_CMD,
+public abstract class JPABaseBusiness<ID extends Serializable,
+        EN extends JPABaseBusiness.PKSet, EN_VO, ADD_CMD, MOD_CMD extends JPABaseBusiness.PKGet<ID>,
         QUERY_CMD extends PageReq, DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>> {
     @Autowired
     protected DataSource dataSource;
@@ -52,19 +53,19 @@ public abstract class JPABaseBusiness<ID extends Serializable, EN, EN_VO, ADD_CM
     public EN_VO add(ADD_CMD cmd) {
         EN entity = addToEntity(cmd);
         authExist(entity);
-        entity = newObjSetId(entity);
+        entity.setPK();
         dao.save(entity);
         return entityToVo(Collections.singletonList(entity), null).get(0);
     }
 
     public EN_VO delete(ID id) {
         EN entity = getById(id);
-        entity = dealDelete(entity);
+        dealDelete(entity);
         return entityToVo(Collections.singletonList(entity), null).get(0);
     }
 
     public EN_VO modify(MOD_CMD cmd) {
-        EN entity = modifyInOldEntity(cmd, getById(getModifyCmdId(cmd)));
+        EN entity = modifyInOldEntity(cmd, getById(cmd.getPK()));
         authExist(entity);
         dao.save(entity);
         return entityToVo(Collections.singletonList(entity), null).get(0);
@@ -94,10 +95,6 @@ public abstract class JPABaseBusiness<ID extends Serializable, EN, EN_VO, ADD_CM
         return (root, query, cb) -> cmdToPredicate(cmd, new ArrayList<>(), root, query, cb);
     }
 
-    protected EN newObjSetId(EN entity) {
-        return entity;
-    }
-
     protected void authExist(EN entity) {
     }
 
@@ -106,12 +103,19 @@ public abstract class JPABaseBusiness<ID extends Serializable, EN, EN_VO, ADD_CM
 
     protected abstract EN modifyInOldEntity(MOD_CMD cmd, EN oldEntity);
 
-    protected abstract ID getModifyCmdId(MOD_CMD cmd);
-
-    protected abstract EN dealDelete(EN entity);
+    protected abstract void dealDelete(EN entity);
 
     protected abstract List<EN_VO> entityToVo(List<EN> dataList, QUERY_CMD cmd);
 
     protected abstract Predicate cmdToPredicate(QUERY_CMD cmd, List<Predicate> tjList,
                                                 Root<EN> root, CriteriaQuery<?> query, CriteriaBuilder cb);
+
+    /*************************************************内部接口*************************************************/
+    public interface PKGet<ID> {
+        ID getPK();
+    }
+
+    public interface PKSet {
+        void setPK();
+    }
 }

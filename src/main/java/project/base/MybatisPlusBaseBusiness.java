@@ -21,8 +21,8 @@ import static project.base.DSUtil.PageResp;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/4/25 14:54
  */
-public abstract class MybatisPlusBaseBusiness<ID extends Serializable, EN,
-        EN_VO, ADD_CMD, MOD_CMD, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>> {
+public abstract class MybatisPlusBaseBusiness<ID extends Serializable, EN extends MybatisPlusBaseBusiness.PKSet, EN_VO, ADD_CMD,
+        MOD_CMD extends MybatisPlusBaseBusiness.PKGet<ID>, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>> {
     @Autowired
     protected DataSource dataSource;
     @Autowired
@@ -46,19 +46,19 @@ public abstract class MybatisPlusBaseBusiness<ID extends Serializable, EN,
     public EN_VO add(ADD_CMD cmd) {
         EN entity = addToEntity(cmd);
         authExist(entity);
-        entity = newObjSetId(entity);
+        entity.setPK();
         dao.insert(entity);
         return entityToVo(Collections.singletonList(entity), null).get(0);
     }
 
     public EN_VO delete(ID id) {
         EN entity = getById(id);
-        entity = dealDelete(entity);
+        dealDelete(entity);
         return entityToVo(Collections.singletonList(entity), null).get(0);
     }
 
     public EN_VO modify(MOD_CMD cmd) {
-        EN entity = modifyInOldEntity(cmd, getById(getModifyCmdId(cmd)));
+        EN entity = modifyInOldEntity(cmd, getById(cmd.getPK()));
         authExist(entity);
         dao.updateById(entity);
         return entityToVo(Collections.singletonList(entity), null).get(0);
@@ -92,17 +92,21 @@ public abstract class MybatisPlusBaseBusiness<ID extends Serializable, EN,
     }
 
     /*************************************************抽象方法*************************************************/
-    protected abstract EN newObjSetId(EN entity);
-
     protected abstract EN addToEntity(ADD_CMD cmd);
 
     protected abstract EN modifyInOldEntity(MOD_CMD cmd, EN oldEntity);
 
-    protected abstract ID getModifyCmdId(MOD_CMD cmd);
-
-    protected abstract EN dealDelete(EN entity);
+    protected abstract void dealDelete(EN entity);
 
     protected abstract List<EN_VO> entityToVo(List<EN> dataList, QUERY_CMD cmd);
 
     protected abstract LambdaQueryWrapper<EN> cmdInWrapper(LambdaQueryWrapper<EN> wrapper, QUERY_CMD cmd);
+
+    public interface PKGet<ID> {
+        ID getPK();
+    }
+
+    public interface PKSet {
+        void setPK();
+    }
 }
