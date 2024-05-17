@@ -46,7 +46,7 @@ public abstract class MybatisPlusBaseBusiness<ID extends Serializable, EN extend
     public EN_VO add(ADD_CMD cmd) {
         EN entity = addToEntity(cmd);
         authExist(entity);
-        entity.setPK();
+        entity.newObjSetPK();
         dao.insert(entity);
         return entityToVo(Collections.singletonList(entity), null).get(0);
     }
@@ -102,11 +102,12 @@ public abstract class MybatisPlusBaseBusiness<ID extends Serializable, EN extend
 
     protected abstract LambdaQueryWrapper<EN> cmdInWrapper(LambdaQueryWrapper<EN> wrapper, QUERY_CMD cmd);
 
+    /*************************************************内部接口*************************************************/
     public interface PKGet<ID> {
         ID getPK();
     }
 
     public interface PKSet {
-        void setPK();
+        void newObjSetPK();
     }
 }

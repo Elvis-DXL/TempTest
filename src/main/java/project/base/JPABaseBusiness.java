@@ -53,7 +53,7 @@ public abstract class JPABaseBusiness<ID extends Serializable,
     public EN_VO add(ADD_CMD cmd) {
         EN entity = addToEntity(cmd);
         authExist(entity);
-        entity.setPK();
+        entity.newObjSetPK();
         dao.save(entity);
         return entityToVo(Collections.singletonList(entity), null).get(0);
     }
@@ -116,6 +116,6 @@ public abstract class JPABaseBusiness<ID extends Serializable,
     }
 
     public interface PKSet {
-        void setPK();
+        void newObjSetPK();
     }
 }
