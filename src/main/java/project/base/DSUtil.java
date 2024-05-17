@@ -189,7 +189,7 @@ public final class DSUtil {
             return join(srcList, true);
         }
 
-        public <T, R> String join(Collection<T> srcList, Function<? super T, ? extends R> function) {
+        public <T, K> String join(Collection<T> srcList, Function<? super T, ? extends K> function) {
             return join(srcList, function, true);
         }
 
@@ -210,7 +210,7 @@ public final class DSUtil {
             return result;
         }
 
-        public <T, R> String join(Collection<T> srcList, Function<? super T, ? extends R> function, boolean includeStartAndEnd) {
+        public <T, K> String join(Collection<T> srcList, Function<? super T, ? extends K> function, boolean includeStartAndEnd) {
             return EmptyTool.isEmpty(srcList) ? null :
                     join(srcList.stream().map(function).map(Object::toString).collect(Collectors.toList()), includeStartAndEnd);
         }
@@ -434,7 +434,7 @@ public final class DSUtil {
         return EmptyTool.isEmpty(srcList) ? null : srcList.get(ThreadLocalRandom.current().nextInt(srcList.size()));
     }
 
-    public static <T, R> R objGet(T srcObj, Function<? super T, ? extends R> function) {
+    public static <T, V> V objGet(T srcObj, Function<? super T, ? extends V> function) {
         return null == srcObj ? null : function.apply(srcObj);
     }
 
@@ -442,7 +442,7 @@ public final class DSUtil {
         return null == srcMap || srcMap.isEmpty() ? null : srcMap.get(aimKey);
     }
 
-    public static <T, K, R> R mapObjGetField(Map<K, T> srcMap, K aimKey, Function<? super T, ? extends R> function) {
+    public static <T, K, V> V mapObjGetField(Map<K, T> srcMap, K aimKey, Function<? super T, ? extends V> function) {
         return null == srcMap || srcMap.isEmpty() || null == srcMap.get(aimKey) ? null : function.apply(srcMap.get(aimKey));
     }
 
@@ -566,13 +566,13 @@ public final class DSUtil {
                 srcList.stream().filter(predicate).collect(Collectors.toList());
     }
 
-    public static <T, R> List<R> listGetField(List<T> srcList, Function<? super T, ? extends R> mapper) {
+    public static <T, V> List<V> listGetField(List<T> srcList, Function<? super T, ? extends V> mapper) {
         return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
                 srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull)
                         .distinct().collect(Collectors.toList());
     }
 
-    public static <T, R> List<R> listGetFieldNoDis(List<T> srcList, Function<? super T, ? extends R> mapper) {
+    public static <T, V> List<V> listGetFieldNoDis(List<T> srcList, Function<? super T, ? extends V> mapper) {
         return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
                 srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull)
                         .collect(Collectors.toList());
