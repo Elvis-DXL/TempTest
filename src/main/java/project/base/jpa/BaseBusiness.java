@@ -1,4 +1,4 @@
-package project.base;
+package project.base.jpa;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,16 +27,16 @@ import static project.base.DSUtil.PageResp;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/4/25 11:31
  */
-public abstract class JPABaseBusiness<ID extends Serializable,
-        EN extends JPABaseBusiness.PKSet, EN_VO, ADD_CMD, MOD_CMD extends JPABaseBusiness.PKGet<ID>,
+public abstract class BaseBusiness<ID extends Serializable,
+        EN extends BaseBusiness.PKSet, EN_VO, ADD_CMD, MOD_CMD extends BaseBusiness.PKGet<ID>,
         QUERY_CMD extends PageReq, DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>> {
     @Autowired
     protected DataSource dataSource;
     @Autowired
     protected DAO dao;
 
-    protected void throwBusinessException(String msgStr) {
-        throw new IllegalArgumentException(msgStr);
+    protected void throwBusinessException(String msg) {
+        throw new IllegalArgumentException(msg);
     }
 
     protected EN getById(ID id) {
@@ -51,24 +51,24 @@ public abstract class JPABaseBusiness<ID extends Serializable,
     }
 
     public EN_VO add(ADD_CMD cmd) {
-        EN entity = addToEntity(cmd);
-        authExist(entity);
-        entity.newObjSetPK();
-        dao.save(entity);
-        return entityToVo(Collections.singletonList(entity), null).get(0);
+        EN obj = addToNewEntity(cmd);
+        authExist(obj);
+        obj.newObjSetPK();
+        dao.save(obj);
+        return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
     public EN_VO delete(ID id) {
-        EN entity = getById(id);
-        dealDelete(entity);
-        return entityToVo(Collections.singletonList(entity), null).get(0);
+        EN obj = getById(id);
+        dealDelete(obj);
+        return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
     public EN_VO modify(MOD_CMD cmd) {
-        EN entity = modifyInOldEntity(cmd, getById(cmd.getPK()));
-        authExist(entity);
-        dao.save(entity);
-        return entityToVo(Collections.singletonList(entity), null).get(0);
+        EN obj = modifyInOldEntity(cmd, getById(cmd.getPK()));
+        authExist(obj);
+        dao.save(obj);
+        return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
     public EN_VO query(ID id) {
@@ -95,15 +95,15 @@ public abstract class JPABaseBusiness<ID extends Serializable,
         return (root, query, cb) -> cmdToPredicate(cmd, new ArrayList<>(), root, query, cb);
     }
 
-    protected void authExist(EN entity) {
+    protected void authExist(EN obj) {
     }
 
     /*************************************************抽象方法*************************************************/
-    protected abstract EN addToEntity(ADD_CMD cmd);
+    protected abstract EN addToNewEntity(ADD_CMD cmd);
 
-    protected abstract EN modifyInOldEntity(MOD_CMD cmd, EN oldEntity);
+    protected abstract EN modifyInOldEntity(MOD_CMD cmd, EN oldObj);
 
-    protected abstract void dealDelete(EN entity);
+    protected abstract void dealDelete(EN obj);
 
     protected abstract List<EN_VO> entityToVo(List<EN> dataList, QUERY_CMD cmd);
 

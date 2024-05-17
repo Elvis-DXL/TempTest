@@ -1,4 +1,4 @@
-package project.base;
+package project.base.mybatisplus;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -21,47 +21,47 @@ import static project.base.DSUtil.PageResp;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/4/25 14:54
  */
-public abstract class MybatisPlusBaseBusiness<ID extends Serializable, EN extends MybatisPlusBaseBusiness.PKSet, EN_VO, ADD_CMD,
-        MOD_CMD extends MybatisPlusBaseBusiness.PKGet<ID>, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>> {
+public abstract class BaseBusiness<ID extends Serializable, EN extends BaseBusiness.PKSet, EN_VO, ADD_CMD,
+        MOD_CMD extends BaseBusiness.PKGet<ID>, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>> {
     @Autowired
     protected DataSource dataSource;
     @Autowired
     protected DAO dao;
 
-    protected void throwBusinessException(String msgStr) {
-        throw new IllegalArgumentException(msgStr);
+    protected void throwBusinessException(String msg) {
+        throw new IllegalArgumentException(msg);
     }
 
     protected EN getById(ID id) {
         if (null == id) {
             throwBusinessException("传入ID为空");
         }
-        EN entity = dao.selectById(id);
-        if (null == entity) {
+        EN obj = dao.selectById(id);
+        if (null == obj) {
             throwBusinessException("传入ID错误");
         }
-        return entity;
+        return obj;
     }
 
     public EN_VO add(ADD_CMD cmd) {
-        EN entity = addToEntity(cmd);
-        authExist(entity);
-        entity.newObjSetPK();
-        dao.insert(entity);
-        return entityToVo(Collections.singletonList(entity), null).get(0);
+        EN obj = addToNewEntity(cmd);
+        authExist(obj);
+        obj.newObjSetPK();
+        dao.insert(obj);
+        return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
     public EN_VO delete(ID id) {
-        EN entity = getById(id);
-        dealDelete(entity);
-        return entityToVo(Collections.singletonList(entity), null).get(0);
+        EN obj = getById(id);
+        dealDelete(obj);
+        return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
     public EN_VO modify(MOD_CMD cmd) {
-        EN entity = modifyInOldEntity(cmd, getById(cmd.getPK()));
-        authExist(entity);
-        dao.updateById(entity);
-        return entityToVo(Collections.singletonList(entity), null).get(0);
+        EN obj = modifyInOldEntity(cmd, getById(cmd.getPK()));
+        authExist(obj);
+        dao.updateById(obj);
+        return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
     public EN_VO query(ID id) {
@@ -88,15 +88,15 @@ public abstract class MybatisPlusBaseBusiness<ID extends Serializable, EN extend
         return cmdInWrapper(Wrappers.<EN>lambdaQuery(), cmd);
     }
 
-    protected void authExist(EN entity) {
+    protected void authExist(EN obj) {
     }
 
     /*************************************************抽象方法*************************************************/
-    protected abstract EN addToEntity(ADD_CMD cmd);
+    protected abstract EN addToNewEntity(ADD_CMD cmd);
 
-    protected abstract EN modifyInOldEntity(MOD_CMD cmd, EN oldEntity);
+    protected abstract EN modifyInOldEntity(MOD_CMD cmd, EN oldObj);
 
-    protected abstract void dealDelete(EN entity);
+    protected abstract void dealDelete(EN obj);
 
     protected abstract List<EN_VO> entityToVo(List<EN> dataList, QUERY_CMD cmd);
 
