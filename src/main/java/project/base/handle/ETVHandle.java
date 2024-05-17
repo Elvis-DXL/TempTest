@@ -1,5 +1,6 @@
 package project.base.handle;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,5 +9,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public final class ETVHandle {
+    @Autowired
+    private MapHandle mapHandle;
 
 }
