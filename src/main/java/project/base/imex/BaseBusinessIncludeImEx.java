@@ -61,12 +61,12 @@ public abstract class BaseBusinessIncludeImEx<ID extends Serializable,
     }
 
     public void dataImport(MultipartFile file) {
-        if (file.isEmpty()) {
-            throwBusinessException("传入文件为空");
-        }
         ImEx imEx = imEx();
         if (null == imEx || null == imEx.getClazz()) {
             throwBusinessException("模板定义信息异常");
+        }
+        if (file.isEmpty()) {
+            throwBusinessException("传入文件为空");
         }
         List<EXCEL> excelData = null;
         try {
