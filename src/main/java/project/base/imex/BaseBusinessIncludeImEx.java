@@ -51,15 +51,6 @@ public abstract class BaseBusinessIncludeImEx<ID extends Serializable,
         ExcelRW.writer(new ArrayList<>(), imEx.getClazz(), imEx.getFileName(), imEx.getSheetName(), request, response);
     }
 
-    public void dataExport(QUERY_CMD cmd, HttpServletRequest request, HttpServletResponse response) {
-        ImEx imEx = imEx();
-        if (null == imEx || null == imEx.getClazz() || isEmpty(imEx.getFileName()) || isEmpty(imEx.getSheetName())) {
-            throwBusinessException("模板定义信息异常");
-        }
-        ExcelRW.writer(entityToExcel(listEntity(cmd)), imEx.getClazz(), imEx.getFileName(), imEx.getSheetName(),
-                request, response);
-    }
-
     public void dataImport(MultipartFile file) {
         ImEx imEx = imEx();
         if (null == imEx || null == imEx.getClazz()) {
@@ -79,6 +70,15 @@ public abstract class BaseBusinessIncludeImEx<ID extends Serializable,
             throwBusinessException("解析Excel文件获得到的数据为空");
         }
         excelDataIntoDatabase(excelData);
+    }
+
+    public void dataExport(QUERY_CMD cmd, HttpServletRequest request, HttpServletResponse response) {
+        ImEx imEx = imEx();
+        if (null == imEx || null == imEx.getClazz() || isEmpty(imEx.getFileName()) || isEmpty(imEx.getSheetName())) {
+            throwBusinessException("模板定义信息异常");
+        }
+        ExcelRW.writer(entityToExcel(listEntity(cmd)), imEx.getClazz(), imEx.getFileName(), imEx.getSheetName(),
+                request, response);
     }
 
     public final static class ExcelRW {
@@ -185,17 +185,15 @@ public abstract class BaseBusinessIncludeImEx<ID extends Serializable,
         }
 
         private static void dealWebExportExcelResponseHeader(String fileName, HttpServletRequest request, HttpServletResponse response) {
-            String agent = request.getHeader("USER-AGENT").toLowerCase();
-            try {
-                if (agent.contains("firefox")) {
-                    fileName = "=?UTF-8?B?" + Base64.getEncoder().encodeToString(fileName.getBytes(StandardCharsets.UTF_8)) + "?=";
-                    fileName = fileName.replaceAll("\r\n", "");
-                } else {
-                    fileName = URLEncoder.encode(fileName, "utf-8");
-                    fileName = fileName.replace("+", " ");
+            if (request.getHeader("USER-AGENT").toLowerCase().contains("firefox")) {
+                fileName = "=?UTF-8?B?".concat(Base64.getEncoder().encodeToString(fileName.getBytes(StandardCharsets.UTF_8)))
+                        .concat("?=").replaceAll("\r\n", "");
+            } else {
+                try {
+                    fileName = URLEncoder.encode(fileName, "utf-8").replace("+", " ");
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
             }
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/vnd.ms-excel");
