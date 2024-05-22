@@ -298,12 +298,12 @@ public final class DSUtil {
         try {
             obj = clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return obj;
     }
 
-    public static List<Field> classAllFields(Class clazz) {
+    public static List<Field> classAllFields(Class<?> clazz) {
         List<Field> result = new ArrayList<>();
         do {
             Field[] fields = clazz.getDeclaredFields();
@@ -948,7 +948,7 @@ public final class DSUtil {
         }
 
         public <T> void updateSomeFieldsById(List<T> aimList, String... fieldName) {
-            if (null == aimList || aimList.size() == 0) {
+            if (EmptyTool.isEmpty(aimList)) {
                 return;
             }
             Class<?> clazz = aimList.get(0).getClass();

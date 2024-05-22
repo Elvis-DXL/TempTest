@@ -1,9 +1,10 @@
-package project.base.imex;
+package project.base.mybatisplus;
 
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.ClientAnchor;
@@ -12,10 +13,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.web.multipart.MultipartFile;
-import project.base.jpa.BaseBusiness;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,9 +36,8 @@ import static project.base.DSUtil.PageReq;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/5/17 16:07
  */
-public abstract class BaseBusinessIncludeImEx<ID extends Serializable,
-        EN extends BaseBusiness.PKSet, EN_VO, ADD_CMD, MOD_CMD extends BaseBusiness.PKGet<ID>, EXCEL,
-        QUERY_CMD extends PageReq, DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>>
+public abstract class BaseImExBusiness<ID extends Serializable, EN extends BaseBusiness.PKSet, EN_VO,
+        ADD_CMD, MOD_CMD extends BaseBusiness.PKGet<ID>, EXCEL, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>>
         extends BaseBusiness<ID, EN, EN_VO, ADD_CMD, MOD_CMD, QUERY_CMD, DAO> {
 
     public void template(HttpServletRequest request, HttpServletResponse response) {
@@ -140,7 +137,7 @@ public abstract class BaseBusinessIncludeImEx<ID extends Serializable,
             try {
                 writer(dataList, clazz, sheetName, response.getOutputStream());
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -156,7 +153,7 @@ public abstract class BaseBusinessIncludeImEx<ID extends Serializable,
                 wb.write(out);
                 out.flush();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             } finally {
                 IOTool.closeStream(out, wb);
             }
@@ -190,12 +187,12 @@ public abstract class BaseBusinessIncludeImEx<ID extends Serializable,
                         .concat("?=").replaceAll("\r\n", "");
             } else {
                 try {
-                    fileName = URLEncoder.encode(fileName, "utf-8").replace("+", " ");
+                    fileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.name()).replace("+", " ");
                 } catch (UnsupportedEncodingException e) {
                     throw new RuntimeException(e);
                 }
             }
-            response.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("Content-disposition", "attachment;filename=" + fileName);
             response.setHeader("Access-Control-Expose-Headers", "Content-disposition");
