@@ -4,7 +4,6 @@ import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
-import com.alibaba.excel.util.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.ClientAnchor;
@@ -13,8 +12,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import project.base.DSUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,9 +22,13 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+
+import static project.base.DSUtil.EmptyTool.isEmpty;
 
 public class ExcelRW {
 
@@ -47,7 +49,7 @@ public class ExcelRW {
             }
             String aim = excelProperty.value()[0];
             if (titleList.contains(aim)) {
-                throw new RuntimeException("表头存在相同字段【" + aim + "】");
+                throw new RuntimeException("表头定义中存在相同字段【" + aim + "】");
             }
             titleList.add(aim);
         }
@@ -81,8 +83,8 @@ public class ExcelRW {
         return result;
     }
 
-    public static <T> void writer(List<T> dataList, Class<T> clazz, String fileName, String sheetName,
-                                  HttpServletRequest request, HttpServletResponse response) {
+    public static void writer(List<?> dataList, Class<?> clazz, String fileName, String sheetName,
+                              HttpServletRequest request, HttpServletResponse response) {
         dealWebExportExcelResponseHeader(fileName + ".xlsx", request, response);
         try {
             writer(dataList, clazz, sheetName, response.getOutputStream());
@@ -91,8 +93,7 @@ public class ExcelRW {
         }
     }
 
-    public static void writer(Workbook wb, String fileName,
-                              HttpServletRequest request, HttpServletResponse response) {
+    public static void writer(Workbook wb, String fileName, HttpServletRequest request, HttpServletResponse response) {
         if (null == wb) {
             throw new NullPointerException("wb must not be null");
         }
@@ -106,24 +107,11 @@ public class ExcelRW {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (null != out) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if (null != wb) {
-                try {
-                    wb.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            DSUtil.IOTool.closeStream(out, wb);
         }
     }
 
-    public static <T> void writer(List<T> dataList, Class<T> clazz, String sheetName, OutputStream outStream) {
+    public static void writer(List<?> dataList, Class<?> clazz, String sheetName, OutputStream outStream) {
         EasyExcelFactory.write(outStream, clazz).sheet(sheetName).doWrite(dataList);
     }
 
@@ -131,34 +119,26 @@ public class ExcelRW {
         sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
     }
 
-    public static void addImage(Workbook wb, Sheet sheet,
-                                int firstRow, int lastRow, int firstCol, int lastCol, String imgStr) {
-        if (StringUtils.isEmpty(imgStr)) {
+    public static void addImage(Workbook wb, Sheet sheet, int firstRow, int lastRow, int firstCol, int lastCol, String imgStr) {
+        if (isEmpty(imgStr)) {
             return;
         }
-        BASE64Decoder decoder = new BASE64Decoder();
+
         sheet.createRow(firstRow);
         cellMerge(sheet, firstRow, lastRow, firstCol, lastCol);
         Drawing drawingPatriarch = sheet.createDrawingPatriarch();
         ClientAnchor anchor = wb instanceof HSSFWorkbook ?
                 new HSSFClientAnchor(0, 0, 0, 0, (short) firstCol, firstRow, (short) (lastCol + 1), lastRow + 1)
                 : new XSSFClientAnchor(0, 0, 0, 0, (short) firstCol, firstRow, (short) (lastCol + 1), lastRow + 1);
-        String[] arr = imgStr.split("base64,");
-        byte[] buffer = new byte[0];
-        try {
-            buffer = decoder.decodeBuffer(arr[1]);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        drawingPatriarch.createPicture(anchor, wb.addPicture(buffer, Workbook.PICTURE_TYPE_JPEG));
+        drawingPatriarch.createPicture(anchor, wb.addPicture(Base64.getDecoder().decode(imgStr.split("base64,")[1]),
+                Workbook.PICTURE_TYPE_JPEG));
     }
 
-    private static void dealWebExportExcelResponseHeader(String fileName,
-                                                         HttpServletRequest request, HttpServletResponse response) {
+    private static void dealWebExportExcelResponseHeader(String fileName, HttpServletRequest request, HttpServletResponse response) {
         String agent = request.getHeader("USER-AGENT").toLowerCase();
         try {
             if (agent.contains("firefox")) {
-                fileName = "=?UTF-8?B?" + new BASE64Encoder().encode(fileName.getBytes("utf-8")) + "?=";
+                fileName = "=?UTF-8?B?" + Base64.getEncoder().encodeToString(fileName.getBytes(StandardCharsets.UTF_8)) + "?=";
                 fileName = fileName.replaceAll("\r\n", "");
             } else {
                 fileName = URLEncoder.encode(fileName, "utf-8");

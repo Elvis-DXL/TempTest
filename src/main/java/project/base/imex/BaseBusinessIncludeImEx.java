@@ -16,15 +16,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.web.multipart.MultipartFile;
 import project.base.jpa.BaseBusiness;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -144,8 +144,7 @@ public abstract class BaseBusinessIncludeImEx<ID extends Serializable,
             }
         }
 
-        public static void writer(Workbook wb, String fileName,
-                                  HttpServletRequest request, HttpServletResponse response) {
+        public static void writer(Workbook wb, String fileName, HttpServletRequest request, HttpServletResponse response) {
             if (null == wb) {
                 throw new NullPointerException("wb must not be null");
             }
@@ -171,34 +170,25 @@ public abstract class BaseBusinessIncludeImEx<ID extends Serializable,
             sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
         }
 
-        public static void addImage(Workbook wb, Sheet sheet,
-                                    int firstRow, int lastRow, int firstCol, int lastCol, String imgStr) {
+        public static void addImage(Workbook wb, Sheet sheet, int firstRow, int lastRow, int firstCol, int lastCol, String imgStr) {
             if (isEmpty(imgStr)) {
                 return;
             }
-            BASE64Decoder decoder = new BASE64Decoder();
             sheet.createRow(firstRow);
             cellMerge(sheet, firstRow, lastRow, firstCol, lastCol);
             Drawing drawingPatriarch = sheet.createDrawingPatriarch();
             ClientAnchor anchor = wb instanceof HSSFWorkbook ?
                     new HSSFClientAnchor(0, 0, 0, 0, (short) firstCol, firstRow, (short) (lastCol + 1), lastRow + 1)
                     : new XSSFClientAnchor(0, 0, 0, 0, (short) firstCol, firstRow, (short) (lastCol + 1), lastRow + 1);
-            String[] arr = imgStr.split("base64,");
-            byte[] buffer = new byte[0];
-            try {
-                buffer = decoder.decodeBuffer(arr[1]);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            drawingPatriarch.createPicture(anchor, wb.addPicture(buffer, Workbook.PICTURE_TYPE_JPEG));
+            drawingPatriarch.createPicture(anchor, wb.addPicture(Base64.getDecoder().decode(imgStr.split("base64,")[1]),
+                    Workbook.PICTURE_TYPE_JPEG));
         }
 
-        private static void dealWebExportExcelResponseHeader(String fileName,
-                                                             HttpServletRequest request, HttpServletResponse response) {
+        private static void dealWebExportExcelResponseHeader(String fileName, HttpServletRequest request, HttpServletResponse response) {
             String agent = request.getHeader("USER-AGENT").toLowerCase();
             try {
                 if (agent.contains("firefox")) {
-                    fileName = "=?UTF-8?B?" + new BASE64Encoder().encode(fileName.getBytes("utf-8")) + "?=";
+                    fileName = "=?UTF-8?B?" + Base64.getEncoder().encodeToString(fileName.getBytes(StandardCharsets.UTF_8)) + "?=";
                     fileName = fileName.replaceAll("\r\n", "");
                 } else {
                     fileName = URLEncoder.encode(fileName, "utf-8");
