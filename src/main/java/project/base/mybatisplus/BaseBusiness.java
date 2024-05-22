@@ -69,7 +69,7 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends BaseBusin
     }
 
     public List<EN_VO> list(QUERY_CMD cmd) {
-        return entityToVo(dao.selectList(cmdToWrapper(cmd)), cmd);
+        return entityToVo(listEntity(cmd), cmd);
     }
 
     public PageResp<EN_VO> page(QUERY_CMD cmd) {
@@ -82,6 +82,10 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends BaseBusin
         result.setTotalPage((int) entityPage.getPages());
         result.setDataList(entityToVo(entityPage.getRecords(), cmd));
         return result;
+    }
+
+    protected List<EN> listEntity(QUERY_CMD cmd) {
+        return dao.selectList(cmdToWrapper(cmd));
     }
 
     protected LambdaQueryWrapper<EN> cmdToWrapper(QUERY_CMD cmd) {
