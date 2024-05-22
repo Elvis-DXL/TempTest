@@ -4,7 +4,6 @@ import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
-import com.alibaba.excel.util.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.ClientAnchor;
@@ -174,7 +173,7 @@ public abstract class BaseBusinessIncludeImEx<ID extends Serializable,
 
         public static void addImage(Workbook wb, Sheet sheet,
                                     int firstRow, int lastRow, int firstCol, int lastCol, String imgStr) {
-            if (StringUtils.isEmpty(imgStr)) {
+            if (isEmpty(imgStr)) {
                 return;
             }
             BASE64Decoder decoder = new BASE64Decoder();
