@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import static project.base.DSUtil.EmptyTool.isEmpty;
-import static project.base.DSUtil.IOTool;
+import static project.base.DSUtil.IOTool.closeStream;
 import static project.base.DSUtil.PageReq;
 
 /**
@@ -155,7 +155,7 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
                 e.printStackTrace();
                 throw new RuntimeException(e);
             } finally {
-                IOTool.closeStream(out, wb);
+                closeStream(out, wb);
             }
         }
 
