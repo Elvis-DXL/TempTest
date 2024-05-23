@@ -15,6 +15,8 @@ import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.web.multipart.MultipartFile;
+import project.base.jpa.BaseBusiness.PKGet;
+import project.base.jpa.BaseBusiness.PKSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,9 +39,8 @@ import static project.base.DSUtil.PageReq;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/5/17 16:07
  */
-public abstract class BaseImExBusiness<ID extends Serializable,
-        EN extends BaseBusiness.PKSet, EN_VO, ADD_CMD, MOD_CMD extends BaseBusiness.PKGet<ID>, EXCEL,
-        QUERY_CMD extends PageReq, DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>>
+public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet, EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>,
+        EXCEL, QUERY_CMD extends PageReq, DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>>
         extends BaseBusiness<ID, EN, EN_VO, ADD_CMD, MOD_CMD, QUERY_CMD, DAO> {
 
     public void template(HttpServletRequest request, HttpServletResponse response) {
