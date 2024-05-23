@@ -489,14 +489,14 @@ public final class DSUtil {
         }
         List<TreeNode> result = new ArrayList<>();
         Map<String, TreeNode> tmpMap = ListTool.listToMap(treeNodeList, TreeNode::getSelfId, it -> it);
-        List<TreeNode> sunList;
+        List<TreeNode> childList;
         for (TreeNode item : treeNodeList) {
             if (EmptyTool.isNotEmpty(item.getParentId()) && null != mapGet(tmpMap, item.getParentId())
                     && !item.getSelfId().equals(item.getParentId())) {
-                sunList = null == mapGet(tmpMap, item.getParentId()).getSunList() ?
-                        new ArrayList<>() : mapGet(tmpMap, item.getParentId()).getSunList();
-                sunList.add(item);
-                mapGet(tmpMap, item.getParentId()).setSunList(sunList);
+                childList = null == mapGet(tmpMap, item.getParentId()).getChildList() ?
+                        new ArrayList<>() : mapGet(tmpMap, item.getParentId()).getChildList();
+                childList.add(item);
+                mapGet(tmpMap, item.getParentId()).setChildList(childList);
             } else {
                 result.add(item);
             }
@@ -1138,17 +1138,17 @@ public final class DSUtil {
             }
 
             public <T> List<T> getList(String sql, Class<T> clazz) {
-                return this.getList(sql, null, clazz);
+                return getList(sql, null, clazz);
             }
 
             public <T> T getSingle(String sql, Class<T> clazz) {
-                return this.getSingle(sql, null, clazz);
+                return getSingle(sql, null, clazz);
             }
 
             public <T> List<T> getList(String sql, Map<String, Object> parameterMap, Class<T> clazz) {
                 List resultList = null;
                 try {
-                    resultList = this.constructorQuery(sql, parameterMap).getResultList();
+                    resultList = constructorQuery(sql, parameterMap).getResultList();
                 } catch (Exception e) {
                     e.printStackTrace();
                     return new ArrayList<>();
@@ -1163,7 +1163,7 @@ public final class DSUtil {
             public <T> T getSingle(String sql, Map<String, Object> parameterMap, Class<T> clazz) {
                 Object singleResult = null;
                 try {
-                    singleResult = this.constructorQuery(sql, parameterMap).getSingleResult();
+                    singleResult = constructorQuery(sql, parameterMap).getSingleResult();
                 } catch (Exception e) {
                     e.printStackTrace();
                     return null;
@@ -1176,8 +1176,7 @@ public final class DSUtil {
 
             private Query constructorQuery(String sql, Map<String, Object> parameterMap) {
                 Query query = entityManager.createNativeQuery(sql)
-                        .unwrap(SQLQuery.class)
-                        .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+                        .unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
                 if (null == parameterMap || parameterMap.isEmpty()) {
                     return query;
                 }
@@ -1315,7 +1314,7 @@ public final class DSUtil {
         private String selfType;
         private String parentId;
         private Object selfObject;
-        private List<TreeNode> sunList;
+        private List<TreeNode> childList;
 
         public TreeNode() {
         }
@@ -1368,8 +1367,8 @@ public final class DSUtil {
             return selfObject;
         }
 
-        public List<TreeNode> getSunList() {
-            return sunList;
+        public List<TreeNode> getChildList() {
+            return childList;
         }
 
         public TreeNode setSelfId(String selfId) {
@@ -1397,8 +1396,8 @@ public final class DSUtil {
             return this;
         }
 
-        public TreeNode setSunList(List<TreeNode> sunList) {
-            this.sunList = sunList;
+        public TreeNode setChildList(List<TreeNode> childList) {
+            this.childList = childList;
             return this;
         }
     }
