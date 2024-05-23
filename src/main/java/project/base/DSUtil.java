@@ -1,6 +1,9 @@
 package project.base;
 
+import com.google.gson.Gson;
 import org.apache.commons.codec.binary.Base64;
+import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -1137,6 +1140,77 @@ public final class DSUtil {
             } catch (Exception e) {
                 throw new RuntimeException("failed to decode");
             }
+        }
+    }
+
+    public final static class SQLTool {
+        private final static Gson gson = new Gson();
+
+        private final EntityManager entityManager;
+
+        private SQLTool(EntityManager entityManager) {
+            this.entityManager = entityManager;
+        }
+
+        public static SQLTool getInstance(EntityManager entityManager) {
+            if (null == entityManager) {
+                throw new NullPointerException("entityManager must not be null");
+            }
+            return new SQLTool(entityManager);
+        }
+
+        public <T> List<T> getList(String sql, Class<T> clazz) {
+            return this.getList(sql, null, clazz);
+        }
+
+        public <T> T getSingle(String sql, Class<T> clazz) {
+            return this.getSingle(sql, null, clazz);
+        }
+
+        public <T> List<T> getList(String sql, Map<String, Object> parameterMap, Class<T> clazz) {
+            List resultList = null;
+            try {
+                resultList = this.constructorQuery(sql, parameterMap).getResultList();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new ArrayList<>();
+            }
+            List<T> result = new ArrayList<>();
+            resultList.forEach(it -> {
+                result.add(objMapToObj(it, clazz));
+            });
+            return result;
+        }
+
+        public <T> T getSingle(String sql, Map<String, Object> parameterMap, Class<T> clazz) {
+            Object singleResult = null;
+            try {
+                singleResult = this.constructorQuery(sql, parameterMap).getSingleResult();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+            if (null == singleResult) {
+                return null;
+            }
+            return objMapToObj(singleResult, clazz);
+        }
+
+        private Query constructorQuery(String sql, Map<String, Object> parameterMap) {
+            Query query = entityManager.createNativeQuery(sql)
+                    .unwrap(SQLQuery.class)
+                    .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+            if (null == parameterMap || parameterMap.isEmpty()) {
+                return query;
+            }
+            for (String key : parameterMap.keySet()) {
+                query.setParameter(key, parameterMap.get(key));
+            }
+            return query;
+        }
+
+        private <T> T objMapToObj(Object objMap, Class<T> clazz) {
+            return gson.fromJson(gson.toJson(objMap), clazz);
         }
     }
 
