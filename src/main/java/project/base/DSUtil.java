@@ -301,6 +301,7 @@ public final class DSUtil {
         try {
             obj = clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return obj;
@@ -343,6 +344,7 @@ public final class DSUtil {
             try {
                 aimField.set(aim, srcField.get(src));
             } catch (IllegalAccessException e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             } finally {
                 srcField.setAccessible(false);
@@ -475,6 +477,7 @@ public final class DSUtil {
         try {
             birthday = TimeTool.parseLD(birthdayStr, Pattern.yyyy_MM_dd);
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
         return birthdayToAgeByTime(birthday, aimTime);
@@ -587,6 +590,7 @@ public final class DSUtil {
                     try {
                         aimField.set(aim, srcField.get(src));
                     } catch (IllegalAccessException e) {
+                        e.printStackTrace();
                         throw new RuntimeException(e);
                     } finally {
                         srcField.setAccessible(false);
@@ -843,6 +847,7 @@ public final class DSUtil {
             try {
                 return TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd);
             } catch (Exception e) {
+                e.printStackTrace();
                 return null;
             }
         }
@@ -856,6 +861,7 @@ public final class DSUtil {
             try {
                 birthday = TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd);
             } catch (Exception e) {
+                e.printStackTrace();
                 return null;
             }
             return birthdayToCurrAge(birthday);
@@ -870,6 +876,7 @@ public final class DSUtil {
             try {
                 birthday = TimeTool.parseLD(idCardStr.substring(6, 14), Pattern.yyyyMMdd);
             } catch (Exception e) {
+                e.printStackTrace();
                 return null;
             }
             return birthdayToAgeByTime(birthday, aimTime);
@@ -971,6 +978,7 @@ public final class DSUtil {
                         connection.commit();
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     throw new RuntimeException("数据保存入库失败");
                 } finally {
                     IOTool.closeStream(connection, ps);
@@ -1045,6 +1053,7 @@ public final class DSUtil {
                         connection.commit();
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     throw new RuntimeException("数据更新入库失败");
                 } finally {
                     IOTool.closeStream(connection, ps);
@@ -1110,6 +1119,7 @@ public final class DSUtil {
                     }
                     colField.setAccessible(false);
                 } catch (SQLException | IllegalAccessException e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 }
             }
@@ -1194,6 +1204,7 @@ public final class DSUtil {
                 generator.init(secureRandom);
                 this.key = generator.generateKey();
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new RuntimeException("failed to construct encrypt key");
             }
         }
@@ -1217,6 +1228,7 @@ public final class DSUtil {
                 byte[] doFinal = cipher.doFinal(bytes);
                 return new String(base64.encode(doFinal));
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new RuntimeException("failed to encode");
             }
         }
@@ -1233,6 +1245,7 @@ public final class DSUtil {
                 byte[] doFinal = cipher.doFinal(bytes);
                 return new String(doFinal, StandardCharsets.UTF_8);
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new RuntimeException("failed to decode");
             }
         }

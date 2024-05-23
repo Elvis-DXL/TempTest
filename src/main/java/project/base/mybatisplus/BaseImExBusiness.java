@@ -62,6 +62,7 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
         try {
             excelData = ExcelRW.reader(file.getInputStream(), (Class<EXCEL>) imEx.getClazz());
         } catch (Exception e) {
+            e.printStackTrace();
             throwBusinessException(e.getMessage().contains(ExcelRW.TITLE_ERROR) ? "Excel文件表头错误，请重新下载导入模板"
                     : "Excel文件解析异常");
         }
@@ -81,7 +82,6 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
     }
 
     public final static class ExcelRW {
-
         public final static String TITLE_ERROR = "表头错误";
 
         public static <T> List<T> reader(InputStream iStream, Class<T> clazz) {
@@ -89,7 +89,6 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
         }
 
         public static <T> List<T> reader(InputStream iStream, Class<T> clazz, Integer sheetIndex) {
-            //获取定义表头信息
             Field[] fields = clazz.getDeclaredFields();
             List<String> titleList = new ArrayList<>();
             for (Field field : fields) {
@@ -104,7 +103,6 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
                 titleList.add(aim);
             }
             List<T> result = new ArrayList<>();
-            //读取数据
             EasyExcelFactory.read(iStream, clazz, new AnalysisEventListener<T>() {
                 @Override
                 public void invoke(T rowDTO, AnalysisContext analysisContext) {
@@ -117,12 +115,10 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
 
                 @Override
                 public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
-                    //获取文件表头
                     List<String> obsTitle = new ArrayList<>();
                     for (Integer it : headMap.keySet()) {
                         obsTitle.add(headMap.get(it));
                     }
-                    //校验表头
                     for (String it : titleList) {
                         if (!obsTitle.contains(it)) {
                             throw new RuntimeException(TITLE_ERROR);
@@ -139,6 +135,7 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
             try {
                 writer(dataList, clazz, sheetName, response.getOutputStream());
             } catch (IOException e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -155,6 +152,7 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
                 wb.write(out);
                 out.flush();
             } catch (IOException e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             } finally {
                 IOTool.closeStream(out, wb);
@@ -191,6 +189,7 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
                 try {
                     fileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.name()).replace("+", " ");
                 } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 }
             }
