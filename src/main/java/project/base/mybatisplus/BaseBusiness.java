@@ -73,15 +73,11 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends BaseBusin
     }
 
     public PageResp<EN_VO> page(QUERY_CMD cmd) {
-        IPage<EN> entityPage = dao
-                .selectPage(new Page<>(cmd.getPageNum(), cmd.getPageSize()), cmdToWrapper(cmd));
-        PageResp<EN_VO> result = new PageResp<>();
-        result.setPageNum((int) entityPage.getCurrent());
-        result.setPageSize((int) entityPage.getSize());
-        result.setTotalNum((int) entityPage.getTotal());
-        result.setTotalPage((int) entityPage.getPages());
-        result.setDataList(entityToVo(entityPage.getRecords(), cmd));
-        return result;
+        IPage<EN> entityPage = dao.selectPage(new Page<>(cmd.getPageNum(), cmd.getPageSize()), cmdToWrapper(cmd));
+        return new PageResp<EN_VO>()
+                .setPageNum((int) entityPage.getCurrent()).setPageSize((int) entityPage.getSize())
+                .setTotalNum((int) entityPage.getTotal()).setTotalPage((int) entityPage.getPages())
+                .setDataList(entityToVo(entityPage.getRecords(), cmd));
     }
 
     protected List<EN> listEntity(QUERY_CMD cmd) {

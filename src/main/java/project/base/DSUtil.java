@@ -1277,6 +1277,18 @@ public final class DSUtil {
             return new R<>(code, data, msg);
         }
 
+        public int getCode() {
+            return code;
+        }
+
+        public T getData() {
+            return data;
+        }
+
+        public String getMsg() {
+            return msg;
+        }
+
         public R<T> setCode(int code) {
             this.code = code;
             return this;
@@ -1290,18 +1302,6 @@ public final class DSUtil {
         public R<T> setMsg(String msg) {
             this.msg = msg;
             return this;
-        }
-
-        public int getCode() {
-            return code;
-        }
-
-        public T getData() {
-            return data;
-        }
-
-        public String getMsg() {
-            return msg;
         }
     }
 
@@ -1348,48 +1348,54 @@ public final class DSUtil {
             return selfId;
         }
 
-        public void setSelfId(String selfId) {
-            this.selfId = selfId;
-        }
-
         public String getSelfName() {
             return selfName;
-        }
-
-        public void setSelfName(String selfName) {
-            this.selfName = selfName;
         }
 
         public String getSelfType() {
             return selfType;
         }
 
-        public void setSelfType(String selfType) {
-            this.selfType = selfType;
-        }
-
         public String getParentId() {
             return parentId;
-        }
-
-        public void setParentId(String parentId) {
-            this.parentId = parentId;
-        }
-
-        public List<TreeNode> getSunList() {
-            return sunList;
-        }
-
-        public void setSunList(List<TreeNode> sunList) {
-            this.sunList = sunList;
         }
 
         public Object getSelfObject() {
             return selfObject;
         }
 
-        public void setSelfObject(Object selfObject) {
+        public List<TreeNode> getSunList() {
+            return sunList;
+        }
+
+        public TreeNode setSelfId(String selfId) {
+            this.selfId = selfId;
+            return this;
+        }
+
+        public TreeNode setSelfName(String selfName) {
+            this.selfName = selfName;
+            return this;
+        }
+
+        public TreeNode setSelfType(String selfType) {
+            this.selfType = selfType;
+            return this;
+        }
+
+        public TreeNode setParentId(String parentId) {
+            this.parentId = parentId;
+            return this;
+        }
+
+        public TreeNode setSelfObject(Object selfObject) {
             this.selfObject = selfObject;
+            return this;
+        }
+
+        public TreeNode setSunList(List<TreeNode> sunList) {
+            this.sunList = sunList;
+            return this;
         }
     }
 
@@ -1413,12 +1419,14 @@ public final class DSUtil {
             return asc;
         }
 
-        public void setColumn(String column) {
+        public OrderItem setColumn(String column) {
             this.column = column;
+            return this;
         }
 
-        public void setAsc(boolean asc) {
+        public OrderItem setAsc(boolean asc) {
             this.asc = asc;
+            return this;
         }
     }
 
@@ -1433,40 +1441,45 @@ public final class DSUtil {
             return pageNum;
         }
 
-        public void setPageNum(Integer pageNum) {
-            this.pageNum = pageNum;
-        }
-
         public Integer getPageSize() {
             return pageSize;
-        }
-
-        public void setPageSize(Integer pageSize) {
-            this.pageSize = pageSize;
         }
 
         public Integer getTotalNum() {
             return totalNum;
         }
 
-        public void setTotalNum(Integer totalNum) {
-            this.totalNum = totalNum;
-        }
-
         public Integer getTotalPage() {
             return totalPage;
-        }
-
-        public void setTotalPage(Integer totalPage) {
-            this.totalPage = totalPage;
         }
 
         public List<T> getDataList() {
             return dataList;
         }
 
-        public void setDataList(List<T> dataList) {
+        public PageResp<T> setPageNum(Integer pageNum) {
+            this.pageNum = pageNum;
+            return this;
+        }
+
+        public PageResp<T> setPageSize(Integer pageSize) {
+            this.pageSize = pageSize;
+            return this;
+        }
+
+        public PageResp<T> setTotalNum(Integer totalNum) {
+            this.totalNum = totalNum;
+            return this;
+        }
+
+        public PageResp<T> setTotalPage(Integer totalPage) {
+            this.totalPage = totalPage;
+            return this;
+        }
+
+        public PageResp<T> setDataList(List<T> dataList) {
             this.dataList = dataList;
+            return this;
         }
     }
 
@@ -1479,24 +1492,27 @@ public final class DSUtil {
             return pageNum;
         }
 
-        public void setPageNum(Integer pageNum) {
-            this.pageNum = pageNum;
-        }
-
         public Integer getPageSize() {
             return pageSize;
-        }
-
-        public void setPageSize(Integer pageSize) {
-            this.pageSize = pageSize;
         }
 
         public List<OrderItem> getOrderList() {
             return orderList;
         }
 
-        public void setOrderList(List<OrderItem> orderList) {
+        public PageReq setPageNum(Integer pageNum) {
+            this.pageNum = pageNum;
+            return this;
+        }
+
+        public PageReq setPageSize(Integer pageSize) {
+            this.pageSize = pageSize;
+            return this;
+        }
+
+        public PageReq setOrderList(List<OrderItem> orderList) {
             this.orderList = orderList;
+            return this;
         }
     }
 }

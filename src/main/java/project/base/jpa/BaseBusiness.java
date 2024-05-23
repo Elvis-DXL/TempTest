@@ -80,15 +80,11 @@ public abstract class BaseBusiness<ID extends Serializable,
     }
 
     public PageResp<EN_VO> page(QUERY_CMD cmd) {
-        Page<EN> entityPage = dao
-                .findAll(cmdToSpecification(cmd), PageRequest.of(cmd.getPageNum() - 1, cmd.getPageSize()));
-        PageResp<EN_VO> result = new PageResp<>();
-        result.setPageNum(entityPage.getNumber() + 1);
-        result.setPageSize(entityPage.getSize());
-        result.setTotalNum((int) entityPage.getTotalElements());
-        result.setTotalPage(entityPage.getTotalPages());
-        result.setDataList(entityToVo(entityPage.getContent(), cmd));
-        return result;
+        Page<EN> entityPage = dao.findAll(cmdToSpecification(cmd), PageRequest.of(cmd.getPageNum() - 1, cmd.getPageSize()));
+        return new PageResp<EN_VO>()
+                .setPageNum(entityPage.getNumber() + 1).setPageSize(entityPage.getSize())
+                .setTotalNum((int) entityPage.getTotalElements()).setTotalPage(entityPage.getTotalPages())
+                .setDataList(entityToVo(entityPage.getContent(), cmd));
     }
 
     protected List<EN> listEntity(QUERY_CMD cmd) {
