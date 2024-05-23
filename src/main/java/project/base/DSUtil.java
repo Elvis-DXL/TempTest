@@ -897,7 +897,7 @@ public final class DSUtil {
                 this.dataSource = dataSource;
             }
 
-            public static SaveUpdate getInstance(DataSource dataSource) {
+            private static SaveUpdate getInstance(DataSource dataSource) {
                 if (null == dataSource) {
                     throw new NullPointerException("dataSource must not be null");
                 }
@@ -1129,7 +1129,7 @@ public final class DSUtil {
                 this.entityManager = entityManager;
             }
 
-            public static Select getInstance(EntityManager entityManager) {
+            private static Select getInstance(EntityManager entityManager) {
                 if (null == entityManager) {
                     throw new NullPointerException("entityManager must not be null");
                 }
