@@ -883,25 +883,21 @@ public final class DSUtil {
         }
 
         public static SaveUpdate getSaveUpdate(DataSource dataSource) {
-            return SaveUpdate.getInstance(dataSource);
+            return new SaveUpdate(dataSource);
         }
 
         public static Select getSelect(EntityManager entityManager) {
-            return Select.getInstance(entityManager);
+            return new Select(entityManager);
         }
 
         public final static class SaveUpdate {
             private final DataSource dataSource;
 
             private SaveUpdate(DataSource dataSource) {
-                this.dataSource = dataSource;
-            }
-
-            private static SaveUpdate getInstance(DataSource dataSource) {
                 if (null == dataSource) {
                     throw new NullPointerException("dataSource must not be null");
                 }
-                return new SaveUpdate(dataSource);
+                this.dataSource = dataSource;
             }
 
             public <T> void saveObjSomeFields(T aim, String... fieldName) {
@@ -1126,14 +1122,10 @@ public final class DSUtil {
             private final EntityManager entityManager;
 
             private Select(EntityManager entityManager) {
-                this.entityManager = entityManager;
-            }
-
-            private static Select getInstance(EntityManager entityManager) {
                 if (null == entityManager) {
                     throw new NullPointerException("entityManager must not be null");
                 }
-                return new Select(entityManager);
+                this.entityManager = entityManager;
             }
 
             public <T> List<T> getList(String sql, Class<T> clazz) {
