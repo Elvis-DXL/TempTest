@@ -326,8 +326,8 @@ public final class DSUtil {
         if (null == src || null == aim) {
             return aim;
         }
-        Map<String, Field> srcMap = listToMap(classAllFields(src.getClass()), Field::getName, it -> it);
-        Map<String, Field> aimMap = listToMap(classAllFields(aim.getClass()), Field::getName, it -> it);
+        Map<String, Field> srcMap = ListTool.listToMap(classAllFields(src.getClass()), Field::getName, it -> it);
+        Map<String, Field> aimMap = ListTool.listToMap(classAllFields(aim.getClass()), Field::getName, it -> it);
         List<String> fieldList = Arrays.asList(fields);
         if (EmptyTool.isEmpty(fieldList)) {
             fieldList = new ArrayList<>(srcMap.keySet());
@@ -485,7 +485,7 @@ public final class DSUtil {
             return new ArrayList<>();
         }
         List<TreeNode> result = new ArrayList<>();
-        Map<String, TreeNode> tmpMap = listToMap(treeNodeList, TreeNode::getSelfId, it -> it);
+        Map<String, TreeNode> tmpMap = ListTool.listToMap(treeNodeList, TreeNode::getSelfId, it -> it);
         List<TreeNode> sunList;
         for (TreeNode item : treeNodeList) {
             if (EmptyTool.isNotEmpty(item.getParentId()) && null != mapGet(tmpMap, item.getParentId())
@@ -502,7 +502,7 @@ public final class DSUtil {
     }
 
     public static Integer minLackOrNext(List<Integer> srcList) {
-        srcList = listFilter(srcList, Objects::nonNull);
+        srcList = ListTool.listFilter(srcList, Objects::nonNull);
         if (EmptyTool.isEmpty(srcList)) {
             return 1;
         }
@@ -517,77 +517,87 @@ public final class DSUtil {
         return max + 1;
     }
 
-    public static <T, K, U> Map<K, U> listToMap(List<T> srcList,
-                                                Function<? super T, ? extends K> keyMapper,
-                                                Function<? super T, ? extends U> valueMapper) {
-        return EmptyTool.isEmpty(srcList) ?
-                new HashMap<>() : srcList.stream().collect(Collectors.toMap(keyMapper, valueMapper, (k1, k2) -> k1));
-    }
-
-    public static <T, K> Map<K, List<T>> listGroup(List<T> srcList, Function<? super T, ? extends K> keyMapper) {
-        return EmptyTool.isEmpty(srcList) ? new HashMap<>() : srcList.stream().collect(Collectors.groupingBy(keyMapper));
-    }
-
-    public static <T> List<T> listFilter(List<T> srcList, java.util.function.Predicate<? super T> predicate) {
-        return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
-                srcList.stream().filter(predicate).collect(Collectors.toList());
-    }
-
-    public static <T> List<T> listDistinct(List<T> srcList) {
-        return EmptyTool.isEmpty(srcList) ? new ArrayList<>() : srcList.stream().distinct().collect(Collectors.toList());
-    }
-
-    public static <T> List<T> listNonNullDistinct(List<T> srcList) {
-        return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
-                srcList.stream().filter(Objects::nonNull).distinct().collect(Collectors.toList());
-    }
-
-    public static <T, V> List<V> listGetField(List<T> srcList, Function<? super T, ? extends V> mapper) {
-        return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
-                srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull)
-                        .distinct().collect(Collectors.toList());
-    }
-
-    public static <T, V> List<V> listGetFieldNoDis(List<T> srcList, Function<? super T, ? extends V> mapper) {
-        return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
-                srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull)
-                        .collect(Collectors.toList());
-    }
-
-    public static <T, K> List<T> listClassChange(List<K> srcList, Class<T> clazz, String... fields) {
-        srcList = listFilter(srcList, Objects::nonNull);
-        if (EmptyTool.isEmpty(srcList) || null == clazz) {
-            return new ArrayList<>();
+    public final static class ListTool {
+        private ListTool() {
+            throw new AssertionError("Tool classes do not allow instantiation");
         }
-        List<T> result = new ArrayList<>();
-        Map<String, Field> srcMap = listToMap(classAllFields(srcList.get(0).getClass()), Field::getName, it -> it);
-        Map<String, Field> aimMap = listToMap(classAllFields(clazz), Field::getName, it -> it);
-        List<String> fieldList = Arrays.asList(fields);
-        if (EmptyTool.isEmpty(fieldList)) {
-            fieldList = new ArrayList<>(srcMap.keySet());
+
+        public static <T, K, U> Map<K, U> listToMap(List<T> srcList,
+                                                    Function<? super T, ? extends K> keyMapper,
+                                                    Function<? super T, ? extends U> valueMapper) {
+            return EmptyTool.isEmpty(srcList) ?
+                    new HashMap<>() : srcList.stream().collect(Collectors.toMap(keyMapper, valueMapper, (k1, k2) -> k1));
         }
-        for (K src : srcList) {
-            T aim = newInstance(clazz);
-            for (String field : fieldList) {
-                Field srcField = srcMap.get(field);
-                Field aimField = aimMap.get(field);
-                if (null == srcField || null == aimField) {
-                    continue;
-                }
-                srcField.setAccessible(true);
-                aimField.setAccessible(true);
-                try {
-                    aimField.set(aim, srcField.get(src));
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                } finally {
-                    srcField.setAccessible(false);
-                    aimField.setAccessible(false);
-                }
+
+        public static <T, K> Map<K, List<T>> listGroup(List<T> srcList, Function<? super T, ? extends K> keyMapper) {
+            return EmptyTool.isEmpty(srcList) ? new HashMap<>() : srcList.stream().collect(Collectors.groupingBy(keyMapper));
+        }
+
+        public static <T> List<T> listFilter(List<T> srcList, java.util.function.Predicate<? super T> predicate) {
+            return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
+                    srcList.stream().filter(predicate).collect(Collectors.toList());
+        }
+
+        public static <T> List<T> listNonNull(List<T> srcList) {
+            return listFilter(srcList, Objects::nonNull);
+        }
+
+        public static <T> List<T> listDistinct(List<T> srcList) {
+            return EmptyTool.isEmpty(srcList) ? new ArrayList<>() : srcList.stream().distinct().collect(Collectors.toList());
+        }
+
+        public static <T> List<T> listNonNullDistinct(List<T> srcList) {
+            return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
+                    srcList.stream().filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        }
+
+        public static <T, V> List<V> listGetField(List<T> srcList, Function<? super T, ? extends V> mapper) {
+            return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
+                    srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull)
+                            .distinct().collect(Collectors.toList());
+        }
+
+        public static <T, V> List<V> listGetFieldNoDis(List<T> srcList, Function<? super T, ? extends V> mapper) {
+            return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
+                    srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull)
+                            .collect(Collectors.toList());
+        }
+
+        public static <T, K> List<T> listClassChange(List<K> srcList, Class<T> clazz, String... fields) {
+            srcList = listNonNull(srcList);
+            if (EmptyTool.isEmpty(srcList) || null == clazz) {
+                return new ArrayList<>();
             }
-            result.add(aim);
+            List<T> result = new ArrayList<>();
+            Map<String, Field> srcMap = listToMap(classAllFields(srcList.get(0).getClass()), Field::getName, it -> it);
+            Map<String, Field> aimMap = listToMap(classAllFields(clazz), Field::getName, it -> it);
+            List<String> fieldList = Arrays.asList(fields);
+            if (EmptyTool.isEmpty(fieldList)) {
+                fieldList = new ArrayList<>(srcMap.keySet());
+            }
+            for (K src : srcList) {
+                T aim = newInstance(clazz);
+                for (String field : fieldList) {
+                    Field srcField = srcMap.get(field);
+                    Field aimField = aimMap.get(field);
+                    if (null == srcField || null == aimField) {
+                        continue;
+                    }
+                    srcField.setAccessible(true);
+                    aimField.setAccessible(true);
+                    try {
+                        aimField.set(aim, srcField.get(src));
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    } finally {
+                        srcField.setAccessible(false);
+                        aimField.setAccessible(false);
+                    }
+                }
+                result.add(aim);
+            }
+            return result;
         }
-        return result;
     }
 
     public final static class JPATool {
@@ -913,7 +923,7 @@ public final class DSUtil {
                 }
                 String tableName = table.name();
                 List<Field> fields = classAllFields(clazz);
-                Map<String, Field> fieldMap = listToMap(fields, Field::getName, it -> it);
+                Map<String, Field> fieldMap = ListTool.listToMap(fields, Field::getName, it -> it);
                 Map<String, String> fieldColMap = consSaveFieldColMap(fields);
                 List<String> srcFields = new ArrayList<>(fieldColMap.keySet());
                 List<String> aimFieldList = null;
@@ -983,7 +993,7 @@ public final class DSUtil {
                 }
                 String tableName = table.name();
                 List<Field> fields = classAllFields(clazz);
-                Map<String, Field> fieldMap = listToMap(fields, Field::getName, it -> it);
+                Map<String, Field> fieldMap = ListTool.listToMap(fields, Field::getName, it -> it);
                 Map<String, String> fieldColMap = consUpdateFieldColMap(fields);
                 String idCol = fieldColMap.get("id_column");
                 if (null == idCol) {
