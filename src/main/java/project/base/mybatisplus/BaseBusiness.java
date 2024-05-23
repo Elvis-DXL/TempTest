@@ -21,8 +21,8 @@ import static project.base.DSUtil.PageResp;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/4/25 14:54
  */
-public abstract class BaseBusiness<ID extends Serializable, EN extends BaseBusiness.PKSet, EN_VO, ADD_CMD,
-        MOD_CMD extends BaseBusiness.PKGet<ID>, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>> {
+public abstract class BaseBusiness<ID extends Serializable, EN extends BaseBusiness.PKSet, EN_VO,
+        ADD_CMD, MOD_CMD extends BaseBusiness.PKGet<ID>, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>> {
     @Autowired
     protected DataSource dataSource;
     @Autowired
