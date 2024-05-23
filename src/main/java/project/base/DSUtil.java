@@ -502,7 +502,7 @@ public final class DSUtil {
     }
 
     public static Integer minLackOrNext(List<Integer> srcList) {
-        srcList = ListTool.listFilter(srcList, Objects::nonNull);
+        srcList = ListTool.listNonNull(srcList);
         if (EmptyTool.isEmpty(srcList)) {
             return 1;
         }
@@ -534,8 +534,7 @@ public final class DSUtil {
         }
 
         public static <T> List<T> listFilter(List<T> srcList, java.util.function.Predicate<? super T> predicate) {
-            return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
-                    srcList.stream().filter(predicate).collect(Collectors.toList());
+            return EmptyTool.isEmpty(srcList) ? new ArrayList<>() : srcList.stream().filter(predicate).collect(Collectors.toList());
         }
 
         public static <T> List<T> listNonNull(List<T> srcList) {
@@ -1314,6 +1313,13 @@ public final class DSUtil {
             this.parentId = parentId;
         }
 
+        public TreeNode(String selfId, String selfName, String parentId, Object selfObject) {
+            this.selfId = selfId;
+            this.selfName = selfName;
+            this.parentId = parentId;
+            this.selfObject = selfObject;
+        }
+
         public TreeNode(String selfId, String selfName, String selfType, String parentId) {
             this.selfId = selfId;
             this.selfName = selfName;
@@ -1325,13 +1331,6 @@ public final class DSUtil {
             this.selfId = selfId;
             this.selfName = selfName;
             this.selfType = selfType;
-            this.parentId = parentId;
-            this.selfObject = selfObject;
-        }
-
-        public TreeNode(String selfId, String selfName, String parentId, Object selfObject) {
-            this.selfId = selfId;
-            this.selfName = selfName;
             this.parentId = parentId;
             this.selfObject = selfObject;
         }
