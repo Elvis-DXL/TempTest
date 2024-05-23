@@ -894,7 +894,7 @@ public final class DSUtil {
             }
 
             public <T> void saveObjSomeFields(List<T> aimList, String... fieldName) {
-                if (DSUtil.EmptyTool.isEmpty(aimList)) {
+                if (EmptyTool.isEmpty(aimList)) {
                     return;
                 }
                 Class<?> clazz = aimList.get(0).getClass();
@@ -914,7 +914,7 @@ public final class DSUtil {
                 } else {
                     aimFieldList = srcFields;
                 }
-                if (DSUtil.EmptyTool.isEmpty(aimFieldList)) {
+                if (EmptyTool.isEmpty(aimFieldList)) {
                     throw new RuntimeException("要保存的目标字段为空");
                 }
                 StringBuilder sb = new StringBuilder("INSERT INTO ");
@@ -959,12 +959,12 @@ public final class DSUtil {
                 } catch (Exception e) {
                     throw new RuntimeException("数据保存入库失败");
                 } finally {
-                    DSUtil.IOTool.closeStream(connection, ps);
+                    IOTool.closeStream(connection, ps);
                 }
             }
 
             public <T> void updateSomeFieldsById(List<T> aimList, String... fieldName) {
-                if (DSUtil.EmptyTool.isEmpty(aimList)) {
+                if (EmptyTool.isEmpty(aimList)) {
                     return;
                 }
                 Class<?> clazz = aimList.get(0).getClass();
@@ -991,7 +991,7 @@ public final class DSUtil {
                 } else {
                     aimFieldList = srcFields;
                 }
-                if (DSUtil.EmptyTool.isEmpty(aimFieldList)) {
+                if (EmptyTool.isEmpty(aimFieldList)) {
                     throw new RuntimeException("要更新的目标字段为空");
                 }
                 StringBuilder sb = new StringBuilder("UPDATE ");
@@ -1033,7 +1033,7 @@ public final class DSUtil {
                 } catch (Exception e) {
                     throw new RuntimeException("数据更新入库失败");
                 } finally {
-                    DSUtil.IOTool.closeStream(connection, ps);
+                    IOTool.closeStream(connection, ps);
                 }
             }
 
