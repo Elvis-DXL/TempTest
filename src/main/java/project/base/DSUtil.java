@@ -534,6 +534,14 @@ public final class DSUtil {
         consumer.accept(obj);
     }
 
+    public static <T> void judgeDo(boolean flag, T obj, Consumer<T> trueConsumer, Consumer<T> flaseConsumer) {
+        if (flag) {
+            trueConsumer.accept(obj);
+        } else {
+            flaseConsumer.accept(obj);
+        }
+    }
+
     public final static class ListTool {
         private ListTool() {
             throw new AssertionError("Tool classes do not allow instantiation");
