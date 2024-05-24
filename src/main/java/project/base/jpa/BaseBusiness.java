@@ -38,17 +38,21 @@ public abstract class BaseBusiness<ID extends Serializable,
     @Autowired
     protected DAO dao;
 
-    protected void throwBusinessException(String msg) {
-        throw new IllegalArgumentException(msg);
+    protected void throwBusinessEx(String msg) {
+        throw getBusinessEx(msg);
+    }
+
+    protected IllegalArgumentException getBusinessEx(String msgStr) {
+        return new IllegalArgumentException(msgStr);
     }
 
     protected EN getById(ID id) {
         if (null == id) {
-            throwBusinessException("传入ID为空");
+            throwBusinessEx("传入ID为空");
         }
         Optional<EN> optional = dao.findById(id);
         if (!optional.isPresent()) {
-            throwBusinessException("传入ID错误");
+            throwBusinessEx("传入ID错误");
         }
         return optional.get();
     }

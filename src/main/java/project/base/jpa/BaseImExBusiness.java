@@ -46,7 +46,7 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
     public void template(HttpServletRequest request, HttpServletResponse response) {
         ImEx imEx = imEx();
         if (null == imEx || null == imEx.getClazz() || isEmpty(imEx.getFileName()) || isEmpty(imEx.getSheetName())) {
-            throwBusinessException("模板定义信息异常");
+            throwBusinessEx("模板定义信息异常");
         }
         ExcelRW.writer(new ArrayList<>(), imEx.getClazz(), imEx.getFileName(), imEx.getSheetName(), request, response);
     }
@@ -54,21 +54,21 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
     public void dataImport(MultipartFile file) {
         ImEx imEx = imEx();
         if (null == imEx || null == imEx.getClazz()) {
-            throwBusinessException("模板定义信息异常");
+            throwBusinessEx("模板定义信息异常");
         }
         if (file.isEmpty()) {
-            throwBusinessException("传入文件为空");
+            throwBusinessEx("传入文件为空");
         }
         List<EXCEL> excelData = null;
         try {
             excelData = ExcelRW.reader(file.getInputStream(), (Class<EXCEL>) imEx.getClazz());
         } catch (Exception e) {
             e.printStackTrace();
-            throwBusinessException(e.getMessage().contains(ExcelRW.TITLE_ERROR) ? "Excel文件表头错误，请重新下载导入模板"
+            throwBusinessEx(e.getMessage().contains(ExcelRW.TITLE_ERROR) ? "Excel文件表头错误，请重新下载导入模板"
                     : "Excel文件解析异常");
         }
         if (isEmpty(excelData)) {
-            throwBusinessException("解析Excel文件获得到的数据为空");
+            throwBusinessEx("解析Excel文件获得到的数据为空");
         }
         excelDataIntoDatabase(excelData);
     }
@@ -76,7 +76,7 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
     public void dataExport(QUERY_CMD cmd, HttpServletRequest request, HttpServletResponse response) {
         ImEx imEx = imEx();
         if (null == imEx || null == imEx.getClazz() || isEmpty(imEx.getFileName()) || isEmpty(imEx.getSheetName())) {
-            throwBusinessException("模板定义信息异常");
+            throwBusinessEx("模板定义信息异常");
         }
         ExcelRW.writer(entityToExcel(listEntity(cmd)), imEx.getClazz(), imEx.getFileName(), imEx.getSheetName(),
                 request, response);
