@@ -188,6 +188,10 @@ public final class DSUtil {
             return result;
         }
 
+        public String oneJoin(String aimStr) {
+            return EmptyTool.isEmpty(aimStr) ? null : (val() + aimStr + val());
+        }
+
         public String join(Collection<String> srcList) {
             return join(srcList, true);
         }
