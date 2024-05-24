@@ -188,7 +188,7 @@ public final class DSUtil {
             return result;
         }
 
-        public <T extends Serializable> String oneJoin(T aim) {
+        public <T extends Serializable> String bothSidesAdd(T aim) {
             return null == aim ? null : (val() + aim + val());
         }
 
