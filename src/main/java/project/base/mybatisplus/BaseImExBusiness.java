@@ -31,6 +31,7 @@ import java.util.Map;
 import static project.base.DSUtil.EmptyTool.isEmpty;
 import static project.base.DSUtil.IOTool.closeStream;
 import static project.base.DSUtil.PageReq;
+import static project.base.DSUtil.trueThrow;
 
 /**
  * 慕君Dxl个人程序代码开发业务基类(包含导入、导出、模板下载)，非本人，仅供参考使用，请勿修改
@@ -44,20 +45,15 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
 
     public void template(HttpServletRequest request, HttpServletResponse response) {
         ImEx imEx = imEx();
-        if (null == imEx || null == imEx.getClazz() || isEmpty(imEx.getFileName()) || isEmpty(imEx.getSheetName())) {
-            throwBusinessEx("模板定义信息异常");
-        }
+        trueThrow(null == imEx || null == imEx.getClazz() || isEmpty(imEx.getFileName()) || isEmpty(imEx.getSheetName()),
+                getBusinessEx("模板定义信息异常"));
         ExcelRW.writer(new ArrayList<>(), imEx.getClazz(), imEx.getFileName(), imEx.getSheetName(), request, response);
     }
 
     public void dataImport(MultipartFile file) {
         ImEx imEx = imEx();
-        if (null == imEx || null == imEx.getClazz()) {
-            throwBusinessEx("模板定义信息异常");
-        }
-        if (file.isEmpty()) {
-            throwBusinessEx("传入文件为空");
-        }
+        trueThrow(null == imEx || null == imEx.getClazz(), getBusinessEx("模板定义信息异常"));
+        trueThrow(file.isEmpty(), getBusinessEx("传入文件为空"));
         List<EXCEL> excelData = null;
         try {
             excelData = ExcelRW.reader(file.getInputStream(), (Class<EXCEL>) imEx.getClazz());
@@ -74,9 +70,8 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
 
     public void dataExport(QUERY_CMD cmd, HttpServletRequest request, HttpServletResponse response) {
         ImEx imEx = imEx();
-        if (null == imEx || null == imEx.getClazz() || isEmpty(imEx.getFileName()) || isEmpty(imEx.getSheetName())) {
-            throwBusinessEx("模板定义信息异常");
-        }
+        trueThrow(null == imEx || null == imEx.getClazz() || isEmpty(imEx.getFileName()) || isEmpty(imEx.getSheetName()),
+                getBusinessEx("模板定义信息异常"));
         ExcelRW.writer(entityToExcel(listEntity(cmd)), imEx.getClazz(), imEx.getFileName(), imEx.getSheetName(),
                 request, response);
     }
@@ -97,9 +92,7 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
                     continue;
                 }
                 String aim = excelProperty.value()[0];
-                if (titleList.contains(aim)) {
-                    throw new RuntimeException("表头定义中存在相同字段【" + aim + "】");
-                }
+                trueThrow(titleList.contains(aim), new RuntimeException("表头定义中存在相同字段【" + aim + "】"));
                 titleList.add(aim);
             }
             List<T> result = new ArrayList<>();
@@ -120,9 +113,7 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
                         obsTitle.add(headMap.get(it));
                     }
                     for (String it : titleList) {
-                        if (!obsTitle.contains(it)) {
-                            throw new RuntimeException(TITLE_ERROR);
-                        }
+                        trueThrow(!obsTitle.contains(it), new RuntimeException(TITLE_ERROR));
                     }
                 }
             }).sheet(sheetIndex).doRead();

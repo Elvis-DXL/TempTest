@@ -12,8 +12,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-import static project.base.DSUtil.PageReq;
-import static project.base.DSUtil.PageResp;
+import static project.base.DSUtil.*;
 
 /**
  * 慕君Dxl个人程序代码开发业务MYBATIS-PLUS基类，非本人，仅供参考使用，请勿修改
@@ -37,13 +36,9 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends BaseBusin
     }
 
     protected EN getById(ID id) {
-        if (null == id) {
-            throwBusinessEx("传入ID为空");
-        }
+        trueThrow(null == id, getBusinessEx("传入ID为空"));
         EN obj = dao.selectById(id);
-        if (null == obj) {
-            throwBusinessEx("传入ID错误");
-        }
+        trueThrow(null == obj, getBusinessEx("传入ID错误"));
         return obj;
     }
 

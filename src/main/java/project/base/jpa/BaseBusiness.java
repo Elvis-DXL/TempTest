@@ -19,8 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static project.base.DSUtil.PageReq;
-import static project.base.DSUtil.PageResp;
+import static project.base.DSUtil.*;
 
 /**
  * 慕君Dxl个人程序代码开发业务JPA基类，非本人，仅供参考使用，请勿修改
@@ -47,13 +46,9 @@ public abstract class BaseBusiness<ID extends Serializable,
     }
 
     protected EN getById(ID id) {
-        if (null == id) {
-            throwBusinessEx("传入ID为空");
-        }
+        trueThrow(null == id, getBusinessEx("传入ID为空"));
         Optional<EN> optional = dao.findById(id);
-        if (!optional.isPresent()) {
-            throwBusinessEx("传入ID错误");
-        }
+        trueThrow(!optional.isPresent(), getBusinessEx("传入ID错误"));
         return optional.get();
     }
 
