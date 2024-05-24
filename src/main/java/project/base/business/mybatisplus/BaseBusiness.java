@@ -1,39 +1,29 @@
-package project.base.jpa;
+package project.base.business.mybatisplus;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.sql.DataSource;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static project.base.DSUtil.*;
 
 /**
- * 慕君Dxl个人程序代码开发业务JPA基类，非本人，仅供参考使用，请勿修改
+ * 慕君Dxl个人程序代码开发业务MYBATIS-PLUS基类，非本人，仅供参考使用，请勿修改
  *
  * @Author : 慕君Dxl
- * @CreateTime : 2024/4/25 11:31
+ * @CreateTime : 2024/4/25 14:54
  */
-public abstract class BaseBusiness<ID extends Serializable,
-        EN extends BaseBusiness.PKSet, EN_VO, ADD_CMD, MOD_CMD extends BaseBusiness.PKGet<ID>,
-        QUERY_CMD extends PageReq, DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>> {
+public abstract class BaseBusiness<ID extends Serializable, EN extends BaseBusiness.PKSet, EN_VO,
+        ADD_CMD, MOD_CMD extends BaseBusiness.PKGet<ID>, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>> {
     @Autowired
     protected DataSource dataSource;
-    @Autowired
-    protected EntityManager entityManager;
     @Autowired
     protected DAO dao;
 
@@ -47,16 +37,16 @@ public abstract class BaseBusiness<ID extends Serializable,
 
     protected EN getById(ID id) {
         trueThrow(null == id, getBusinessEx("传入ID为空"));
-        Optional<EN> optional = dao.findById(id);
-        trueThrow(!optional.isPresent(), getBusinessEx("传入ID错误"));
-        return optional.get();
+        EN obj = dao.selectById(id);
+        trueThrow(null == obj, getBusinessEx("传入ID错误"));
+        return obj;
     }
 
     public EN_VO add(ADD_CMD cmd) {
         EN obj = addToNewEntity(cmd);
         authExist(obj);
         obj.newObjSetPK();
-        dao.save(obj);
+        dao.insert(obj);
         return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
@@ -69,7 +59,7 @@ public abstract class BaseBusiness<ID extends Serializable,
     public EN_VO modify(MOD_CMD cmd) {
         EN obj = modifyInOldEntity(cmd, getById(cmd.getPK()));
         authExist(obj);
-        dao.save(obj);
+        dao.updateById(obj);
         return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
@@ -82,19 +72,19 @@ public abstract class BaseBusiness<ID extends Serializable,
     }
 
     public PageResp<EN_VO> page(QUERY_CMD cmd) {
-        Page<EN> entityPage = dao.findAll(cmdToSpecification(cmd), PageRequest.of(cmd.getPageNum() - 1, cmd.getPageSize()));
+        IPage<EN> entityPage = dao.selectPage(new Page<>(cmd.getPageNum(), cmd.getPageSize()), cmdToWrapper(cmd));
         return new PageResp<EN_VO>()
-                .setPageNum(entityPage.getNumber() + 1).setPageSize(entityPage.getSize())
-                .setTotalNum((int) entityPage.getTotalElements()).setTotalPage(entityPage.getTotalPages())
-                .setDataList(entityToVo(entityPage.getContent(), cmd));
+                .setPageNum((int) entityPage.getCurrent()).setPageSize((int) entityPage.getSize())
+                .setTotalNum((int) entityPage.getTotal()).setTotalPage((int) entityPage.getPages())
+                .setDataList(entityToVo(entityPage.getRecords(), cmd));
     }
 
     protected List<EN> listEntity(QUERY_CMD cmd) {
-        return dao.findAll(cmdToSpecification(cmd));
+        return dao.selectList(cmdToWrapper(cmd));
     }
 
-    protected Specification<EN> cmdToSpecification(QUERY_CMD cmd) {
-        return (root, query, cb) -> cmdToPredicate(cmd, new ArrayList<>(), root, query, cb);
+    protected LambdaQueryWrapper<EN> cmdToWrapper(QUERY_CMD cmd) {
+        return cmdInWrapper(Wrappers.<EN>lambdaQuery(), cmd);
     }
 
     protected void authExist(EN obj) {
@@ -109,8 +99,7 @@ public abstract class BaseBusiness<ID extends Serializable,
 
     protected abstract List<EN_VO> entityToVo(List<EN> dataList, QUERY_CMD cmd);
 
-    protected abstract Predicate cmdToPredicate(QUERY_CMD cmd, List<Predicate> tjList,
-                                                Root<EN> root, CriteriaQuery<?> query, CriteriaBuilder cb);
+    protected abstract LambdaQueryWrapper<EN> cmdInWrapper(LambdaQueryWrapper<EN> wrapper, QUERY_CMD cmd);
 
     /*************************************************内部接口*************************************************/
     public interface PKGet<ID> {

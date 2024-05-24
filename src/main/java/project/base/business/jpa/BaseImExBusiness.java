@@ -1,10 +1,9 @@
-package project.base.mybatisplus;
+package project.base.business.jpa;
 
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.ClientAnchor;
@@ -13,9 +12,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.web.multipart.MultipartFile;
-import project.base.mybatisplus.BaseBusiness.PKGet;
-import project.base.mybatisplus.BaseBusiness.PKSet;
+import project.base.business.jpa.BaseBusiness.PKGet;
+import project.base.business.jpa.BaseBusiness.PKSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,8 +40,8 @@ import static project.base.DSUtil.trueThrow;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/5/17 16:07
  */
-public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet, EN_VO,
-        ADD_CMD, MOD_CMD extends PKGet<ID>, EXCEL, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>>
+public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet, EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>,
+        EXCEL, QUERY_CMD extends PageReq, DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>>
         extends BaseBusiness<ID, EN, EN_VO, ADD_CMD, MOD_CMD, QUERY_CMD, DAO> {
 
     public void template(HttpServletRequest request, HttpServletResponse response) {
