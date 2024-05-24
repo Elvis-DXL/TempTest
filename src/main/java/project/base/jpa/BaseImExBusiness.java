@@ -133,9 +133,7 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
         }
 
         public static void writer(Workbook wb, String fileName, HttpServletRequest request, HttpServletResponse response) {
-            if (null == wb) {
-                throw new NullPointerException("wb must not be null");
-            }
+            trueThrow(null == wb, new NullPointerException("wb must not be null"));
             fileName = wb instanceof HSSFWorkbook ? (fileName + ".xls") : (fileName + ".xlsx");
             dealWebExportExcelResponseHeader(fileName, request, response);
             OutputStream out = null;
