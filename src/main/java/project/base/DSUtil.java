@@ -520,6 +520,20 @@ public final class DSUtil {
         return max + 1;
     }
 
+    public static <T extends RuntimeException> void trueThrow(boolean flag, T ex) {
+        if (!flag) {
+            return;
+        }
+        throw ex;
+    }
+
+    public static <T> void trueDo(boolean flag, T obj, Consumer<T> consumer) {
+        if (!flag) {
+            return;
+        }
+        consumer.accept(obj);
+    }
+
     public final static class ListTool {
         private ListTool() {
             throw new AssertionError("Tool classes do not allow instantiation");
