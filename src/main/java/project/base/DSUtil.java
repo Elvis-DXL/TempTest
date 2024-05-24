@@ -291,12 +291,8 @@ public final class DSUtil {
     }
 
     public static <T> T newInstance(Class<T> clazz) {
-        if (null == clazz) {
-            throw new NullPointerException("class must not be null");
-        }
-        if (clazz.isInterface()) {
-            throw new IllegalArgumentException("specified class is an interface");
-        }
+        trueThrow(null == clazz, new NullPointerException("class must not be null"));
+        trueThrow(clazz.isInterface(), new IllegalArgumentException("specified class is an interface"));
         T obj = null;
         try {
             obj = clazz.newInstance();
@@ -427,9 +423,7 @@ public final class DSUtil {
     }
 
     public static <T> void judgeAdd(List<T> aimList, T aimObj) {
-        if (null == aimList) {
-            throw new NullPointerException("aimList must not be null");
-        }
+        trueThrow(null == aimList, new NullPointerException("aimList must not be null"));
         if (null == aimObj || aimList.contains(aimObj)) {
             return;
         }
@@ -437,9 +431,7 @@ public final class DSUtil {
     }
 
     public static <T> void judgeAddAll(List<T> aimList, List<T> aims) {
-        if (null == aimList) {
-            throw new NullPointerException("aimList must not be null");
-        }
+        trueThrow(null == aimList, new NullPointerException("aimList must not be null"));
         if (EmptyTool.isEmpty(aims)) {
             return;
         }
@@ -848,9 +840,7 @@ public final class DSUtil {
         }
 
         private static void verifyIdCardStr(String idCardStr) {
-            if (Regex.ID_CARD.verifyFail(idCardStr)) {
-                throw new IllegalArgumentException("idCardStr format error");
-            }
+            trueThrow(Regex.ID_CARD.verifyFail(idCardStr), new IllegalArgumentException("idCardStr format error"));
         }
 
         public static Gender getSex(String idCardStr) {
@@ -922,9 +912,7 @@ public final class DSUtil {
             private final DataSource dataSource;
 
             private SaveUpdate(DataSource dataSource) {
-                if (null == dataSource) {
-                    throw new NullPointerException("dataSource must not be null");
-                }
+                trueThrow(null == dataSource, new NullPointerException("dataSource must not be null"));
                 this.dataSource = dataSource;
             }
 
@@ -942,9 +930,7 @@ public final class DSUtil {
                 }
                 Class<?> clazz = aimList.get(0).getClass();
                 Table table = clazz.getAnnotation(Table.class);
-                if (null == table) {
-                    throw new RuntimeException("实体对象没有javax.persistence.Table注解");
-                }
+                trueThrow(null == table, new RuntimeException("实体对象没有javax.persistence.Table注解"));
                 String tableName = table.name();
                 List<Field> fields = classAllFields(clazz);
                 Map<String, Field> fieldMap = ListTool.listToMap(fields, Field::getName, it -> it);
@@ -957,9 +943,7 @@ public final class DSUtil {
                 } else {
                     aimFieldList = srcFields;
                 }
-                if (EmptyTool.isEmpty(aimFieldList)) {
-                    throw new RuntimeException("要保存的目标字段为空");
-                }
+                trueThrow(EmptyTool.isEmpty(aimFieldList), new RuntimeException("要保存的目标字段为空"));
                 StringBuilder sb = new StringBuilder("INSERT INTO ");
                 StringBuilder sb2 = new StringBuilder();
                 sb.append(tableName);
@@ -1013,17 +997,13 @@ public final class DSUtil {
                 }
                 Class<?> clazz = aimList.get(0).getClass();
                 Table table = clazz.getAnnotation(Table.class);
-                if (null == table) {
-                    throw new RuntimeException("实体对象没有javax.persistence.Table注解");
-                }
+                trueThrow(null == table, new RuntimeException("实体对象没有javax.persistence.Table注解"));
                 String tableName = table.name();
                 List<Field> fields = classAllFields(clazz);
                 Map<String, Field> fieldMap = ListTool.listToMap(fields, Field::getName, it -> it);
                 Map<String, String> fieldColMap = consUpdateFieldColMap(fields);
-                String idCol = fieldColMap.get("id_column");
-                if (null == idCol) {
-                    throw new RuntimeException("实体对象没有标注主键javax.persistence.Id注解字段");
-                }
+                String idCol = mapGet(fieldColMap, "id_column");
+                trueThrow(null == idCol, new RuntimeException("实体对象没有标注主键javax.persistence.Id注解字段"));
                 Set<String> keySet = fieldColMap.keySet();
                 List<String> srcFields = new ArrayList<>(keySet);
                 srcFields.remove("id_column");
@@ -1035,9 +1015,7 @@ public final class DSUtil {
                 } else {
                     aimFieldList = srcFields;
                 }
-                if (EmptyTool.isEmpty(aimFieldList)) {
-                    throw new RuntimeException("要更新的目标字段为空");
-                }
+                trueThrow(EmptyTool.isEmpty(aimFieldList), new RuntimeException("要更新的目标字段为空"));
                 StringBuilder sb = new StringBuilder("UPDATE ");
                 sb.append(tableName).append(" SET ");
                 for (String it : aimFieldList) {
@@ -1153,9 +1131,7 @@ public final class DSUtil {
             private final EntityManager entityManager;
 
             private Select(EntityManager entityManager) {
-                if (null == entityManager) {
-                    throw new NullPointerException("entityManager must not be null");
-                }
+                trueThrow(null == entityManager, new NullPointerException("entityManager must not be null"));
                 this.entityManager = entityManager;
             }
 
@@ -1231,9 +1207,7 @@ public final class DSUtil {
         }
 
         public static DESTool getInstance(String secretKey) {
-            if (EmptyTool.isEmpty(secretKey)) {
-                throw new IllegalArgumentException("secretKey must not be empty");
-            }
+            trueThrow(EmptyTool.isEmpty(secretKey), new IllegalArgumentException("secretKey must not be empty"));
             return new DESTool(secretKey);
         }
 
