@@ -297,14 +297,12 @@ public final class DSUtil {
     public static <T> T newInstance(Class<T> clazz) {
         trueThrow(null == clazz, new NullPointerException("class must not be null"));
         trueThrow(clazz.isInterface(), new IllegalArgumentException("specified class is an interface"));
-        T obj = null;
         try {
-            obj = clazz.newInstance();
+            return clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        return obj;
     }
 
     public static List<Field> classAllFields(Class<?> clazz) {
