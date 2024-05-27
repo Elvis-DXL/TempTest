@@ -530,11 +530,11 @@ public final class DSUtil {
         consumer.accept(obj);
     }
 
-    public static <T> void judgeDo(boolean flag, T obj, Consumer<T> trueConsumer, Consumer<T> flaseConsumer) {
+    public static <T> void judgeDo(boolean flag, T obj, Consumer<T> trueConsumer, Consumer<T> falseConsumer) {
         if (flag) {
             trueConsumer.accept(obj);
         } else {
-            flaseConsumer.accept(obj);
+            falseConsumer.accept(obj);
         }
     }
 
