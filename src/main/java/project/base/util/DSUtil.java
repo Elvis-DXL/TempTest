@@ -1,4 +1,4 @@
-package project.base;
+package project.base.util;
 
 import com.google.gson.Gson;
 import org.apache.commons.codec.binary.Base64;

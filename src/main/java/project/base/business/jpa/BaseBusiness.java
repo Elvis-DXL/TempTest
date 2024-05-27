@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static project.base.DSUtil.*;
+import static project.base.util.DSUtil.*;
 
 /**
  * 慕君Dxl个人程序代码开发业务JPA基类，非本人，仅供参考使用，请勿修改
