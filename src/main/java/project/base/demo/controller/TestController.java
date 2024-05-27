@@ -1,4 +1,4 @@
-package project.base.pgdemo.controller;
+package project.base.demo.controller;
 
 /**
  * @Author : 慕君Dxl
