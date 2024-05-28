@@ -8,7 +8,10 @@ import org.hibernate.transform.Transformers;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.persistence.*;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Root;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +35,7 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -552,7 +556,7 @@ public final class DSUtil {
             return EmptyTool.isEmpty(srcList) ? new HashMap<>() : srcList.stream().collect(Collectors.groupingBy(keyMapper));
         }
 
-        public static <T> List<T> listFilter(List<T> srcList, java.util.function.Predicate<? super T> predicate) {
+        public static <T> List<T> listFilter(List<T> srcList, Predicate<? super T> predicate) {
             return EmptyTool.isEmpty(srcList) ? new ArrayList<>() : srcList.stream().filter(predicate).collect(Collectors.toList());
         }
 
@@ -612,20 +616,23 @@ public final class DSUtil {
             throw new AssertionError("Tool classes do not allow instantiation");
         }
 
-        public static Predicate tjlToPredicate(List<Predicate> tjList, CriteriaQuery<?> query) {
-            Predicate[] tjPredicate = new Predicate[tjList.size()];
+        public static javax.persistence.criteria.Predicate tjlToPredicate(List<javax.persistence.criteria.Predicate> tjList,
+                                                                          CriteriaQuery<?> query) {
+            javax.persistence.criteria.Predicate[] tjPredicate = new javax.persistence.criteria.Predicate[tjList.size()];
             return query.where(tjList.toArray(tjPredicate)).getRestriction();
         }
 
-        public static Predicate tjlToPredicate(List<Predicate> tjList, OrderItem defaultSort, List<OrderItem> sortList,
-                                               Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-            Predicate[] tjPredicate = new Predicate[tjList.size()];
+        public static javax.persistence.criteria.Predicate tjlToPredicate(List<javax.persistence.criteria.Predicate> tjList,
+                                                                          OrderItem defaultSort, List<OrderItem> sortList,
+                                                                          Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            javax.persistence.criteria.Predicate[] tjPredicate = new javax.persistence.criteria.Predicate[tjList.size()];
             return query.where(tjList.toArray(tjPredicate)).orderBy(getOrderArray(defaultSort, sortList, root, cb))
                     .getRestriction();
         }
 
-        public static Predicate listToOnePredicate(List<Predicate> list, CriteriaBuilder cb, boolean isAnd) {
-            Predicate[] predicateArr = new Predicate[list.size()];
+        public static javax.persistence.criteria.Predicate listToOnePredicate(List<javax.persistence.criteria.Predicate> list,
+                                                                              CriteriaBuilder cb, boolean isAnd) {
+            javax.persistence.criteria.Predicate[] predicateArr = new javax.persistence.criteria.Predicate[list.size()];
             return isAnd ? cb.and(list.toArray(predicateArr)) : cb.or(list.toArray(predicateArr));
         }
 
