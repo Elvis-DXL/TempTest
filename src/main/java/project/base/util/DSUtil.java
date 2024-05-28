@@ -564,21 +564,9 @@ public final class DSUtil {
             return EmptyTool.isEmpty(srcList) ? new ArrayList<>() : srcList.stream().distinct().collect(Collectors.toList());
         }
 
-        public static <T> List<T> listNonNullDistinct(List<T> srcList) {
-            return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
-                    srcList.stream().filter(Objects::nonNull).distinct().collect(Collectors.toList());
-        }
-
         public static <T, V> List<V> listGetField(List<T> srcList, Function<? super T, ? extends V> mapper) {
             return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
-                    srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull)
-                            .distinct().collect(Collectors.toList());
-        }
-
-        public static <T, V> List<V> listGetFieldNoDis(List<T> srcList, Function<? super T, ? extends V> mapper) {
-            return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
-                    srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull)
-                            .collect(Collectors.toList());
+                    srcList.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toList());
         }
 
         public static <T, K> List<T> listClassChange(List<K> srcList, Class<T> clazz, String... fields) {
