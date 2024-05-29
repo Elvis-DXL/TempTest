@@ -481,27 +481,6 @@ public final class DSUtil {
         return birthdayToAgeByTime(birthday, aimTime);
     }
 
-    public static List<TreeNode> formatTree(List<TreeNode> treeNodeList) {
-        if (EmptyTool.isEmpty(treeNodeList)) {
-            return new ArrayList<>();
-        }
-        List<TreeNode> result = new ArrayList<>();
-        Map<String, TreeNode> tmpMap = ListTool.listToMap(treeNodeList, TreeNode::getSelfId, it -> it);
-        List<TreeNode> childList;
-        for (TreeNode item : treeNodeList) {
-            if (EmptyTool.isNotEmpty(item.getParentId()) && null != mapGet(tmpMap, item.getParentId())
-                    && !item.getSelfId().equals(item.getParentId())) {
-                childList = null == mapGet(tmpMap, item.getParentId()).getChildList() ?
-                        new ArrayList<>() : mapGet(tmpMap, item.getParentId()).getChildList();
-                childList.add(item);
-                mapGet(tmpMap, item.getParentId()).setChildList(childList);
-            } else {
-                result.add(item);
-            }
-        }
-        return result;
-    }
-
     public static Integer minLackOrNext(List<Integer> srcList) {
         srcList = ListTool.listNonNull(srcList);
         if (EmptyTool.isEmpty(srcList)) {
@@ -1243,189 +1222,6 @@ public final class DSUtil {
         }
     }
 
-    public final static class R<T> implements Serializable {
-        private int code;
-        private T data;
-        private String msg;
-
-        private R() {
-        }
-
-        private R(int code, T data, String msg) {
-            this.code = code;
-            this.data = data;
-            this.msg = msg;
-        }
-
-        public static <T> R<T> data() {
-            return new R<>();
-        }
-
-        public static <T> R<T> data(T data) {
-            return data(200, data, "操作成功");
-        }
-
-        public static <T> R<T> data(T data, String msg) {
-            return data(200, data, msg);
-        }
-
-        public static <T> R<T> data(int code, T data, String msg) {
-            return new R<>(code, data, msg);
-        }
-
-        public int getCode() {
-            return code;
-        }
-
-        public T getData() {
-            return data;
-        }
-
-        public String getMsg() {
-            return msg;
-        }
-
-        public R<T> setCode(int code) {
-            this.code = code;
-            return this;
-        }
-
-        public R<T> setData(T data) {
-            this.data = data;
-            return this;
-        }
-
-        public R<T> setMsg(String msg) {
-            this.msg = msg;
-            return this;
-        }
-    }
-
-    public final static class TreeNode implements Serializable {
-        private String selfId;
-        private String selfName;
-        private String selfType;
-        private String parentId;
-        private Object selfObject;
-        private List<TreeNode> childList;
-
-        public TreeNode() {
-        }
-
-        public TreeNode(String selfId, String selfName, String parentId) {
-            this.selfId = selfId;
-            this.selfName = selfName;
-            this.parentId = parentId;
-        }
-
-        public TreeNode(String selfId, String selfName, String parentId, Object selfObject) {
-            this.selfId = selfId;
-            this.selfName = selfName;
-            this.parentId = parentId;
-            this.selfObject = selfObject;
-        }
-
-        public TreeNode(String selfId, String selfName, String selfType, String parentId) {
-            this.selfId = selfId;
-            this.selfName = selfName;
-            this.selfType = selfType;
-            this.parentId = parentId;
-        }
-
-        public TreeNode(String selfId, String selfName, String selfType, String parentId, Object selfObject) {
-            this.selfId = selfId;
-            this.selfName = selfName;
-            this.selfType = selfType;
-            this.parentId = parentId;
-            this.selfObject = selfObject;
-        }
-
-        public String getSelfId() {
-            return selfId;
-        }
-
-        public String getSelfName() {
-            return selfName;
-        }
-
-        public String getSelfType() {
-            return selfType;
-        }
-
-        public String getParentId() {
-            return parentId;
-        }
-
-        public Object getSelfObject() {
-            return selfObject;
-        }
-
-        public List<TreeNode> getChildList() {
-            return childList;
-        }
-
-        public TreeNode setSelfId(String selfId) {
-            this.selfId = selfId;
-            return this;
-        }
-
-        public TreeNode setSelfName(String selfName) {
-            this.selfName = selfName;
-            return this;
-        }
-
-        public TreeNode setSelfType(String selfType) {
-            this.selfType = selfType;
-            return this;
-        }
-
-        public TreeNode setParentId(String parentId) {
-            this.parentId = parentId;
-            return this;
-        }
-
-        public TreeNode setSelfObject(Object selfObject) {
-            this.selfObject = selfObject;
-            return this;
-        }
-
-        public TreeNode setChildList(List<TreeNode> childList) {
-            this.childList = childList;
-            return this;
-        }
-    }
-
-    public final static class OrderItem implements Serializable {
-        private String column;
-        private boolean asc = true;
-
-        public OrderItem() {
-        }
-
-        public OrderItem(String column, boolean asc) {
-            this.column = column;
-            this.asc = asc;
-        }
-
-        public String getColumn() {
-            return column;
-        }
-
-        public boolean isAsc() {
-            return asc;
-        }
-
-        public OrderItem setColumn(String column) {
-            this.column = column;
-            return this;
-        }
-
-        public OrderItem setAsc(boolean asc) {
-            this.asc = asc;
-            return this;
-        }
-    }
-
     public final static class PageResp<T> implements Serializable {
         private Integer pageNum;
         private Integer pageSize;
@@ -1509,6 +1305,233 @@ public final class DSUtil {
         public PageReq setOrderList(List<OrderItem> orderList) {
             this.orderList = orderList;
             return this;
+        }
+    }
+
+    public final static class OrderItem implements Serializable {
+        private String column;
+        private boolean asc = true;
+
+        public OrderItem() {
+        }
+
+        public OrderItem(String column, boolean asc) {
+            this.column = column;
+            this.asc = asc;
+        }
+
+        public String getColumn() {
+            return column;
+        }
+
+        public boolean isAsc() {
+            return asc;
+        }
+
+        public OrderItem setColumn(String column) {
+            this.column = column;
+            return this;
+        }
+
+        public OrderItem setAsc(boolean asc) {
+            this.asc = asc;
+            return this;
+        }
+    }
+
+    public final static class R<T> implements Serializable {
+        private int code;
+        private T data;
+        private String msg;
+
+        private R() {
+        }
+
+        private R(int code, T data, String msg) {
+            this.code = code;
+            this.data = data;
+            this.msg = msg;
+        }
+
+        public static <T> R<T> data() {
+            return new R<>();
+        }
+
+        public static <T> R<T> data(T data) {
+            return data(200, data, "操作成功");
+        }
+
+        public static <T> R<T> data(T data, String msg) {
+            return data(200, data, msg);
+        }
+
+        public static <T> R<T> data(int code, T data, String msg) {
+            return new R<>(code, data, msg);
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public T getData() {
+            return data;
+        }
+
+        public String getMsg() {
+            return msg;
+        }
+
+        public R<T> setCode(int code) {
+            this.code = code;
+            return this;
+        }
+
+        public R<T> setData(T data) {
+            this.data = data;
+            return this;
+        }
+
+        public R<T> setMsg(String msg) {
+            this.msg = msg;
+            return this;
+        }
+    }
+
+    public final static class TreeNode implements Serializable {
+        private String selfId;
+        private String selfName;
+        private String selfType;
+        private String parentId;
+        private Object selfObject;
+        private List<TreeNode> childList;
+
+        private TreeNode() {
+        }
+
+        public TreeNode(String selfId, String selfName, String parentId) {
+            this.selfId = selfId;
+            this.selfName = selfName;
+            this.parentId = parentId;
+        }
+
+        public TreeNode(String selfId, String selfName, String parentId, Object selfObject) {
+            this.selfId = selfId;
+            this.selfName = selfName;
+            this.parentId = parentId;
+            this.selfObject = selfObject;
+        }
+
+        public TreeNode(String selfId, String selfName, String selfType, String parentId) {
+            this.selfId = selfId;
+            this.selfName = selfName;
+            this.selfType = selfType;
+            this.parentId = parentId;
+        }
+
+        public TreeNode(String selfId, String selfName, String selfType, String parentId, Object selfObject) {
+            this.selfId = selfId;
+            this.selfName = selfName;
+            this.selfType = selfType;
+            this.parentId = parentId;
+            this.selfObject = selfObject;
+        }
+
+        public String getSelfId() {
+            return selfId;
+        }
+
+        public String getSelfName() {
+            return selfName;
+        }
+
+        public String getSelfType() {
+            return selfType;
+        }
+
+        public String getParentId() {
+            return parentId;
+        }
+
+        public Object getSelfObject() {
+            return selfObject;
+        }
+
+        public List<TreeNode> getChildList() {
+            return childList;
+        }
+
+        public void setSelfId(String selfId) {
+            this.selfId = selfId;
+        }
+
+        public void setSelfName(String selfName) {
+            this.selfName = selfName;
+        }
+
+        public void setSelfType(String selfType) {
+            this.selfType = selfType;
+        }
+
+        public void setParentId(String parentId) {
+            this.parentId = parentId;
+        }
+
+        public void setSelfObject(Object selfObject) {
+            this.selfObject = selfObject;
+        }
+
+        public void setChildList(List<TreeNode> childList) {
+            this.childList = childList;
+        }
+
+        public TreeNode selfId(String selfId) {
+            setSelfId(selfId);
+            return this;
+        }
+
+        public TreeNode selfName(String selfName) {
+            setSelfName(selfName);
+            return this;
+        }
+
+        public TreeNode selfType(String selfType) {
+            setSelfType(selfType);
+            return this;
+        }
+
+        public TreeNode parentId(String parentId) {
+            setParentId(parentId);
+            return this;
+        }
+
+        public TreeNode selfObject(Object selfObject) {
+            setSelfObject(selfObject);
+            return this;
+        }
+
+        public static TreeNode getInstance() {
+            return new TreeNode();
+        }
+
+        public static List<TreeNode> formatTree(List<TreeNode> treeNodeList) {
+            if (EmptyTool.isEmpty(treeNodeList)) {
+                return new ArrayList<>();
+            }
+            List<TreeNode> result = new ArrayList<>();
+            Map<String, TreeNode> tmpMap = ListTool.listToMap(treeNodeList, TreeNode::getSelfId, it -> it);
+            List<TreeNode> childList;
+            for (TreeNode item : treeNodeList) {
+                if (EmptyTool.isNotEmpty(item.getParentId()) && null != mapGet(tmpMap, item.getParentId())
+                        && !item.getSelfId().equals(item.getParentId())) {
+                    childList = null == mapGet(tmpMap, item.getParentId()).getChildList() ?
+                            new ArrayList<>() : mapGet(tmpMap, item.getParentId()).getChildList();
+                    childList.add(item);
+                    mapGet(tmpMap, item.getParentId()).setChildList(childList);
+                } else {
+                    result.add(item);
+                }
+            }
+            return result;
         }
     }
 }
