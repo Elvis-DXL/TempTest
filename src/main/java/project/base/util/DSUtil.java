@@ -1408,34 +1408,6 @@ public final class DSUtil {
         private TreeNode() {
         }
 
-        public TreeNode(String selfId, String selfName, String parentId) {
-            this.selfId = selfId;
-            this.selfName = selfName;
-            this.parentId = parentId;
-        }
-
-        public TreeNode(String selfId, String selfName, String parentId, Object selfObject) {
-            this.selfId = selfId;
-            this.selfName = selfName;
-            this.parentId = parentId;
-            this.selfObject = selfObject;
-        }
-
-        public TreeNode(String selfId, String selfName, String selfType, String parentId) {
-            this.selfId = selfId;
-            this.selfName = selfName;
-            this.selfType = selfType;
-            this.parentId = parentId;
-        }
-
-        public TreeNode(String selfId, String selfName, String selfType, String parentId, Object selfObject) {
-            this.selfId = selfId;
-            this.selfName = selfName;
-            this.selfType = selfType;
-            this.parentId = parentId;
-            this.selfObject = selfObject;
-        }
-
         public String getSelfId() {
             return selfId;
         }
