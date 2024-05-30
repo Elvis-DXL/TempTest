@@ -471,7 +471,7 @@ public final class DSUtil {
         if (EmptyTool.isEmpty(birthdayStr)) {
             return null;
         }
-        LocalDate birthday = null;
+        LocalDate birthday;
         try {
             birthday = TimeTool.parseLD(birthdayStr, Pattern.yyyy_MM_dd);
         } catch (Exception e) {
@@ -912,7 +912,7 @@ public final class DSUtil {
                 Map<String, Field> fieldMap = ListTool.listToMap(fields, Field::getName, it -> it);
                 Map<String, String> fieldColMap = consSaveFieldColMap(fields);
                 List<String> srcFields = new ArrayList<>(fieldColMap.keySet());
-                List<String> aimFieldList = null;
+                List<String> aimFieldList;
                 if (null != fieldName && fieldName.length != 0) {
                     List<String> aim = Arrays.asList(fieldName);
                     aimFieldList = srcFields.stream().filter(aim::contains).collect(Collectors.toList());
@@ -984,7 +984,7 @@ public final class DSUtil {
                 List<String> srcFields = new ArrayList<>(keySet);
                 srcFields.remove("id_column");
                 srcFields.remove("id_field");
-                List<String> aimFieldList = null;
+                List<String> aimFieldList;
                 if (null != fieldName && fieldName.length != 0) {
                     List<String> aim = Arrays.asList(fieldName);
                     aimFieldList = srcFields.stream().filter(aim::contains).collect(Collectors.toList());
