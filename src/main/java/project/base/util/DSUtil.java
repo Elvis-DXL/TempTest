@@ -29,6 +29,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
@@ -725,6 +726,10 @@ public final class DSUtil {
 
         public static Date localToDate(LocalDateTime localDateTime) {
             return null != localDateTime ? Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()) : null;
+        }
+
+        public static Long localToTime(LocalDateTime localDateTime) {
+            return null != localDateTime ? localDateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli() : null;
         }
     }
 
