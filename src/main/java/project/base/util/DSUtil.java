@@ -1182,14 +1182,16 @@ public final class DSUtil {
 
     public final static class DESTool {
         private final Key key;
+        private final Cipher cipher;
 
         private DESTool(String secretKey) {
             try {
-                SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
-                secureRandom.setSeed(secretKey.getBytes());
-                KeyGenerator generator = KeyGenerator.getInstance("DES");
-                generator.init(secureRandom);
-                this.key = generator.generateKey();
+                SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+                sr.setSeed(secretKey.getBytes());
+                KeyGenerator kg = KeyGenerator.getInstance("DES");
+                kg.init(sr);
+                this.key = kg.generateKey();
+                this.cipher = Cipher.getInstance("DES");
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new RuntimeException("failed to construct encrypt key");
@@ -1206,12 +1208,8 @@ public final class DSUtil {
                 return null;
             }
             try {
-                Base64 base64 = new Base64();
-                byte[] bytes = aimStr.getBytes(StandardCharsets.UTF_8);
-                Cipher cipher = Cipher.getInstance("DES");
                 cipher.init(Cipher.ENCRYPT_MODE, key);
-                byte[] doFinal = cipher.doFinal(bytes);
-                return new String(base64.encode(doFinal));
+                return new String(new Base64().encode(cipher.doFinal(aimStr.getBytes(StandardCharsets.UTF_8))));
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new RuntimeException("failed to encode");
@@ -1222,13 +1220,9 @@ public final class DSUtil {
             if (EmptyTool.isEmpty(aimStr)) {
                 return null;
             }
-            Base64 base64 = new Base64();
             try {
-                byte[] bytes = base64.decode(aimStr);
-                Cipher cipher = Cipher.getInstance("DES");
                 cipher.init(Cipher.DECRYPT_MODE, key);
-                byte[] doFinal = cipher.doFinal(bytes);
-                return new String(doFinal, StandardCharsets.UTF_8);
+                return new String(cipher.doFinal(new Base64().decode(aimStr)), StandardCharsets.UTF_8);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new RuntimeException("failed to decode");
