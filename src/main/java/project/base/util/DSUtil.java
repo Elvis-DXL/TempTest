@@ -733,12 +733,12 @@ public final class DSUtil {
             return null != date ? date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime() : null;
         }
 
-        public static Date localToDate(LocalDateTime localDateTime) {
-            return null != localDateTime ? Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()) : null;
+        public static Date localToDate(LocalDateTime time) {
+            return null != time ? Date.from(time.atZone(ZoneId.systemDefault()).toInstant()) : null;
         }
 
-        public static Long localToTime(LocalDateTime localDateTime) {
-            return null != localDateTime ? localDateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli() : null;
+        public static Long localToTime(LocalDateTime time) {
+            return null != time ? time.toInstant(ZoneOffset.of("+8")).toEpochMilli() : null;
         }
     }
 
