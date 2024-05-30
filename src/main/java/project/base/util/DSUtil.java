@@ -1346,8 +1346,8 @@ public final class DSUtil {
 
     public final static class R<T> implements Serializable {
         private int code;
-        private T data;
         private String msg;
+        private T data;
 
         private R() {
         }
