@@ -536,21 +536,30 @@ public final class DSUtil {
             return EmptyTool.isEmpty(srcList) ? new HashMap<>() : srcList.stream().collect(Collectors.groupingBy(keyMapper));
         }
 
-        public static <T> List<T> listFilter(List<T> srcList, Predicate<? super T> predicate) {
-            return EmptyTool.isEmpty(srcList) ? new ArrayList<>() : srcList.stream().filter(predicate).collect(Collectors.toList());
+        public static <T, V> List<V> listMap(List<T> srcList, Function<? super T, ? extends V> mapper) {
+            return EmptyTool.isEmpty(srcList) ? new ArrayList<>() : srcList.stream().map(mapper).collect(Collectors.toList());
         }
 
-        public static <T> List<T> listNonNull(List<T> srcList) {
-            return listFilter(srcList, Objects::nonNull);
+        public static <T> List<T> listFilter(List<T> srcList, Predicate<? super T> predicate) {
+            return EmptyTool.isEmpty(srcList) ? new ArrayList<>() : srcList.stream().filter(predicate).collect(Collectors.toList());
         }
 
         public static <T> List<T> listDistinct(List<T> srcList) {
             return EmptyTool.isEmpty(srcList) ? new ArrayList<>() : srcList.stream().distinct().collect(Collectors.toList());
         }
 
+        public static <T> List<T> listNonNull(List<T> srcList) {
+            return listFilter(srcList, Objects::nonNull);
+        }
+
         public static <T, V> List<V> listGetField(List<T> srcList, Function<? super T, ? extends V> mapper) {
             return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
                     srcList.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toList());
+        }
+
+        public static <T, V> List<V> listGetFieldNonNull(List<T> srcList, Function<? super T, ? extends V> mapper) {
+            return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
+                    srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull).collect(Collectors.toList());
         }
 
         public static <T, K> List<T> listClassChange(List<K> srcList, Class<T> clazz, String... fields) {
