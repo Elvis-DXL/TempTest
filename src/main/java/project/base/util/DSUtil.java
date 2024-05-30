@@ -224,8 +224,8 @@ public final class DSUtil {
 
         public <T, K> String join(Collection<T> srcList, Function<? super T, ? extends K> function, boolean includeStartAndEnd) {
             return EmptyTool.isEmpty(srcList) ? null :
-                    join(srcList.stream().filter(Objects::nonNull).map(function).map(Object::toString).collect(Collectors.toList()),
-                            includeStartAndEnd);
+                    join(srcList.stream().filter(Objects::nonNull).map(function).filter(Objects::nonNull).map(Object::toString)
+                            .collect(Collectors.toList()), includeStartAndEnd);
         }
     }
 
