@@ -1,4 +1,4 @@
---MySQL存储过程样例
+--MySQL存储过程样例 ↓
 BEGIN
 DECLARE tabName VARCHAR(128) DEFAULT '';
 DECLARE sqlStr VARCHAR(255) DEFAULT '';
@@ -11,8 +11,7 @@ EXECUTE STMT;
 SET tabCount = tabCount + 1;
 END WHILE;
 END
-
---Oracle存储过程样例
+--Oracle存储过程样例 ↓
 CREATE OR REPLACE
 PROCEDURE LOOP_TWO_TOOL IS
 monthStr VARCHAR2(3);
@@ -33,8 +32,7 @@ FOR i IN 2..12 LOOP
 	END LOOP;
 END LOOP;
 END;
-
---MySQL删除表格忽略外键
+--MySQL删除表格忽略外键 ↓
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS 'table_name';
 SET FOREIGN_KEY_CHECKS = 1;
