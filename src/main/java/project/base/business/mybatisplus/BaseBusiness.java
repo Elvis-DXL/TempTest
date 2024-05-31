@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import project.base.interfaces.PKGet;
+import project.base.interfaces.PKSet;
 
 import javax.sql.DataSource;
 import java.io.Serializable;
@@ -20,8 +22,8 @@ import static project.base.util.DSUtil.*;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/4/25 14:54
  */
-public abstract class BaseBusiness<ID extends Serializable, EN extends BaseBusiness.PKSet, EN_VO,
-        ADD_CMD, MOD_CMD extends BaseBusiness.PKGet<ID>, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>> {
+public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet,
+        EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>> {
     @Autowired
     protected DataSource dataSource;
     @Autowired
@@ -102,11 +104,4 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends BaseBusin
     protected abstract LambdaQueryWrapper<EN> cmdInWrapper(LambdaQueryWrapper<EN> wrapper, QUERY_CMD cmd);
 
     /*************************************************内部接口*************************************************/
-    public interface PKGet<ID> {
-        ID getPK();
-    }
-
-    public interface PKSet {
-        void newObjSetPK();
-    }
 }

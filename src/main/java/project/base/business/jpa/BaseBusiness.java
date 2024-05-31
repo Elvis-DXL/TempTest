@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import project.base.interfaces.PKGet;
+import project.base.interfaces.PKSet;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -27,8 +29,7 @@ import static project.base.util.DSUtil.*;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/4/25 11:31
  */
-public abstract class BaseBusiness<ID extends Serializable,
-        EN extends BaseBusiness.PKSet, EN_VO, ADD_CMD, MOD_CMD extends BaseBusiness.PKGet<ID>,
+public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet, EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>,
         QUERY_CMD extends PageReq, DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>> {
     @Autowired
     protected DataSource dataSource;
@@ -111,13 +112,4 @@ public abstract class BaseBusiness<ID extends Serializable,
 
     protected abstract Predicate cmdToPredicate(QUERY_CMD cmd, List<Predicate> tjList,
                                                 Root<EN> root, CriteriaQuery<?> query, CriteriaBuilder cb);
-
-    /*************************************************内部接口*************************************************/
-    public interface PKGet<ID> {
-        ID getPK();
-    }
-
-    public interface PKSet {
-        void newObjSetPK();
-    }
 }

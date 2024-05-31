@@ -15,8 +15,8 @@ import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.web.multipart.MultipartFile;
-import project.base.business.jpa.BaseBusiness.PKGet;
-import project.base.business.jpa.BaseBusiness.PKSet;
+import project.base.interfaces.PKGet;
+import project.base.interfaces.PKSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

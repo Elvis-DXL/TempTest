@@ -14,8 +14,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.springframework.web.multipart.MultipartFile;
-import project.base.business.mybatisplus.BaseBusiness.PKGet;
-import project.base.business.mybatisplus.BaseBusiness.PKSet;
+import project.base.interfaces.PKGet;
+import project.base.interfaces.PKSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
