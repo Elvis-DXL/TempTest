@@ -563,6 +563,11 @@ public final class DSUtil {
                     srcList.stream().filter(Objects::nonNull).map(mapper).filter(Objects::nonNull).collect(Collectors.toList());
         }
 
+        public static <T> List<T> listNonNullDistinct(List<T> srcList) {
+            return EmptyTool.isEmpty(srcList) ? new ArrayList<>() :
+                    srcList.stream().filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        }
+
         public static <T, K> List<T> listClassChange(List<K> srcList, Class<T> clazz, String... fields) {
             srcList = listNonNull(srcList);
             if (EmptyTool.isEmpty(srcList) || null == clazz) {
