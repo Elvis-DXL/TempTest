@@ -1236,6 +1236,39 @@ public final class DSUtil {
         }
     }
 
+    public static class PageReq implements Serializable {
+        protected Integer pageNum;
+        protected Integer pageSize;
+        protected List<OrderItem> orderList;
+
+        public Integer getPageNum() {
+            return pageNum;
+        }
+
+        public Integer getPageSize() {
+            return pageSize;
+        }
+
+        public List<OrderItem> getOrderList() {
+            return orderList;
+        }
+
+        public PageReq setPageNum(Integer pageNum) {
+            this.pageNum = pageNum;
+            return this;
+        }
+
+        public PageReq setPageSize(Integer pageSize) {
+            this.pageSize = pageSize;
+            return this;
+        }
+
+        public PageReq setOrderList(List<OrderItem> orderList) {
+            this.orderList = orderList;
+            return this;
+        }
+    }
+
     public final static class PageResp<T> implements Serializable {
         private Integer pageNum;
         private Integer pageSize;
@@ -1289,39 +1322,6 @@ public final class DSUtil {
         }
     }
 
-    public static class PageReq implements Serializable {
-        protected Integer pageNum;
-        protected Integer pageSize;
-        protected List<OrderItem> orderList;
-
-        public Integer getPageNum() {
-            return pageNum;
-        }
-
-        public Integer getPageSize() {
-            return pageSize;
-        }
-
-        public List<OrderItem> getOrderList() {
-            return orderList;
-        }
-
-        public PageReq setPageNum(Integer pageNum) {
-            this.pageNum = pageNum;
-            return this;
-        }
-
-        public PageReq setPageSize(Integer pageSize) {
-            this.pageSize = pageSize;
-            return this;
-        }
-
-        public PageReq setOrderList(List<OrderItem> orderList) {
-            this.orderList = orderList;
-            return this;
-        }
-    }
-
     public final static class OrderItem implements Serializable {
         private String column;
         private boolean asc = true;
@@ -1349,6 +1349,51 @@ public final class DSUtil {
 
         public OrderItem setAsc(boolean asc) {
             this.asc = asc;
+            return this;
+        }
+    }
+
+    public final static class R<T> implements Serializable {
+        private int code;
+        private String msg;
+        private T data;
+
+        public static <T> R<T> data(T data) {
+            return new R<T>().setCode(200).setData(data).setMsg("操作成功");
+        }
+
+        public static <T> R<T> data(T data, String msg) {
+            return new R<T>().setCode(200).setData(data).setMsg(msg);
+        }
+
+        public static <T> R<T> data(int code, T data, String msg) {
+            return new R<T>().setCode(code).setData(data).setMsg(msg);
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getMsg() {
+            return msg;
+        }
+
+        public T getData() {
+            return data;
+        }
+
+        public R<T> setCode(int code) {
+            this.code = code;
+            return this;
+        }
+
+        public R<T> setMsg(String msg) {
+            this.msg = msg;
+            return this;
+        }
+
+        public R<T> setData(T data) {
+            this.data = data;
             return this;
         }
     }
