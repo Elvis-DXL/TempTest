@@ -1,7 +1,7 @@
 package project.base.demopg.entity;
 
 import lombok.Data;
-import project.base.business.jpa.BaseBusiness;
+import project.base.interfaces.PKSet;
 
 import java.io.Serializable;
 
@@ -10,7 +10,13 @@ import java.io.Serializable;
  * @CreateTime : 2024/5/27 13:51
  */
 @Data
-public class Demo implements BaseBusiness.PKSet, Serializable {
+public class Demo implements PKSet, Serializable {
+
+    private Integer id;
+
+    private String name;
+
+    private String exStr;
 
     @Override
     public void newObjSetPK() {

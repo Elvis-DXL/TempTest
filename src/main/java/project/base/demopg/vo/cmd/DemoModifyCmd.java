@@ -1,7 +1,7 @@
 package project.base.demopg.vo.cmd;
 
 import lombok.Data;
-import project.base.business.jpa.BaseBusiness;
+import project.base.interfaces.PKGet;
 
 import java.io.Serializable;
 
@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @CreateTime : 2024/5/27 13:55
  */
 @Data
-public class DemoModifyCmd implements BaseBusiness.PKGet<Long>, Serializable {
+public class DemoModifyCmd implements PKGet<Long>, Serializable {
 
     @Override
     public Long getPK() {
