@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import project.base.interfaces.DeleteDeal;
 import project.base.interfaces.PKGet;
 import project.base.interfaces.PKSet;
 
@@ -22,7 +23,7 @@ import static project.base.util.DSUtil.*;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/4/25 14:54
  */
-public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet,
+public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & DeleteDeal,
         EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>> {
     @Autowired
     protected DataSource dataSource;
@@ -89,6 +90,11 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet,
         return cmdInWrapper(Wrappers.<EN>lambdaQuery(), cmd);
     }
 
+    protected void dealDelete(EN obj) {
+        obj.deleteDealMark();
+        dao.updateById(obj);
+    }
+
     protected void authExist(EN obj) {
     }
 
@@ -97,11 +103,7 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet,
 
     protected abstract EN modifyInOldEntity(MOD_CMD cmd, EN oldObj);
 
-    protected abstract void dealDelete(EN obj);
-
     protected abstract List<EN_VO> entityToVo(List<EN> dataList, QUERY_CMD cmd);
 
     protected abstract LambdaQueryWrapper<EN> cmdInWrapper(LambdaQueryWrapper<EN> wrapper, QUERY_CMD cmd);
-
-    /*************************************************内部接口*************************************************/
 }
