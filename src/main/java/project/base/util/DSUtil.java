@@ -900,10 +900,6 @@ public final class DSUtil {
             return new SaveUpdate(dataSource);
         }
 
-        public static Select getSelect(EntityManager entityManager) {
-            return new Select(entityManager);
-        }
-
         public final static class SaveUpdate {
             private final DataSource dataSource;
 
@@ -1119,6 +1115,10 @@ public final class DSUtil {
                     throw new RuntimeException(e);
                 }
             }
+        }
+
+        public static Select getSelect(EntityManager entityManager) {
+            return new Select(entityManager);
         }
 
         public final static class Select {
