@@ -25,6 +25,7 @@ import java.lang.reflect.Type;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @RestControllerAdvice
 public class EnhanceRequestBodyAdvice implements RequestBodyAdvice {
+
     @Override
     public boolean supports(MethodParameter methodParameter, Type targetType,
                             Class<? extends HttpMessageConverter<?>> converterType) {

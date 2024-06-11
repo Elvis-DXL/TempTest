@@ -24,6 +24,7 @@ import javax.servlet.Servlet;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @RestControllerAdvice
 public class EnhanceResponseBodyAdvice implements ResponseBodyAdvice {
+
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {
         //判断是否要执行本类方法,true为执行,false不执行.通过该方法可以选择哪些类或那些方法要进行处理,其他的不进行处理.
