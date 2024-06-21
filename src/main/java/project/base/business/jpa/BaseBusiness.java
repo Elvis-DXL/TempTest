@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import project.base.interfaces.DeleteDeal;
+import org.springframework.transaction.annotation.Transactional;
 import project.base.interfaces.PKGet;
 import project.base.interfaces.PKSet;
 
@@ -30,7 +30,7 @@ import static project.base.util.DSUtil.*;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/4/25 11:31
  */
-public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & DeleteDeal, EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>,
+public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet, EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>,
         QUERY_CMD extends PageReq, DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>> {
     @Autowired
     protected DataSource dataSource;
@@ -54,6 +54,7 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & D
         return optional.get();
     }
 
+    @Transactional
     public EN_VO add(ADD_CMD cmd) {
         EN obj = addToNewEntity(cmd);
         authExist(obj);
@@ -62,12 +63,14 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & D
         return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
+    @Transactional
     public EN_VO delete(ID id) {
         EN obj = getById(id);
         dealDelete(obj);
         return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
+    @Transactional
     public EN_VO modify(MOD_CMD cmd) {
         EN obj = modifyInOldEntity(cmd, getById(cmd.getPK()));
         authExist(obj);
@@ -99,11 +102,6 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & D
         return (root, query, cb) -> cmdToPredicate(cmd, new ArrayList<>(), root, query, cb);
     }
 
-    protected void dealDelete(EN obj) {
-        obj.deleteDealMark();
-        dao.save(obj);
-    }
-
     protected void authExist(EN obj) {
     }
 
@@ -111,6 +109,8 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & D
     protected abstract EN addToNewEntity(ADD_CMD cmd);
 
     protected abstract EN modifyInOldEntity(MOD_CMD cmd, EN oldObj);
+
+    protected abstract void dealDelete(EN obj);
 
     protected abstract List<EN_VO> entityToVo(List<EN> dataList, QUERY_CMD cmd);
 

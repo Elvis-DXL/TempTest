@@ -1,7 +1,6 @@
 package project.base.demopg.entity;
 
 import lombok.Data;
-import project.base.interfaces.DeleteDeal;
 import project.base.interfaces.PKSet;
 
 import java.io.Serializable;
@@ -11,7 +10,7 @@ import java.io.Serializable;
  * @CreateTime : 2024/5/27 13:51
  */
 @Data
-public class Demo implements PKSet, DeleteDeal, Serializable {
+public class Demo implements PKSet, Serializable {
 
     private Integer id;
 
@@ -21,9 +20,5 @@ public class Demo implements PKSet, DeleteDeal, Serializable {
 
     @Override
     public void newObjSetPK() {
-    }
-
-    @Override
-    public void deleteDealMark() {
     }
 }

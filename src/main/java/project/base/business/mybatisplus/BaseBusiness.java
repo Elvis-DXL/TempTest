@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
-import project.base.interfaces.DeleteDeal;
+import org.springframework.transaction.annotation.Transactional;
 import project.base.interfaces.PKGet;
 import project.base.interfaces.PKSet;
 
@@ -23,7 +23,7 @@ import static project.base.util.DSUtil.*;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/4/25 14:54
  */
-public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & DeleteDeal,
+public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet,
         EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>> {
     @Autowired
     protected DataSource dataSource;
@@ -45,6 +45,7 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & D
         return obj;
     }
 
+    @Transactional
     public EN_VO add(ADD_CMD cmd) {
         EN obj = addToNewEntity(cmd);
         authExist(obj);
@@ -53,12 +54,14 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & D
         return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
+    @Transactional
     public EN_VO delete(ID id) {
         EN obj = getById(id);
         dealDelete(obj);
         return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
+    @Transactional
     public EN_VO modify(MOD_CMD cmd) {
         EN obj = modifyInOldEntity(cmd, getById(cmd.getPK()));
         authExist(obj);
@@ -90,11 +93,6 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & D
         return cmdInWrapper(Wrappers.<EN>lambdaQuery(), cmd);
     }
 
-    protected void dealDelete(EN obj) {
-        obj.deleteDealMark();
-        dao.updateById(obj);
-    }
-
     protected void authExist(EN obj) {
     }
 
@@ -102,6 +100,8 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & D
     protected abstract EN addToNewEntity(ADD_CMD cmd);
 
     protected abstract EN modifyInOldEntity(MOD_CMD cmd, EN oldObj);
+
+    protected abstract void dealDelete(EN obj);
 
     protected abstract List<EN_VO> entityToVo(List<EN> dataList, QUERY_CMD cmd);
 

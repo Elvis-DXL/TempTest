@@ -25,7 +25,7 @@ import static project.base.util.DSUtil.trueThrow;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/5/17 16:07
  */
-public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet & DeleteDeal, EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>,
+public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet, EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>,
         EXCEL, QUERY_CMD extends PageReq, DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>>
         extends BaseBusiness<ID, EN, EN_VO, ADD_CMD, MOD_CMD, QUERY_CMD, DAO> {
 
