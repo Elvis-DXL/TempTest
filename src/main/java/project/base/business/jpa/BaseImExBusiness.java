@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.web.multipart.MultipartFile;
 import project.base.excel.ExcelRW;
 import project.base.excel.ImEx;
-import project.base.interfaces.DeleteDeal;
 import project.base.interfaces.PKGet;
 import project.base.interfaces.PKSet;
 
