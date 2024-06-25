@@ -72,7 +72,7 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet, EN
 
     @Transactional
     public EN_VO modify(MOD_CMD cmd) {
-        EN obj = modifyInOldEntity(cmd, getById(cmd.getPK()));
+        EN obj = modifyInOldEntity(cmd, getById(cmd.obtainPK()));
         authExist(obj);
         dao.save(obj);
         return entityToVo(Collections.singletonList(obj), null).get(0);
