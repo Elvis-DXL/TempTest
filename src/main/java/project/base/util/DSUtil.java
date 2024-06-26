@@ -604,6 +604,18 @@ public final class DSUtil {
             }
             return result;
         }
+
+        public static <T> boolean containsAnyOne(List<T> srcList, List<T> aimList) {
+            if (EmptyTool.isEmpty(srcList) || EmptyTool.isEmpty(aimList)) {
+                return false;
+            }
+            for (T it : aimList) {
+                if (srcList.contains(it)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     public final static class JPATool {
