@@ -15,7 +15,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-import static project.base.util.DSUtil.*;
+import static project.base.DSUtil.*;
 
 /**
  * 慕君Dxl个人程序代码开发业务MYBATIS-PLUS基类，非本人，仅供参考使用，请勿修改
