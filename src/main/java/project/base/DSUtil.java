@@ -758,6 +758,21 @@ public final class DSUtil {
         public static Long localToTime(LocalDateTime time) {
             return null != time ? time.toInstant(ZoneOffset.of("+8")).toEpochMilli() : null;
         }
+
+        public static Calendar dateToCalendar(Date date) {
+            if (null == date) {
+                date = new Date();
+            }
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            return calendar;
+        }
+
+        public static Date addDate(Date date, int calendarType, int num) {
+            Calendar calendar = dateToCalendar(date);
+            calendar.add(calendarType, num);
+            return calendar.getTime();
+        }
     }
 
     public final static class IOTool {
