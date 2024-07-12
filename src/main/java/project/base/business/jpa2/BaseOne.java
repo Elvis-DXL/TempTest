@@ -1,4 +1,4 @@
-package project.base.business.jpa;
+package project.base.business.jpa2;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -6,10 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.transaction.annotation.Transactional;
-import project.base.interfaces.DeleteBaseInterface;
-import project.base.interfaces.PKGet;
-import project.base.interfaces.PKSet;
+import project.base.DSUtil.PageResp;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -23,16 +20,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static project.base.DSUtil.*;
+import static project.base.DSUtil.PageReq;
+import static project.base.DSUtil.trueThrow;
 
 /**
- * 慕君Dxl个人程序代码开发业务JPA基类，非本人，仅供参考使用，请勿修改
- *
  * @Author : 慕君Dxl
- * @CreateTime : 2024/4/25 11:31
+ * @CreateTime : 2024/7/12 9:55
  */
-public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & DeleteBaseInterface, EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>,
-        QUERY_CMD extends PageReq, DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>> {
+public abstract class BaseOne<ID extends Serializable, EN, EN_VO, QUERY_CMD extends PageReq,
+        DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>> {
     @Autowired
     protected DataSource dataSource;
     @Autowired
@@ -53,30 +49,6 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & D
         Optional<EN> optional = dao.findById(id);
         trueThrow(!optional.isPresent(), getBusinessEx("传入ID错误"));
         return optional.get();
-    }
-
-    @Transactional
-    public EN_VO add(ADD_CMD cmd) {
-        EN obj = addToNewEntity(cmd);
-        authExist(obj);
-        obj.newObjSetPK();
-        dao.save(obj);
-        return entityToVo(Collections.singletonList(obj), null).get(0);
-    }
-
-    @Transactional
-    public EN_VO delete(ID id) {
-        EN obj = getById(id);
-        dealDelete(obj);
-        return entityToVo(Collections.singletonList(obj), null).get(0);
-    }
-
-    @Transactional
-    public EN_VO modify(MOD_CMD cmd) {
-        EN obj = modifyInOldEntity(cmd, getById(cmd.obtainPK()));
-        authExist(obj);
-        dao.save(obj);
-        return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
     public EN_VO query(ID id) {
@@ -103,19 +75,7 @@ public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & D
         return (root, query, cb) -> cmdToPredicate(cmd, new ArrayList<>(), root, query, cb);
     }
 
-    protected void dealDelete(EN obj) {
-        obj.deleteDealMark();
-        dao.save(obj);
-    }
-
-    protected void authExist(EN obj) {
-    }
-
     /*************************************************抽象方法*************************************************/
-    protected abstract EN addToNewEntity(ADD_CMD cmd);
-
-    protected abstract EN modifyInOldEntity(MOD_CMD cmd, EN oldObj);
-
     protected abstract List<EN_VO> entityToVo(List<EN> dataList, QUERY_CMD cmd);
 
     protected abstract Predicate cmdToPredicate(QUERY_CMD cmd, List<Predicate> tjList,

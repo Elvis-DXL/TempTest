@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.web.multipart.MultipartFile;
 import project.base.excel.ExcelRW;
 import project.base.excel.ImEx;
-import project.base.interfaces.DeleteDeal;
+import project.base.interfaces.DeleteBaseInterface;
 import project.base.interfaces.PKGet;
 import project.base.interfaces.PKSet;
 
@@ -25,7 +25,7 @@ import static project.base.DSUtil.trueThrow;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/5/17 16:07
  */
-public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet & DeleteDeal, EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>,
+public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet & DeleteBaseInterface, EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>,
         EXCEL, QUERY_CMD extends PageReq, DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>>
         extends BaseBusiness<ID, EN, EN_VO, ADD_CMD, MOD_CMD, QUERY_CMD, DAO> {
 

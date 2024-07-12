@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import project.base.interfaces.DeleteDeal;
+import project.base.interfaces.DeleteBaseInterface;
 import project.base.interfaces.PKGet;
 import project.base.interfaces.PKSet;
 
@@ -24,7 +24,7 @@ import static project.base.DSUtil.*;
  * @Author : 慕君Dxl
  * @CreateTime : 2024/4/25 14:54
  */
-public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & DeleteDeal,
+public abstract class BaseBusiness<ID extends Serializable, EN extends PKSet & DeleteBaseInterface,
         EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>> {
     @Autowired
     protected DataSource dataSource;
