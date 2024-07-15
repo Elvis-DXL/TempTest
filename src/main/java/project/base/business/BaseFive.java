@@ -1,13 +1,8 @@
-package project.base.business.jpa;
+package project.base.business;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.web.multipart.MultipartFile;
 import project.base.excel.ExcelRW;
 import project.base.excel.ImEx;
-import project.base.interfaces.DeleteBaseInterface;
-import project.base.interfaces.PKGet;
-import project.base.interfaces.PKSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,14 +15,12 @@ import static project.base.DSUtil.PageReq;
 import static project.base.DSUtil.trueThrow;
 
 /**
- * 慕君Dxl个人程序代码开发业务基类(包含导入、导出、模板下载)，非本人，仅供参考使用，请勿修改
- *
  * @Author : 慕君Dxl
- * @CreateTime : 2024/5/17 16:07
+ * @CreateTime : 2024/7/15 9:43
  */
-public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet & DeleteBaseInterface, EN_VO, ADD_CMD, MOD_CMD extends PKGet<ID>,
-        EXCEL, QUERY_CMD extends PageReq, DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>>
-        extends BaseBusiness<ID, EN, EN_VO, ADD_CMD, MOD_CMD, QUERY_CMD, DAO> {
+public abstract class BaseFive<ID extends Serializable, EN extends InterfaceOfEntityBase & InterfaceOfDeleteBase, EN_VO,
+        ADD_CMD extends InterfaceOfAddBase<EN>, MOD_CMD extends InterfaceOfModifyBase<ID, EN>, EXCEL, QUERY_CMD extends PageReq,
+        DAO extends BaseDao<EN, ID>> extends BaseThree<ID, EN, EN_VO, ADD_CMD, MOD_CMD, QUERY_CMD, DAO> {
 
     public void template(HttpServletRequest request, HttpServletResponse response) {
         ImEx imEx = imEx();
@@ -61,7 +54,7 @@ public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet
         ExcelRW.writer(entityToExcel(listEntity(cmd)), imEx.getClazz(), imEx.getFileName(), imEx.getSheetName(),
                 request, response);
     }
-
+    
     /*************************************************抽象方法*************************************************/
     protected abstract ImEx imEx();
 

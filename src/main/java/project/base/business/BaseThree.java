@@ -1,12 +1,6 @@
-package project.base.business.jpa2;
+package project.base.business;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.transaction.annotation.Transactional;
-import project.base.interfaces.AddBaseInterface;
-import project.base.interfaces.DeleteBaseInterface;
-import project.base.interfaces.EntityBaseInterface;
-import project.base.interfaces.ModifyBaseInterface;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -15,18 +9,21 @@ import static project.base.DSUtil.PageReq;
 
 /**
  * @Author : 慕君Dxl
- * @CreateTime : 2024/7/12 10:01
+ * @CreateTime : 2024/7/15 9:34
  */
-public abstract class BaseThree<ID extends Serializable, EN extends EntityBaseInterface & DeleteBaseInterface, EN_VO,
-        ADD_CMD extends AddBaseInterface<EN>, MOD_CMD extends ModifyBaseInterface<ID, EN>, QUERY_CMD extends PageReq,
-        DAO extends JpaRepository<EN, ID> & JpaSpecificationExecutor<EN>> extends BaseOne<ID, EN, EN_VO, QUERY_CMD, DAO> {
+public abstract class BaseThree<ID extends Serializable, EN extends InterfaceOfEntityBase & InterfaceOfDeleteBase,
+        EN_VO, ADD_CMD extends InterfaceOfAddBase<EN>, MOD_CMD extends InterfaceOfModifyBase<ID, EN>, QUERY_CMD extends PageReq,
+        DAO extends BaseDao<EN, ID>> extends BaseTwo<ID, EN, EN_VO, QUERY_CMD, DAO> {
 
     @Transactional
     public EN_VO add(ADD_CMD cmd) {
         EN obj = addToNewEntity(cmd);
         authExist(obj);
         obj.newEntityObjSetPK();
+        //JPA
         dao.save(obj);
+        //MYBATIS-PLUS
+//        dao.insert(obj);
         return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
@@ -34,7 +31,10 @@ public abstract class BaseThree<ID extends Serializable, EN extends EntityBaseIn
     public EN_VO modify(MOD_CMD cmd) {
         EN obj = modifyInOldEntity(cmd, getById(cmd.obtainPK()));
         authExist(obj);
+        //JPA
         dao.save(obj);
+        //MYBATIS-PLUS
+//        dao.updateById(obj);
         return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 

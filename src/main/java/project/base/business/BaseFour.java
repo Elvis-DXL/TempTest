@@ -1,12 +1,8 @@
-package project.base.business.mybatisplus;
+package project.base.business;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.web.multipart.MultipartFile;
 import project.base.excel.ExcelRW;
 import project.base.excel.ImEx;
-import project.base.interfaces.DeleteBaseInterface;
-import project.base.interfaces.PKGet;
-import project.base.interfaces.PKSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,14 +15,11 @@ import static project.base.DSUtil.PageReq;
 import static project.base.DSUtil.trueThrow;
 
 /**
- * 慕君Dxl个人程序代码开发业务基类(包含导入、导出、模板下载)，非本人，仅供参考使用，请勿修改
- *
  * @Author : 慕君Dxl
- * @CreateTime : 2024/5/17 16:07
+ * @CreateTime : 2024/7/15 9:41
  */
-public abstract class BaseImExBusiness<ID extends Serializable, EN extends PKSet & DeleteBaseInterface, EN_VO,
-        ADD_CMD, MOD_CMD extends PKGet<ID>, EXCEL, QUERY_CMD extends PageReq, DAO extends BaseMapper<EN>>
-        extends BaseBusiness<ID, EN, EN_VO, ADD_CMD, MOD_CMD, QUERY_CMD, DAO> {
+public abstract class BaseFour<ID extends Serializable, EN extends InterfaceOfDeleteBase, EN_VO, EXCEL,
+        QUERY_CMD extends PageReq, DAO extends BaseDao<EN, ID>> extends BaseTwo<ID, EN, EN_VO, QUERY_CMD, DAO> {
 
     public void template(HttpServletRequest request, HttpServletResponse response) {
         ImEx imEx = imEx();
