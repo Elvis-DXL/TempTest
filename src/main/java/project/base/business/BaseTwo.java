@@ -23,7 +23,6 @@ public abstract class BaseTwo<ID extends Serializable, EN extends InterfaceOfDel
 
     protected void dealDelete(EN obj) {
         obj.deleteDealMark();
-
         //JPA
         dao.save(obj);
         //MYBATIS-PLUS
