@@ -85,7 +85,9 @@ public class DemoController {
     @Operation(summary = "数据导出")
     public void dataExport(@RequestParam(required = false) String name,
                            HttpServletRequest request, HttpServletResponse response) {
-        demoBusiness.dataExport(new DemoListCmd().name(name), request, response);
+        DemoListCmd cmd = new DemoListCmd();
+        cmd.name(name);
+        demoBusiness.dataExport(cmd, request, response);
     }
 
     @PostMapping("/dataImport")
