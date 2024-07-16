@@ -12,4 +12,11 @@ import static project.base.base.DSUtil.PageReq;
  */
 @Data
 public class DemoListCmd extends PageReq implements Serializable {
+
+    private String name;
+
+    public DemoListCmd name(String name) {
+        this.name = name;
+        return this;
+    }
 }
