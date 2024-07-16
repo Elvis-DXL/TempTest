@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import project.base.base.DSUtil.PageReq;
-import project.base.base.DSUtil.PageResp;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,13 +17,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static project.base.base.DSUtil.trueThrow;
 
 /**
  * @Author : 慕君Dxl
  * @CreateTime : 2024/7/15 9:06
  */
-public abstract class BaseOne<ID extends Serializable, EN, EN_VO, QUERY_CMD extends PageReq, DAO extends BaseDao<EN, ID>> {
+public abstract class BaseOne<ID extends Serializable, EN, EN_VO, QUERY_CMD extends DSUtil.PageReq, DAO extends BaseDao<EN, ID>> {
     @Autowired
     protected DataSource dataSource;
     @Autowired
@@ -44,15 +41,15 @@ public abstract class BaseOne<ID extends Serializable, EN, EN_VO, QUERY_CMD exte
     protected EN getById(ID id) {
         //JPA
         EN obj = null;
-        trueThrow(null == id, getBusinessEx("传入ID为空"));
+        DSUtil.trueThrow(null == id, getBusinessEx("传入ID为空"));
         Optional<EN> optional = dao.findById(id);
-        trueThrow(!optional.isPresent(), getBusinessEx("传入ID错误"));
+        DSUtil.trueThrow(!optional.isPresent(), getBusinessEx("传入ID错误"));
         obj = optional.get();
 
         //MYBATIS-PLUS
-//        trueThrow(null == id, getBusinessEx("传入ID为空"));
+//        DSUtil.trueThrow(null == id, getBusinessEx("传入ID为空"));
 //        obj = dao.selectById(id);
-//        trueThrow(null == obj, getBusinessEx("传入ID错误"));
+//        DSUtil.trueThrow(null == obj, getBusinessEx("传入ID错误"));
         return obj;
     }
 
@@ -64,17 +61,17 @@ public abstract class BaseOne<ID extends Serializable, EN, EN_VO, QUERY_CMD exte
         return entityToVo(listEntity(cmd), cmd);
     }
 
-    public PageResp<EN_VO> page(QUERY_CMD cmd) {
+    public DSUtil.PageResp<EN_VO> page(QUERY_CMD cmd) {
         //JPA
         Page<EN> entityPage = dao.findAll(cmdToSpecification(cmd), PageRequest.of(cmd.getPageNum() - 1, cmd.getPageSize()));
-        return new PageResp<EN_VO>()
+        return new DSUtil.PageResp<EN_VO>()
                 .setPageNum(entityPage.getNumber() + 1).setPageSize(entityPage.getSize())
                 .setTotalNum((int) entityPage.getTotalElements()).setTotalPage(entityPage.getTotalPages())
                 .setDataList(entityToVo(entityPage.getContent(), cmd));
 
         //MYBATIS-PLUS
 //        IPage<EN> entityPage = dao.selectPage(new Page<>(cmd.getPageNum(), cmd.getPageSize()), cmdToWrapper(cmd));
-//        return new PageResp<EN_VO>()
+//        return new DSUtil.PageResp<EN_VO>()
 //                .setPageNum((int) entityPage.getCurrent()).setPageSize((int) entityPage.getSize())
 //                .setTotalNum((int) entityPage.getTotal()).setTotalPage((int) entityPage.getPages())
 //                .setDataList(entityToVo(entityPage.getRecords(), cmd));

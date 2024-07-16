@@ -5,14 +5,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.util.Collections;
 
-import static project.base.base.DSUtil.PageReq;
-
 /**
  * @Author : 慕君Dxl
  * @CreateTime : 2024/7/15 9:34
  */
 public abstract class BaseThree<ID extends Serializable, EN extends InterfaceOfEntityBase & InterfaceOfDeleteBase, EN_VO,
-        ADD_CMD extends InterfaceOfAddBase<EN>, MOD_CMD extends InterfaceOfModifyBase<ID, EN>, QUERY_CMD extends PageReq,
+        ADD_CMD extends InterfaceOfAddBase<EN>, MOD_CMD extends InterfaceOfModifyBase<ID, EN>, QUERY_CMD extends DSUtil.PageReq,
         DAO extends BaseDao<EN, ID>> extends BaseTwo<ID, EN, EN_VO, QUERY_CMD, DAO> {
 
     @Transactional

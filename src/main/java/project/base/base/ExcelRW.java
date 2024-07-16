@@ -27,10 +27,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
-import static project.base.base.DSUtil.EmptyTool.isEmpty;
-import static project.base.base.DSUtil.IOTool.closeStream;
-import static project.base.base.DSUtil.trueThrow;
-
 /**
  * @Author : 慕君Dxl
  * @CreateTime : 2024/5/31 15:45
@@ -51,7 +47,7 @@ public class ExcelRW {
                 continue;
             }
             String aim = excelProperty.value()[0];
-            trueThrow(titleList.contains(aim), new RuntimeException("表头定义中存在相同字段【" + aim + "】"));
+            DSUtil.trueThrow(titleList.contains(aim), new RuntimeException("表头定义中存在相同字段【" + aim + "】"));
             titleList.add(aim);
         }
         List<T> result = new ArrayList<>();
@@ -72,7 +68,7 @@ public class ExcelRW {
                     obsTitle.add(headMap.get(it));
                 }
                 for (String it : titleList) {
-                    trueThrow(!obsTitle.contains(it), new RuntimeException(TITLE_ERROR));
+                    DSUtil.trueThrow(!obsTitle.contains(it), new RuntimeException(TITLE_ERROR));
                 }
             }
         }).sheet(sheetIndex).doRead();
@@ -91,7 +87,7 @@ public class ExcelRW {
     }
 
     public static void writer(Workbook wb, String fileName, HttpServletRequest request, HttpServletResponse response) {
-        trueThrow(null == wb, new NullPointerException("wb must not be null"));
+        DSUtil.trueThrow(null == wb, new NullPointerException("wb must not be null"));
         fileName = wb instanceof HSSFWorkbook ? (fileName + ".xls") : (fileName + ".xlsx");
         dealWebExportExcelResponseHeader(fileName, request, response);
         OutputStream out = null;
@@ -103,7 +99,7 @@ public class ExcelRW {
             e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
-            closeStream(out, wb);
+            DSUtil.IOTool.closeStream(out, wb);
         }
     }
 
@@ -116,7 +112,7 @@ public class ExcelRW {
     }
 
     public static void addImage(Workbook wb, Sheet sheet, int firstRow, int lastRow, int firstCol, int lastCol, String imgStr) {
-        if (isEmpty(imgStr)) {
+        if (DSUtil.EmptyTool.isEmpty(imgStr)) {
             return;
         }
         sheet.createRow(firstRow);
