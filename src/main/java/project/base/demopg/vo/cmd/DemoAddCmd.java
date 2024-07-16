@@ -1,7 +1,7 @@
 package project.base.demopg.vo.cmd;
 
 import lombok.Data;
-import project.base.business.InterfaceOfAddBase;
+import project.base.base.InterfaceOfAddBase;
 import project.base.demopg.entity.Demo;
 
 import java.io.Serializable;

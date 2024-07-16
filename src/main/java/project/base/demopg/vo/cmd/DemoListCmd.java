@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-import static project.base.DSUtil.PageReq;
+import static project.base.base.DSUtil.PageReq;
 
 /**
  * @Author : 慕君Dxl

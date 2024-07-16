@@ -1,11 +1,11 @@
-package project.base.business;
+package project.base.base;
 
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Collections;
 
-import static project.base.DSUtil.PageReq;
+import static project.base.base.DSUtil.PageReq;
 
 /**
  * @Author : 慕君Dxl

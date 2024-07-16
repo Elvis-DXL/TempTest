@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static project.base.DSUtil.EmptyTool.isEmpty;
-import static project.base.DSUtil.EmptyTool.isNotEmpty;
-import static project.base.DSUtil.ListTool.listToMap;
-import static project.base.DSUtil.mapGet;
+import static project.base.base.DSUtil.EmptyTool.isEmpty;
+import static project.base.base.DSUtil.EmptyTool.isNotEmpty;
+import static project.base.base.DSUtil.ListTool.listToMap;
+import static project.base.base.DSUtil.mapGet;
 
 /**
  * @Author : 慕君Dxl

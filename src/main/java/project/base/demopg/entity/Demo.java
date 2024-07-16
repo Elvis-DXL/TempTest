@@ -1,8 +1,8 @@
 package project.base.demopg.entity;
 
 import lombok.Data;
-import project.base.business.InterfaceOfDeleteBase;
-import project.base.business.InterfaceOfEntityBase;
+import project.base.base.InterfaceOfDeleteBase;
+import project.base.base.InterfaceOfEntityBase;
 
 import javax.persistence.Column;
 import java.io.Serializable;

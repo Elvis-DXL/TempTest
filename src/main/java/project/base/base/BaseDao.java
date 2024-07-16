@@ -1,4 +1,4 @@
-package project.base.business;
+package project.base.base;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.data.jpa.repository.JpaRepository;

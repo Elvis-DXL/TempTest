@@ -1,8 +1,6 @@
-package project.base.business;
+package project.base.base;
 
 import org.springframework.web.multipart.MultipartFile;
-import project.base.excel.ExcelRW;
-import project.base.excel.ImEx;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,16 +8,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static project.base.DSUtil.EmptyTool.isEmpty;
-import static project.base.DSUtil.PageReq;
-import static project.base.DSUtil.trueThrow;
+import static project.base.base.DSUtil.EmptyTool.isEmpty;
+import static project.base.base.DSUtil.PageReq;
+import static project.base.base.DSUtil.trueThrow;
 
 /**
  * @Author : 慕君Dxl
- * @CreateTime : 2024/7/15 9:41
+ * @CreateTime : 2024/7/15 9:43
  */
-public abstract class BaseFour<ID extends Serializable, EN extends InterfaceOfDeleteBase, EN_VO, EXCEL,
-        QUERY_CMD extends PageReq, DAO extends BaseDao<EN, ID>> extends BaseTwo<ID, EN, EN_VO, QUERY_CMD, DAO> {
+public abstract class BaseFive<ID extends Serializable, EN extends InterfaceOfEntityBase & InterfaceOfDeleteBase, EN_VO,
+        ADD_CMD extends InterfaceOfAddBase<EN>, MOD_CMD extends InterfaceOfModifyBase<ID, EN>, EXCEL, QUERY_CMD extends PageReq,
+        DAO extends BaseDao<EN, ID>> extends BaseThree<ID, EN, EN_VO, ADD_CMD, MOD_CMD, QUERY_CMD, DAO> {
 
     public void template(HttpServletRequest request, HttpServletResponse response) {
         ImEx imEx = imEx();

@@ -1,4 +1,4 @@
-package project.base;
+package project.base.base;
 
 import com.google.gson.Gson;
 import org.apache.commons.codec.binary.Base64;
@@ -26,6 +26,7 @@ import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -231,7 +232,8 @@ public final class DSUtil {
 
     public enum Regex {
         ID_CARD("(^[0-9]{18}$)|(^[0-9]{17}(Ⅹ|X|x)$)", "身份证号码"),
-        MOBILE_PHONE("(^1[0-9]{10}$)", "手机号");
+        MOBILE_PHONE("(^1[0-9]{10}$)", "手机号"),
+        LNG_LAT("(^[0-9]{1,3}$)|(^[0-9]{1,3}[\\.]{1}$)|(^[0-9]{1,3}[\\.]{1}[0-9]+$)", "经纬度");
 
         private final String regexStr;
         private final String desc;
@@ -772,6 +774,40 @@ public final class DSUtil {
             Calendar calendar = dateToCalendar(date);
             calendar.add(calendarType, num);
             return calendar.getTime();
+        }
+
+        public static String formatDate(Date date, String pattern) {
+            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+            return sdf.format(date);
+        }
+
+        public static String formatDate(Date date, Pattern pattern) {
+            return formatDate(date, pattern.val());
+        }
+
+        public static Date dateStartTime(Date date) {
+            Calendar calendar = dateToCalendar(date);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            return calendar.getTime();
+        }
+
+        public static Date dateEndTime(Date date) {
+            Calendar calendar = dateToCalendar(date);
+            calendar.set(Calendar.HOUR_OF_DAY, 23);
+            calendar.set(Calendar.MINUTE, 59);
+            calendar.set(Calendar.SECOND, 59);
+            calendar.set(Calendar.MILLISECOND, 999);
+            return calendar.getTime();
+        }
+
+        public static int monthDaysByDate(Date date) {
+            Calendar calendar = dateToCalendar(date);
+            calendar.set(Calendar.DATE, 1);
+            calendar.roll(Calendar.DATE, -1);
+            return calendar.get(Calendar.DATE);
         }
     }
 

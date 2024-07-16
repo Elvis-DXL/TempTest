@@ -1,11 +1,11 @@
-package project.base.business;
+package project.base.base;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import project.base.DSUtil.PageReq;
-import project.base.DSUtil.PageResp;
+import project.base.base.DSUtil.PageReq;
+import project.base.base.DSUtil.PageResp;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static project.base.DSUtil.trueThrow;
+import static project.base.base.DSUtil.trueThrow;
 
 /**
  * @Author : 慕君Dxl
