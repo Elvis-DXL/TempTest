@@ -1,8 +1,10 @@
 package project.base.demopg.entity;
 
 import lombok.Data;
-import project.base.interfaces.PKSet;
+import project.base.business.InterfaceOfDeleteBase;
+import project.base.business.InterfaceOfEntityBase;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 
 /**
@@ -10,7 +12,7 @@ import java.io.Serializable;
  * @CreateTime : 2024/5/27 13:51
  */
 @Data
-public class Demo implements PKSet, Serializable {
+public class Demo implements InterfaceOfEntityBase, InterfaceOfDeleteBase, Serializable {
 
     private Integer id;
 
@@ -18,7 +20,15 @@ public class Demo implements PKSet, Serializable {
 
     private String exStr;
 
+    @Column(name = "_delete", columnDefinition = "int(3) COMMENT '删除状态'")
+    private Boolean delete = false;
+
     @Override
-    public void newObjSetPK() {
+    public void deleteDealMark() {
+        this.setDelete(Boolean.TRUE);
+    }
+
+    @Override
+    public void newEntityObjSetPK() {
     }
 }
