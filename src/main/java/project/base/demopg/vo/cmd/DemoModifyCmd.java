@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class DemoModifyCmd implements PKGet<Long>, Serializable {
 
     @Override
-    public Long getPK() {
+    public Long obtainPK() {
         return null;
     }
 }
