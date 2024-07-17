@@ -40,17 +40,16 @@ public abstract class BaseOne<ID extends Serializable, EN, EN_VO, QUERY_CMD exte
 
     protected EN getById(ID id) {
         //JPA
-        EN obj = null;
         DSUtil.trueThrow(null == id, getBusinessEx("传入ID为空"));
         Optional<EN> optional = dao.findById(id);
         DSUtil.trueThrow(!optional.isPresent(), getBusinessEx("传入ID错误"));
-        obj = optional.get();
+        return optional.get();
 
         //MYBATIS-PLUS
 //        DSUtil.trueThrow(null == id, getBusinessEx("传入ID为空"));
-//        obj = dao.selectById(id);
+//        EN obj = dao.selectById(id);
 //        DSUtil.trueThrow(null == obj, getBusinessEx("传入ID错误"));
-        return obj;
+//        return obj;
     }
 
     public EN_VO query(ID id) {
