@@ -21,9 +21,9 @@ import java.lang.reflect.Type;
  */
 @Slf4j
 @Configuration
+@RestControllerAdvice
 @ConditionalOnClass({Servlet.class, DispatcherServlet.class})
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-@RestControllerAdvice
 public class EnhanceRequestBodyAdvice implements RequestBodyAdvice {
 
     @Override

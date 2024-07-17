@@ -20,9 +20,9 @@ import javax.servlet.Servlet;
  */
 @Slf4j
 @Configuration
+@RestControllerAdvice
 @ConditionalOnClass({Servlet.class, DispatcherServlet.class})
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-@RestControllerAdvice
 public class EnhanceResponseBodyAdvice implements ResponseBodyAdvice {
 
     @Override
