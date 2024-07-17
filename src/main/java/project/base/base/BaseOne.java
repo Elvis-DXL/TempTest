@@ -39,7 +39,6 @@ public abstract class BaseOne<ID extends Serializable, EN, EN_VO, QUERY_CMD exte
     }
 
     protected EN getById(ID id) {
-        //JPA
         DSUtil.trueThrow(null == id, getBusinessEx("传入ID为空"));
         Optional<EN> optional = dao.findById(id);
         DSUtil.trueThrow(!optional.isPresent(), getBusinessEx("传入ID错误"));
@@ -61,7 +60,6 @@ public abstract class BaseOne<ID extends Serializable, EN, EN_VO, QUERY_CMD exte
     }
 
     public DSUtil.PageResp<EN_VO> page(QUERY_CMD cmd) {
-        //JPA
         Page<EN> entityPage = dao.findAll(cmdToSpecification(cmd), PageRequest.of(cmd.getPageNum() - 1, cmd.getPageSize()));
         return new DSUtil.PageResp<EN_VO>()
                 .setPageNum(entityPage.getNumber() + 1).setPageSize(entityPage.getSize())
@@ -77,13 +75,11 @@ public abstract class BaseOne<ID extends Serializable, EN, EN_VO, QUERY_CMD exte
     }
 
     protected List<EN> listEntity(QUERY_CMD cmd) {
-        //JPA
         return dao.findAll(cmdToSpecification(cmd));
         //MYBATIS-PLUS
 //        return dao.selectList(cmdToWrapper(cmd));
     }
 
-    //JPA
     protected Specification<EN> cmdToSpecification(QUERY_CMD cmd) {
         return (root, query, cb) -> cmdToPredicate(cmd, new ArrayList<>(), root, query, cb);
     }
@@ -96,7 +92,6 @@ public abstract class BaseOne<ID extends Serializable, EN, EN_VO, QUERY_CMD exte
     /*************************************************抽象方法*************************************************/
     protected abstract List<EN_VO> entityToVo(List<EN> dataList, QUERY_CMD cmd);
 
-    //JPA
     protected abstract Predicate cmdToPredicate(QUERY_CMD cmd, List<Predicate> tjList,
                                                 Root<EN> root, CriteriaQuery<?> query, CriteriaBuilder cb);
 

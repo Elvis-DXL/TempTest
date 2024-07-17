@@ -18,7 +18,6 @@ public abstract class BaseThree<ID extends Serializable, EN extends InterfaceOfE
         EN obj = addToNewEntity(cmd);
         authExist(obj);
         obj.newEntityObjSetPK();
-        //JPA
         dao.save(obj);
         //MYBATIS-PLUS
 //        dao.insert(obj);
@@ -29,7 +28,6 @@ public abstract class BaseThree<ID extends Serializable, EN extends InterfaceOfE
     public EN_VO modify(MOD_CMD cmd) {
         EN obj = modifyInOldEntity(cmd, getById(cmd.obtainPK()));
         authExist(obj);
-        //JPA
         dao.save(obj);
         //MYBATIS-PLUS
 //        dao.updateById(obj);
