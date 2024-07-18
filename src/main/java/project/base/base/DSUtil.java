@@ -1,7 +1,6 @@
 package project.base.base;
 
 import com.google.gson.Gson;
-import org.apache.commons.codec.binary.Base64;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 
@@ -1278,7 +1277,7 @@ public final class DSUtil {
             }
             try {
                 cipher.init(Cipher.ENCRYPT_MODE, key);
-                return new String(new Base64().encode(cipher.doFinal(aimStr.getBytes(StandardCharsets.UTF_8))));
+                return new String(Base64.getEncoder().encode(cipher.doFinal(aimStr.getBytes(StandardCharsets.UTF_8))));
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new RuntimeException("failed to encode");
@@ -1291,7 +1290,7 @@ public final class DSUtil {
             }
             try {
                 cipher.init(Cipher.DECRYPT_MODE, key);
-                return new String(cipher.doFinal(new Base64().decode(aimStr)), StandardCharsets.UTF_8);
+                return new String(cipher.doFinal(Base64.getDecoder().decode(aimStr)), StandardCharsets.UTF_8);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new RuntimeException("failed to decode");
