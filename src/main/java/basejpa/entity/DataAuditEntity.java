@@ -18,11 +18,11 @@ import java.time.LocalDateTime;
 public class DataAuditEntity extends BaseEntity {
     @Column(name = "create_user", columnDefinition = "bigint(22) COMMENT '创建人'")
     private Long createUser;
-    @Column(name = "update_user", columnDefinition = "bigint(22) COMMENT '更新人'")
-    private Long updateUser;
-
     @Column(name = "create_time", columnDefinition = "datetime COMMENT '创建时间'")
     private LocalDateTime createTime;
+
+    @Column(name = "update_user", columnDefinition = "bigint(22) COMMENT '更新人'")
+    private Long updateUser;
     @Column(name = "update_time", columnDefinition = "datetime COMMENT '更新时间'")
     private LocalDateTime updateTime;
 }
