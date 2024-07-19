@@ -1,8 +1,8 @@
 package com.elvis.test.demopg.vo.cmd;
 
-import lombok.Data;
-import com.elvis.test.base.InterfaceOfModifyBase;
+import basejpa.interfaces.ModifyBase;
 import com.elvis.test.demopg.entity.Demo;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @CreateTime : 2024/5/27 13:55
  */
 @Data
-public class DemoModifyCmd implements InterfaceOfModifyBase<Long, Demo>, Serializable {
+public class DemoModifyCmd implements ModifyBase<Long, Demo>, Serializable {
 
     @Override
     public Demo modifyIntoOldEntityObj(Demo oldObj) {
@@ -19,7 +19,7 @@ public class DemoModifyCmd implements InterfaceOfModifyBase<Long, Demo>, Seriali
     }
 
     @Override
-    public Long obtainPK() {
+    public Long obtainPrimaryKey() {
         return null;
     }
 }

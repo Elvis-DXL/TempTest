@@ -1,4 +1,4 @@
-package com.elvis.test.base;
+package basejpa.util;
 
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.annotation.ExcelProperty;
@@ -27,11 +27,15 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
+import static basejpa.util.DSUtil.EmptyTool.isEmpty;
+import static basejpa.util.DSUtil.IOTool;
+import static basejpa.util.DSUtil.trueThrow;
+
 /**
  * @Author : 慕君Dxl
- * @CreateTime : 2024/5/31 15:45
+ * @CreateTime : 2024/7/19 15:26
  */
-public class ExcelRW {
+public final class ExcelRW {
     public final static String TITLE_ERROR = "表头错误";
 
     public static <T> List<T> reader(InputStream iStream, Class<T> clazz) {
@@ -47,7 +51,7 @@ public class ExcelRW {
                 continue;
             }
             String aim = excelProperty.value()[0];
-            DSUtil.trueThrow(titleList.contains(aim), new RuntimeException("表头定义中存在相同字段【" + aim + "】"));
+            trueThrow(titleList.contains(aim), new RuntimeException("表头定义中存在相同字段【" + aim + "】"));
             titleList.add(aim);
         }
         List<T> result = new ArrayList<>();
@@ -68,7 +72,7 @@ public class ExcelRW {
                     obsTitle.add(headMap.get(it));
                 }
                 for (String it : titleList) {
-                    DSUtil.trueThrow(!obsTitle.contains(it), new RuntimeException(TITLE_ERROR));
+                    trueThrow(!obsTitle.contains(it), new RuntimeException(TITLE_ERROR));
                 }
             }
         }).sheet(sheetIndex).doRead();
@@ -87,7 +91,7 @@ public class ExcelRW {
     }
 
     public static void writer(Workbook wb, String fileName, HttpServletRequest request, HttpServletResponse response) {
-        DSUtil.trueThrow(null == wb, new NullPointerException("wb must not be null"));
+        trueThrow(null == wb, new NullPointerException("wb must not be null"));
         fileName = wb instanceof HSSFWorkbook ? (fileName + ".xls") : (fileName + ".xlsx");
         dealWebExportExcelResponseHeader(fileName, request, response);
         OutputStream out = null;
@@ -99,7 +103,7 @@ public class ExcelRW {
             e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
-            DSUtil.IOTool.closeStream(out, wb);
+            IOTool.closeStream(out, wb);
         }
     }
 
@@ -112,7 +116,7 @@ public class ExcelRW {
     }
 
     public static void addImage(Workbook wb, Sheet sheet, int firstRow, int lastRow, int firstCol, int lastCol, String imgStr) {
-        if (DSUtil.EmptyTool.isEmpty(imgStr)) {
+        if (isEmpty(imgStr)) {
             return;
         }
         sheet.createRow(firstRow);

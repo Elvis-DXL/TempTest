@@ -1,8 +1,8 @@
 package com.elvis.test.demopg.entity;
 
+import basejpa.interfaces.DeleteBase;
+import basejpa.interfaces.EntityBase;
 import lombok.Data;
-import com.elvis.test.base.InterfaceOfDeleteBase;
-import com.elvis.test.base.InterfaceOfEntityBase;
 
 import javax.persistence.Column;
 import java.io.Serializable;
@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @CreateTime : 2024/5/27 13:51
  */
 @Data
-public class Demo implements InterfaceOfEntityBase, InterfaceOfDeleteBase, Serializable {
+public class Demo implements EntityBase, DeleteBase, Serializable {
 
     private Integer id;
 
@@ -29,6 +29,7 @@ public class Demo implements InterfaceOfEntityBase, InterfaceOfDeleteBase, Seria
     }
 
     @Override
-    public void newEntityObjSetPK() {
+    public void newEntityObjSetPrimaryKey() {
+
     }
 }

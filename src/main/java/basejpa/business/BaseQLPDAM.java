@@ -1,36 +1,39 @@
-package com.elvis.test.base;
+package basejpa.business;
 
+import basejpa.dao.BaseDao;
+import basejpa.interfaces.AddBase;
+import basejpa.interfaces.DeleteBase;
+import basejpa.interfaces.EntityBase;
+import basejpa.interfaces.ModifyBase;
+import com.zx.core.base.form.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
 import java.util.Collections;
 
 /**
+ * Query-List-Page-Delete-Add-Modify
+ *
  * @Author : 慕君Dxl
- * @CreateTime : 2024/7/15 9:34
+ * @CreateTime : 2024/7/19 14:44
  */
-public abstract class BaseThree<ID extends Serializable, EN extends InterfaceOfEntityBase & InterfaceOfDeleteBase, EN_VO,
-        ADD_CMD extends InterfaceOfAddBase<EN>, MOD_CMD extends InterfaceOfModifyBase<ID, EN>,
-        QUERY_CMD extends DSUtil.PageReq, DAO extends BaseDao<EN, ID>> extends BaseTwo<ID, EN, EN_VO, QUERY_CMD, DAO> {
+public abstract class BaseQLPDAM<ID, EN extends EntityBase & DeleteBase, EN_VO,
+        ADD_CMD extends AddBase<EN>, MOD_CMD extends ModifyBase<ID, EN>, QUERY_CMD extends Query,
+        DAO extends BaseDao<EN, ID>> extends BaseQLPD<ID, EN, EN_VO, QUERY_CMD, DAO> {
 
     @Transactional
     public EN_VO add(ADD_CMD cmd) {
         EN obj = addToNewEntity(cmd);
         authExist(obj);
-        obj.newEntityObjSetPK();
+        obj.newEntityObjSetPrimaryKey();
         dao.save(obj);
-        //MYBATIS-PLUS
-//        dao.insert(obj);
         return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
     @Transactional
     public EN_VO modify(MOD_CMD cmd) {
-        EN obj = modifyInOldEntity(cmd, getById(cmd.obtainPK()));
+        EN obj = modifyInOldEntity(cmd, getById(cmd.obtainPrimaryKey()));
         authExist(obj);
         dao.save(obj);
-        //MYBATIS-PLUS
-//        dao.updateById(obj);
         return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 

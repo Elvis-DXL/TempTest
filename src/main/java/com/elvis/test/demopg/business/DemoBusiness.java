@@ -1,8 +1,7 @@
 package com.elvis.test.demopg.business;
 
-import org.springframework.stereotype.Service;
-import com.elvis.test.base.BaseFive;
-import com.elvis.test.base.ImEx;
+import basejpa.business.BaseQLPDAMIE;
+import basejpa.pojo.ImEx;
 import com.elvis.test.demopg.dao.DemoDao;
 import com.elvis.test.demopg.entity.Demo;
 import com.elvis.test.demopg.vo.cmd.DemoAddCmd;
@@ -10,6 +9,7 @@ import com.elvis.test.demopg.vo.cmd.DemoListCmd;
 import com.elvis.test.demopg.vo.cmd.DemoModifyCmd;
 import com.elvis.test.demopg.vo.dto.DemoVo;
 import com.elvis.test.demopg.vo.excel.DemoExcel;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Service
 public class DemoBusiness
-        extends BaseFive<Long, Demo, DemoVo, DemoAddCmd, DemoModifyCmd, DemoExcel, DemoListCmd, DemoDao> {
+        extends BaseQLPDAMIE<Long, Demo, DemoVo, DemoAddCmd, DemoModifyCmd, DemoExcel, DemoListCmd, DemoDao> {
     @Override
     protected ImEx imEx() {
         return ImEx.getInstance().clazz(DemoExcel.class).fileName("").sheetName("");

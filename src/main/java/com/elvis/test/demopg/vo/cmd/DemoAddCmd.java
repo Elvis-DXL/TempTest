@@ -1,8 +1,8 @@
 package com.elvis.test.demopg.vo.cmd;
 
-import lombok.Data;
-import com.elvis.test.base.InterfaceOfAddBase;
+import basejpa.interfaces.AddBase;
 import com.elvis.test.demopg.entity.Demo;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @CreateTime : 2024/5/27 13:55
  */
 @Data
-public class DemoAddCmd implements InterfaceOfAddBase<Demo>, Serializable {
+public class DemoAddCmd implements AddBase<Demo>, Serializable {
 
     @Override
     public Demo createNewEntityObj() {

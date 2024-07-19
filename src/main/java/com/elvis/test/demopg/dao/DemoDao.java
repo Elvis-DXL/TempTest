@@ -1,6 +1,6 @@
 package com.elvis.test.demopg.dao;
 
-import com.elvis.test.base.BaseDao;
+import basejpa.dao.BaseDao;
 import com.elvis.test.demopg.entity.Demo;
 
 /**

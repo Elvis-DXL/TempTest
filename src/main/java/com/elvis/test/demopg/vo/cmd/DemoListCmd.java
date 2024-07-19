@@ -1,7 +1,7 @@
 package com.elvis.test.demopg.vo.cmd;
 
+import com.zx.core.base.form.Query;
 import lombok.Data;
-import com.elvis.test.base.DSUtil;
 
 import java.io.Serializable;
 
@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @CreateTime : 2024/5/27 13:56
  */
 @Data
-public class DemoListCmd extends DSUtil.PageReq implements Serializable {
+public class DemoListCmd extends Query implements Serializable {
 
     private String name;
 

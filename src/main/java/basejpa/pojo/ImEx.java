@@ -1,12 +1,10 @@
-package com.elvis.test.base;
-
-import java.io.Serializable;
+package basejpa.pojo;
 
 /**
  * @Author : 慕君Dxl
- * @CreateTime : 2024/5/31 15:44
+ * @CreateTime : 2024/7/19 15:29
  */
-public class ImEx implements Serializable {
+public final class ImEx {
     private Class<?> clazz;
     private String fileName;
     private String sheetName;
