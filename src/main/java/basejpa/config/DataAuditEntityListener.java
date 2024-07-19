@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Configurable
 public class DataAuditEntityListener implements ConfigurableObject {
     @PrePersist
-    public void PrePersist(Object obj) {
+    public void prePersist(Object obj) {
         DataAuditEntity dataAuditEntity = (DataAuditEntity) obj;
         dataAuditEntity.setCreateTime(LocalDateTime.now());
         dataAuditEntity.setUpdateTime(LocalDateTime.now());
