@@ -101,6 +101,34 @@
             <version>2.2.22</version>
         </dependency>
 
+        <!--ZX需要引入POM ↓-->
+        <dependency>
+            <groupId>com.zx.core</groupId>
+            <artifactId>zx-core-tool</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zx.core</groupId>
+            <artifactId>zx-core-base</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <artifactId>zx-core-common</artifactId>
+            <groupId>com.zx.core</groupId>
+            <version>3.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zx.core</groupId>
+            <artifactId>zx-core-oss</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zx.core</groupId>
+            <artifactId>zx-core-redis</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
+        </dependency>
+        <!--ZX需要引入POM ↑-->
+
         <!--Excel需要引入POM ↓-->
         <dependency>
             <groupId>org.apache.poi</groupId>
