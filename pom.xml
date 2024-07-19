@@ -50,7 +50,6 @@
             <artifactId>freemarker</artifactId>
             <version>2.3.23</version>
         </dependency>
-
         <dependency>
             <groupId>org.xhtmlrenderer</groupId>
             <artifactId>flying-saucer-pdf</artifactId>
@@ -127,18 +126,30 @@
 
     </dependencies>
 
+    <!--打包插件-->
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <configuration>
+                    <aggregate>true</aggregate>
+                    <charset>utf-8</charset>
+                    <encoding>utf-8</encoding>
+                    <docencoding>utf-8</docencoding>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-
 </project>
