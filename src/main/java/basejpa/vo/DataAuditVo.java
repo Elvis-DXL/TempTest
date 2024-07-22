@@ -16,13 +16,13 @@ import java.time.LocalDateTime;
 public class DataAuditVo extends BaseVo {
     @Schema(name = "createUser", description = "创建人ID")
     protected Long createUser;
-    @Schema(name = "updateUser", description = "更新人ID")
-    protected Long updateUser;
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Schema(name = "createTime", description = "创建时间")
     protected LocalDateTime createTime;
+
+    @Schema(name = "updateUser", description = "更新人ID")
+    protected Long updateUser;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Schema(name = "updateTime", description = "更新时间")
