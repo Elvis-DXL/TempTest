@@ -1,9 +1,9 @@
 package basejpa.vo;
 
-import basejpa.enums.FlowBtn;
+import basejpa.pojo.FlowBtn;
 import basejpa.enums.FlowLink;
 import basejpa.enums.FlowSAS;
-import basejpa.enums.FlowTurn;
+import basejpa.pojo.FlowTurn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

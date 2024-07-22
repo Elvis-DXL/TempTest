@@ -1,4 +1,4 @@
-package basejpa.enums;
+package basejpa.pojo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

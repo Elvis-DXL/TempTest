@@ -1,7 +1,7 @@
 package basejpa.interfaces;
 
 import basejpa.entity.FlowAuditEntity;
-import basejpa.enums.FlowTurn;
+import basejpa.pojo.FlowTurn;
 import basejpa.pojo.FlowSp;
 import basejpa.pojo.SpUser;
 

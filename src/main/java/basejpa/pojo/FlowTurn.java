@@ -1,6 +1,6 @@
-package basejpa.enums;
+package basejpa.pojo;
 
-import basejpa.pojo.FlowSp;
+import basejpa.enums.FlowSAS;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
