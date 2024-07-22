@@ -1,8 +1,8 @@
 package basejpa.vo;
 
-import basejpa.pojo.FlowBtn;
 import basejpa.enums.FlowLink;
 import basejpa.enums.FlowSAS;
+import basejpa.pojo.FlowBtn;
 import basejpa.pojo.FlowTurn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -14,6 +14,7 @@ import java.util.List;
  * @CreateTime : 2024/7/22 8:59
  */
 @Data
+@Schema(name = "FlowAuditVo", description = "流程数据基础VO")
 public class FlowAuditVo extends DataAuditVo {
     @Schema(name = "auditStart", description = "流程开始")
     private Boolean auditStart;

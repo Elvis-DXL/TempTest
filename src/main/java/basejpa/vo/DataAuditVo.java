@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
  * @CreateTime : 2024/7/22 8:58
  */
 @Data
+@Schema(name = "DataAuditVo", description = "数据基础VO")
 public class DataAuditVo extends BaseVo {
     @Schema(name = "createUser", description = "创建人ID")
     protected Long createUser;
