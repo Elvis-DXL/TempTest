@@ -2,6 +2,7 @@ package basejpa.util;
 
 import com.google.gson.Gson;
 import com.zx.core.base.form.OrderItem;
+import com.zx.core.tool.utils.JsonUtil;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 
@@ -519,6 +520,18 @@ public final class DSUtil {
         } else {
             falseConsumer.accept(obj);
         }
+    }
+
+    public static <T> String toJson(T obj) {
+        return null == obj ? null : JsonUtil.toJson(obj);
+    }
+
+    public static <T> T parseObj(String str, Class<T> clazz) {
+        return EmptyTool.isEmpty(str) ? null : JsonUtil.parse(str, clazz);
+    }
+
+    public static <T> List<T> parseList(String str, Class<T> clazz) {
+        return EmptyTool.isEmpty(str) ? new ArrayList<>() : JsonUtil.parseArray(str, clazz);
     }
 
     public final static class ListTool {
