@@ -36,18 +36,18 @@ public abstract class BaseQLP<ID, EN, EN_VO, QUERY_CMD extends Query, DAO extend
     @Autowired
     protected DAO dao;
 
-    protected void throwBusinessEx(String msg) {
-        throw getBusinessEx(msg);
+    protected void throwBizEx(String msg) {
+        throw bizEx(msg);
     }
 
-    protected BizException getBusinessEx(String msgStr) {
+    protected BizException bizEx(String msgStr) {
         return new BizException(msgStr);
     }
 
     protected EN getById(ID id) {
-        trueThrow(null == id, getBusinessEx("传入ID为空"));
+        trueThrow(null == id, bizEx("传入ID为空"));
         Optional<EN> optional = dao.findById(id);
-        trueThrow(!optional.isPresent(), getBusinessEx("传入ID错误"));
+        trueThrow(!optional.isPresent(), bizEx("传入ID错误"));
         return optional.get();
     }
 
