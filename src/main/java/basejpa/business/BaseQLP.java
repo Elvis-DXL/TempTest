@@ -1,6 +1,7 @@
 package basejpa.business;
 
 import basejpa.dao.BaseDao;
+import basejpa.handle.DataTool;
 import com.zx.core.base.api.Page;
 import com.zx.core.base.exception.BizException;
 import com.zx.core.base.form.Query;
@@ -35,15 +36,6 @@ public abstract class BaseQLP<ID, EN, EN_VO, QUERY_CMD extends Query, DAO extend
     @Autowired
     protected DAO dao;
 
-    protected <T, K> Page<T> pageConvert(org.springframework.data.domain.Page<K> srcPage) {
-        Page<T> result = new Page<>();
-        result.setPageSize(srcPage.getSize());
-        result.setTotal((int) srcPage.getTotalElements());
-        result.setTotalPage(srcPage.getTotalPages());
-        result.setPageIndex(srcPage.getNumber() + 1);
-        return result;
-    }
-
     protected void throwBusinessEx(String msg) {
         throw getBusinessEx(msg);
     }
@@ -70,7 +62,7 @@ public abstract class BaseQLP<ID, EN, EN_VO, QUERY_CMD extends Query, DAO extend
     public Page<EN_VO> page(QUERY_CMD cmd) {
         org.springframework.data.domain.Page<EN> entityPage = dao.findAll(cmdToSpecification(cmd),
                 PageRequest.of(cmd.getCurrent() - 1, cmd.getSize()));
-        Page<EN_VO> result = pageConvert(entityPage);
+        Page<EN_VO> result = DataTool.pageConvert(entityPage);
         result.setList(entityToVo(entityPage.getContent(), cmd));
         return result;
     }

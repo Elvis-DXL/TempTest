@@ -5,6 +5,7 @@ import basejpa.entity.FlowAuditEntity;
 import basejpa.enums.FlowTurn;
 import basejpa.vo.DataAuditVo;
 import basejpa.vo.FlowAuditVo;
+import com.zx.core.base.api.Page;
 
 import static basejpa.util.DSUtil.objGet;
 import static basejpa.util.DSUtil.parseList;
@@ -39,5 +40,14 @@ public final class DataTool {
         aimObj.setHisDealUserName(objGet(srcObj, FlowAuditEntity::getHisDealUserName));
         aimObj.setFlowTurnJson(objGet(srcObj, FlowAuditEntity::getFlowTurnJson));
         aimObj.setTurnInfos(parseList(objGet(srcObj, FlowAuditEntity::getFlowTurnJson), FlowTurn.class));
+    }
+
+    public static <T, K> Page<T> pageConvert(org.springframework.data.domain.Page<K> srcPage) {
+        Page<T> result = new Page<>();
+        result.setPageSize(srcPage.getSize());
+        result.setTotal((int) srcPage.getTotalElements());
+        result.setTotalPage(srcPage.getTotalPages());
+        result.setPageIndex(srcPage.getNumber() + 1);
+        return result;
     }
 }
