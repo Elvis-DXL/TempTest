@@ -10,6 +10,6 @@ import java.io.Serializable;
  */
 @Data
 public class FilePojo implements Serializable {
-    private String url;
-    private String name;
+    private String fileUrl;
+    private String fileName;
 }
