@@ -21,7 +21,7 @@ public class FlowAuditVo extends DataAuditVo {
     @Schema(name = "auditEnd", description = "流程审核结束")
     private Boolean auditEnd;
 
-    @Schema(name = "flowStatus", description = "流程开始环节")
+    @Schema(name = "startFlowLink", description = "流程开始环节")
     private FlowLink startFlowLink;
 
     @Schema(name = "currentFlowLink", description = "流程当前环节")
