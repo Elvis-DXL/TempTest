@@ -1,6 +1,6 @@
 package basejpa.enums;
 
-import basejpa.pojo.FilePojo;
+import basejpa.pojo.FlowSp;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -8,7 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @Author : 慕君Dxl
@@ -35,6 +34,15 @@ public class FlowTurn implements Serializable {
     @Schema(name = "optTime", description = "操作时间")
     private LocalDateTime optTime;
 
-    @Schema(name = "fileList", description = "审批附件信息")
-    private List<FilePojo> fileList;
+    /*********************************************************************************/
+    public static FlowTurn consTurnInfo(String flowLink, FlowSp spPo, Long userId, String userName) {
+        FlowTurn obj = new FlowTurn();
+        obj.setFlowLink(flowLink);
+        obj.setFlowSp(spPo.getFlowSp());
+        obj.setSpMsg(spPo.getSpMsg());
+        obj.setUserId(userId);
+        obj.setUserName(userName);
+        obj.setOptTime(LocalDateTime.now());
+        return obj;
+    }
 }
