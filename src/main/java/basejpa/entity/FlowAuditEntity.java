@@ -18,14 +18,12 @@ import javax.persistence.MappedSuperclass;
 public class FlowAuditEntity extends DataAuditEntity {
     @Column(name = "audit_start", columnDefinition = "int(3) COMMENT '流程开始'")
     private Boolean auditStart = false;
-
     @Column(name = "audit_end", columnDefinition = "int(3) COMMENT '流程审核结束'")
     private Boolean auditEnd = false;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "start_flow_link", columnDefinition = "varchar(128) COMMENT '流程开始环节'")
     private FlowLink startFlowLink;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "current_flow_link", columnDefinition = "varchar(128) COMMENT '流程当前环节'")
     private FlowLink currentFlowLink;
@@ -36,13 +34,10 @@ public class FlowAuditEntity extends DataAuditEntity {
 
     @Column(name = "wait_deal_user_id", columnDefinition = "text COMMENT '待处理用户ID'")
     private String waitDealUserId;
-
     @Column(name = "wait_deal_user_name", columnDefinition = "text COMMENT '待处理用户名称'")
     private String waitDealUserName;
-
     @Column(name = "his_deal_user_id", columnDefinition = "text COMMENT '历史处理人ID'")
     private String hisDealUserId;
-
     @Column(name = "his_deal_user_name", columnDefinition = "text COMMENT '历史处理人名称'")
     private String hisDealUserName;
 
