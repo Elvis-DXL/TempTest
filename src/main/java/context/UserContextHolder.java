@@ -15,7 +15,6 @@ public final class UserContextHolder {
     }
 
     public static Optional<UserContext> getUser() {
-        Object obj = ContextHolder.get(CONTEXT_KEY);
-        return Optional.ofNullable(null == obj ? null : (UserContext) obj);
+        return Optional.ofNullable((UserContext) ContextHolder.get(CONTEXT_KEY));
     }
 }
