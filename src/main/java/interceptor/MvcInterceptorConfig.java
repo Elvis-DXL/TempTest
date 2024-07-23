@@ -1,5 +1,6 @@
 package interceptor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -10,9 +11,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class MvcInterceptorConfig implements WebMvcConfigurer {
+    @Autowired
+    private UserPermissionInterceptor userPermissionInterceptor;
+    @Autowired
+    private TokenPreHandlerInterceptor tokenPreHandlerInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new TokenPreHandlerInterceptor()).addPathPatterns("/**").order(1);
-        registry.addInterceptor(new UserPermissionInterceptor()).addPathPatterns("/**").order(2);
+        registry.addInterceptor(tokenPreHandlerInterceptor).addPathPatterns("/**").order(1);
+        registry.addInterceptor(userPermissionInterceptor).addPathPatterns("/**").order(2);
     }
 }
