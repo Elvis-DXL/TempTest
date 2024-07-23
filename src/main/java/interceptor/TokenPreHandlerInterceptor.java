@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 public class TokenPreHandlerInterceptor implements AsyncHandlerInterceptor {
+
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         UserContextHolder.clear();
