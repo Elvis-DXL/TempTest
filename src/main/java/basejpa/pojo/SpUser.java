@@ -1,6 +1,8 @@
 package basejpa.pojo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -9,6 +11,8 @@ import java.io.Serializable;
  * @CreateTime : 2024/7/22 14:14
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SpUser implements Serializable {
     private Long userId;
     private String userName;
