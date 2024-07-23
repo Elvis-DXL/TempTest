@@ -1,8 +1,8 @@
 package basejpa.interfaces;
 
 import basejpa.entity.FlowAuditEntity;
-import basejpa.pojo.FlowTurn;
 import basejpa.pojo.FlowSp;
+import basejpa.pojo.FlowTurn;
 import basejpa.pojo.SpUser;
 
 import java.util.List;
@@ -24,8 +24,10 @@ public interface FlowBase<EN extends FlowAuditEntity, EN_VO, CREATE_CMD, AUDIT_C
     List<SpUser> getFlowSpDealUsers(EN obj);
 
     default void flowPostProcessing(EN obj, FlowSp spPo, Long userId, String userName) {
-        obj.setHisDealUserId(isEmpty(obj.getHisDealUserId()) ? DH.bothSidesAdd(userId) : (obj.getHisDealUserId() + userId + DH.val()));
-        obj.setHisDealUserName(isEmpty(obj.getHisDealUserName()) ? userName : (obj.getHisDealUserName() + DH.val() + userName));
+        obj.setHisDealUserId(isEmpty(obj.getHisDealUserId()) ?
+                DH.bothSidesAdd(userId) : (obj.getHisDealUserId() + userId + DH.val()));
+        obj.setHisDealUserName(isEmpty(obj.getHisDealUserName()) ?
+                userName : (obj.getHisDealUserName() + DH.val() + userName));
         List<FlowTurn> turns = parseList(obj.getFlowTurnJson(), FlowTurn.class);
         turns.add(FlowTurn.consTurnInfo(obj.getCurrentFlowLink().name(), spPo, userId, userName));
         obj.setFlowTurnJson(toJson(turns));
