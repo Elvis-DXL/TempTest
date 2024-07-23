@@ -11,6 +11,7 @@ public class UserContext implements Serializable {
     private Long id;
     private String name;
     private String account;
+    private boolean superAdmin;
     private List<String> roleCodes;
     private List<String> permissions;
     private Map<String, String> extMap;
@@ -27,6 +28,11 @@ public class UserContext implements Serializable {
 
     public UserContext account(String account) {
         this.account = account;
+        return this;
+    }
+
+    public UserContext superAdmin(boolean superAdmin) {
+        this.superAdmin = superAdmin;
         return this;
     }
 
