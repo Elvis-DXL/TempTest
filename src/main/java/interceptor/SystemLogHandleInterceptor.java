@@ -22,6 +22,7 @@ public class SystemLogHandleInterceptor implements AsyncHandlerInterceptor {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         trueDo(handler instanceof HandlerMethod, handler, obj -> {
             HandlerMethod method = (HandlerMethod) obj;
+            //判断是否拥有需要记录日志的注解，进行日志记录操作
             Optional.ofNullable(method.getMethodAnnotation(ZxOperaLog.class)).ifPresent(anno -> {
                 //日志操作
 
