@@ -15,10 +15,13 @@ public class MvcInterceptorConfig implements WebMvcConfigurer {
     private UserPermissionInterceptor userPermissionInterceptor;
     @Autowired
     private TokenPreHandlerInterceptor tokenPreHandlerInterceptor;
+    @Autowired
+    private SysLogHandleInterceptor sysLogHandleInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenPreHandlerInterceptor).addPathPatterns("/**").order(1);
         registry.addInterceptor(userPermissionInterceptor).addPathPatterns("/**").order(2);
+        registry.addInterceptor(sysLogHandleInterceptor).addPathPatterns("/**").order(3);
     }
 }
