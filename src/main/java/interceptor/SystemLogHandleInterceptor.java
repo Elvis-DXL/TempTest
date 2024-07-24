@@ -16,7 +16,7 @@ import static basejpa.util.DSUtil.trueDo;
  * @CreateTime : 2024/7/24 9:42
  */
 @Component
-public class SysLogHandleInterceptor implements AsyncHandlerInterceptor {
+public class SystemLogHandleInterceptor implements AsyncHandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
