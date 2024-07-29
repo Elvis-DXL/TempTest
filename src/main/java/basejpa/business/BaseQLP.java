@@ -22,7 +22,7 @@ import java.util.List;
  * @CreateTime : 2024/7/19 14:43
  */
 public abstract class BaseQLP<ID, EN, EN_VO, QUERY_CMD extends Query, DAO extends BaseDao<EN, ID>>
-        extends BaseTop<EN, ID, DAO> {
+        extends BaseTop<ID, EN, DAO> {
 
     public EN_VO query(ID id) {
         return entityToVo(Collections.singletonList(getById(id)), null).get(0);

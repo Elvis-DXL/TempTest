@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import static basejpa.util.DSUtil.trueThrow;
 
-public abstract class BaseTop<EN, ID, DAO extends BaseDao<EN, ID>> {
+public abstract class BaseTop<ID, EN, DAO extends BaseDao<EN, ID>> {
     @Autowired
     protected DataSource dataSource;
     @Autowired
