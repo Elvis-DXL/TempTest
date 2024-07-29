@@ -20,9 +20,9 @@ public class DataAuditEntityListener implements ConfigurableObject {
         DataAuditEntity dataAuditEntity = (DataAuditEntity) obj;
         dataAuditEntity.setCreateTime(LocalDateTime.now());
         dataAuditEntity.setUpdateTime(LocalDateTime.now());
-        UserContextHolder.getUser().ifPresent(user -> {
-            dataAuditEntity.setCreateUser(user.getId());
-            dataAuditEntity.setUpdateUser(user.getId());
+        UserContextHolder.getUser().ifPresent(userContext -> {
+            dataAuditEntity.setCreateUser(userContext.getId());
+            dataAuditEntity.setUpdateUser(userContext.getId());
         });
     }
 
@@ -30,8 +30,8 @@ public class DataAuditEntityListener implements ConfigurableObject {
     public void preUpdate(Object obj) {
         DataAuditEntity dataAuditEntity = (DataAuditEntity) obj;
         dataAuditEntity.setUpdateTime(LocalDateTime.now());
-        UserContextHolder.getUser().ifPresent(user -> {
-            dataAuditEntity.setUpdateUser(user.getId());
+        UserContextHolder.getUser().ifPresent(userContext -> {
+            dataAuditEntity.setUpdateUser(userContext.getId());
         });
     }
 }
