@@ -15,12 +15,12 @@ public class UserContext implements Serializable {
     private List<String> permissions;
     private Map<String, String> extMap;
 
-    public UserContext id(String userId) {
+    public UserContext userId(String userId) {
         this.userId = userId;
         return this;
     }
 
-    public UserContext name(String userName) {
+    public UserContext userName(String userName) {
         this.userName = userName;
         return this;
     }
