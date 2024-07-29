@@ -18,8 +18,8 @@ public abstract class BaseTop<EN, ID, DAO extends BaseDao<EN, ID>> {
     @Autowired
     protected DAO dao;
 
-    protected void throwBizEx(String msg) {
-        throw bizEx(msg);
+    protected void throwBizEx(String msgStr) {
+        throw bizEx(msgStr);
     }
 
     protected BizException bizEx(String msgStr) {
