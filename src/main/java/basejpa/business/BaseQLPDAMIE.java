@@ -30,8 +30,8 @@ public abstract class BaseQLPDAMIE<ID, EN extends EntityBase & DeleteBase, EN_VO
 
     public void template(HttpServletRequest request, HttpServletResponse response) {
         ImEx imEx = imEx();
-        trueThrow(null == imEx || null == imEx.getClazz() || isEmpty(imEx.getFileName())
-                || isEmpty(imEx.getSheetName()), bizEx("模板定义信息异常"));
+        trueThrow(null == imEx || null == imEx.getClazz() || isEmpty(imEx.getFileName()) || isEmpty(imEx.getSheetName()),
+                bizEx("模板定义信息异常"));
         ExcelRW.writer(new ArrayList<>(), imEx.getClazz(), imEx.getFileName(), imEx.getSheetName(), request, response);
     }
 
@@ -55,8 +55,8 @@ public abstract class BaseQLPDAMIE<ID, EN extends EntityBase & DeleteBase, EN_VO
 
     public void dataExport(QUERY_CMD cmd, HttpServletRequest request, HttpServletResponse response) {
         ImEx imEx = imEx();
-        trueThrow(null == imEx || null == imEx.getClazz() || isEmpty(imEx.getFileName())
-                || isEmpty(imEx.getSheetName()), bizEx("模板定义信息异常"));
+        trueThrow(null == imEx || null == imEx.getClazz() || isEmpty(imEx.getFileName()) || isEmpty(imEx.getSheetName()),
+                bizEx("模板定义信息异常"));
         ExcelRW.writer(entityToExcel(listEntity(cmd)), imEx.getClazz(), imEx.getFileName(), imEx.getSheetName(),
                 request, response);
     }
