@@ -16,4 +16,9 @@ import java.io.Serializable;
 public class SpUser implements Serializable {
     private Long userId;
     private String userName;
+    private String userEx1;
+    private String userEx2;
+    private String userEx3;
+    private String userEx4;
+    private String userEx5;
 }

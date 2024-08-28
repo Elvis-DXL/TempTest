@@ -38,6 +38,10 @@ public interface FlowBase<EN extends FlowAuditEntity, EN_VO, CREATE_CMD, AUDIT_C
         obj.setWaitDealUserName(DH.join(users, SpUser::getUserName, false));
         trueDo(null == obj.getCurrentFlowLink(), obj, it -> it.setAuditEnd(Boolean.TRUE));
         afterFlowPostDealBusiness(obj, spPo, userId, userName);
+        afterFlowPostDealNextSpUserInfo(obj, users);
+    }
+
+    default void afterFlowPostDealNextSpUserInfo(EN obj, List<SpUser> nextSpUsers) {
     }
 
     default void afterFlowPostDealBusiness(EN obj, FlowSp spPo, Long userId, String userName) {
