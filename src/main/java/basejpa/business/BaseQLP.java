@@ -25,7 +25,9 @@ public abstract class BaseQLP<ID, EN, EN_VO, QUERY_CMD extends Query, DAO extend
         extends BaseTop<ID, EN, DAO> {
 
     public EN_VO query(ID id) {
-        return entityToVo(Collections.singletonList(getById(id)), null).get(0);
+        EN obj = getById(id);
+        afterQuery(obj);
+        return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
     public List<EN_VO> list(QUERY_CMD cmd) {
@@ -46,6 +48,9 @@ public abstract class BaseQLP<ID, EN, EN_VO, QUERY_CMD extends Query, DAO extend
 
     protected Specification<EN> cmdToSpecification(QUERY_CMD cmd) {
         return (root, query, cb) -> cmdToPredicate(cmd, new ArrayList<>(), root, query, cb);
+    }
+
+    protected void afterQuery(EN obj) {
     }
 
     /*************************************************抽象方法*************************************************/
