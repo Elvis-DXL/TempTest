@@ -8,4 +8,9 @@ public class RuleTwo implements Rule {
     public void print() {
         System.out.println("Two");
     }
+
+    @Override
+    public RuleEnum ruleMark() {
+        return RuleEnum.TWO;
+    }
 }
