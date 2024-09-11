@@ -51,7 +51,7 @@ public final class TreeNode implements Serializable {
         return this;
     }
 
-    public static TreeNode getInstance() {
+    public static TreeNode newInstance() {
         return new TreeNode();
     }
 
