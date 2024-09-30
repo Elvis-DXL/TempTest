@@ -1,7 +1,7 @@
 package test.demopg.business;
 
-import basejpa.business.BaseQLPDAMIE;
-import basejpa.pojo.ImEx;
+import basejpaold.business.BaseQLPDAMIE;
+import basejpaold.pojo.ImEx;
 import test.demopg.dao.DemoDao;
 import test.demopg.entity.Demo;
 import test.demopg.vo.cmd.DemoAddCmd;

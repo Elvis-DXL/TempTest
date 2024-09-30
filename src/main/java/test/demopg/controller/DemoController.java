@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-import static basejpa.util.DSUtil.trueThrow;
+import static basejpaold.util.DSUtil.trueThrow;
 
 /**
  * @Author : 慕君Dxl

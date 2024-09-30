@@ -1,6 +1,6 @@
 package test.demopg.vo.cmd;
 
-import basejpa.interfaces.ModifyBase;
+import basejpaold.interfaces.ModifyBase;
 import test.demopg.entity.Demo;
 import lombok.Data;
 

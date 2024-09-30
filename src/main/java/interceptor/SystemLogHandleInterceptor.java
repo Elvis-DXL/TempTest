@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-import static basejpa.util.DSUtil.trueDo;
+import static basejpaold.util.DSUtil.trueDo;
 
 /**
  * @Author : 慕君Dxl
