@@ -1,6 +1,6 @@
 package test.demopg.dao;
 
-import basejpaold.dao.BaseDao;
+import basejpa.dao.BaseDao;
 import test.demopg.entity.Demo;
 
 /**

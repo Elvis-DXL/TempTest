@@ -1,7 +1,7 @@
 package test.demopg.entity;
 
-import basejpaold.interfaces.DeleteBase;
-import basejpaold.interfaces.EntityBase;
+import basejpa.interfaces.DeleteBase;
+import basejpa.interfaces.EntityBase;
 import lombok.Data;
 
 import javax.persistence.Column;

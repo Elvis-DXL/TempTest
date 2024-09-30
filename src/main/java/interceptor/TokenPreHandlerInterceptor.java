@@ -8,8 +8,8 @@ import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static basejpaold.util.DSUtil.EmptyTool.isNotEmpty;
-import static basejpaold.util.DSUtil.trueDo;
+import static basejpa.util.DSUtil.EmptyTool.isNotEmpty;
+import static basejpa.util.DSUtil.trueDo;
 
 /**
  * @Author : 慕君Dxl
