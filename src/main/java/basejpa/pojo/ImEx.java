@@ -24,7 +24,7 @@ public final class ImEx {
         return sheetName;
     }
 
-    public static ImEx getInstance() {
+    public static ImEx newInstance() {
         return new ImEx();
     }
 

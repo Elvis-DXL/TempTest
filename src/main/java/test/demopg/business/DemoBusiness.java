@@ -26,7 +26,7 @@ public class DemoBusiness
         extends BaseQLPDAMIE<Long, Demo, DemoVo, DemoAddCmd, DemoModifyCmd, DemoExcel, DemoListCmd, DemoDao> {
     @Override
     protected ImEx imEx() {
-        return ImEx.getInstance().clazz(DemoExcel.class).fileName("").sheetName("");
+        return ImEx.newInstance().clazz(DemoExcel.class).fileName("").sheetName("");
     }
 
     @Override
