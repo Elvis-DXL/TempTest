@@ -19,6 +19,6 @@ public class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "generator")
     @GenericGenerator(name = "generator", strategy = "native")
-    @Column(name = "id", columnDefinition = "bigint(22) COMMENT '主键'")
+    @Column(name = "_id", columnDefinition = "bigint(22) COMMENT '主键'")
     private Long id;
 }
