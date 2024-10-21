@@ -17,30 +17,30 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public class FlowAuditEntity extends DataAuditEntity {
     @Column(name = "audit_start", columnDefinition = "int(3) COMMENT '流程开始'")
-    private Boolean auditStart = false;
+    protected Boolean auditStart = false;
     @Column(name = "audit_end", columnDefinition = "int(3) COMMENT '流程审核结束'")
-    private Boolean auditEnd = false;
+    protected Boolean auditEnd = false;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "start_flow_link", columnDefinition = "varchar(128) COMMENT '流程开始环节'")
-    private FlowLink startFlowLink;
+    protected FlowLink startFlowLink;
     @Enumerated(EnumType.STRING)
     @Column(name = "current_flow_link", columnDefinition = "varchar(128) COMMENT '流程当前环节'")
-    private FlowLink currentFlowLink;
+    protected FlowLink currentFlowLink;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "flow_status", columnDefinition = "varchar(64) COMMENT '流程状态'")
-    private FlowSAS flowStatus;
+    protected FlowSAS flowStatus;
 
     @Column(name = "wait_deal_user_id", columnDefinition = "text COMMENT '待处理用户ID'")
-    private String waitDealUserId;
+    protected String waitDealUserId;
     @Column(name = "wait_deal_user_name", columnDefinition = "text COMMENT '待处理用户名称'")
-    private String waitDealUserName;
+    protected String waitDealUserName;
     @Column(name = "his_deal_user_id", columnDefinition = "text COMMENT '历史处理人ID'")
-    private String hisDealUserId;
+    protected String hisDealUserId;
     @Column(name = "his_deal_user_name", columnDefinition = "text COMMENT '历史处理人名称'")
-    private String hisDealUserName;
+    protected String hisDealUserName;
 
     @Column(name = "flow_turn_json", columnDefinition = "text COMMENT '流程流转JSON'")
-    private String flowTurnJson;
+    protected String flowTurnJson;
 }

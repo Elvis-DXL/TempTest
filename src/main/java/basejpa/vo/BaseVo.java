@@ -13,5 +13,5 @@ import java.io.Serializable;
 @Schema(name = "BaseVo", description = "基础VO")
 public class BaseVo implements Serializable {
     @Schema(name = "id", description = "ID主键")
-    private Long id;
+    protected Long id;
 }
