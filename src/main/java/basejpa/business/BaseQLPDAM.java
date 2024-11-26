@@ -26,7 +26,7 @@ public abstract class BaseQLPDAM<ID, EN extends EntityBase & DeleteBase, EN_VO,
         authExist(obj);
         obj.newEntityObjSetPrimaryKey();
         dao.save(obj);
-        afterAdd(obj);
+        afterAdd(obj, cmd);
         return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
@@ -35,7 +35,7 @@ public abstract class BaseQLPDAM<ID, EN extends EntityBase & DeleteBase, EN_VO,
         EN obj = modifyInOldEntity(cmd, getById(cmd.obtainPrimaryKey()));
         authExist(obj);
         dao.save(obj);
-        afterModify(obj);
+        afterModify(obj, cmd);
         return entityToVo(Collections.singletonList(obj), null).get(0);
     }
 
@@ -50,9 +50,9 @@ public abstract class BaseQLPDAM<ID, EN extends EntityBase & DeleteBase, EN_VO,
     protected void authExist(EN obj) {
     }
 
-    protected void afterAdd(EN obj) {
+    protected void afterAdd(EN obj, ADD_CMD cmd) {
     }
 
-    protected void afterModify(EN obj) {
+    protected void afterModify(EN obj, MOD_CMD cmd) {
     }
 }
