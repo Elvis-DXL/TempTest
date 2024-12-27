@@ -1,7 +1,6 @@
 package basejpa.business;
 
 import basejpa.dao.BaseDao;
-import com.zx.core.base.exception.BizException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -10,21 +9,13 @@ import java.util.Optional;
 
 import static basejpa.util.DSUtil.trueThrow;
 
-public abstract class BaseTop<ID, EN, DAO extends BaseDao<EN, ID>> {
+public abstract class BaseTop<ID, EN, DAO extends BaseDao<EN, ID>> implements BaseEx {
     @Autowired
     protected DataSource dataSource;
     @Autowired
     protected EntityManager entityManager;
     @Autowired
     protected DAO dao;
-
-    protected void throwBizEx(String msgStr) {
-        throw bizEx(msgStr);
-    }
-
-    protected BizException bizEx(String msgStr) {
-        return new BizException(msgStr);
-    }
 
     protected EN getById(ID id) {
         trueThrow(null == id, bizEx("传入ID为空"));
