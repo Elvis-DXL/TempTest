@@ -1,15 +1,17 @@
 package test.spf;
 
+import basejpa.interfaces.BaseThrowBizEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class PaySF {
+public class PaySF implements BaseThrowBizEx {
 
     private final Map<PayEnums, PayInterface> strategies;
 
@@ -25,10 +27,7 @@ public class PaySF {
     }
 
     public PayInterface getService(PayEnums payEnums) {
-        PayInterface strategy = strategies.get(payEnums);
-        if (strategy == null) {
-            throw new IllegalArgumentException("不支持的支付方式: " + payEnums.name());
-        }
-        return strategy;
+        return Optional.ofNullable(strategies.get(payEnums))
+                .orElseThrow(() -> bizEx("不支持的支付方式【" + payEnums.name() + "】"));
     }
 }
