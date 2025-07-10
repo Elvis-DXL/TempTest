@@ -28,6 +28,6 @@ public class PaySF implements BaseThrowBizEx {
 
     public PayInterface getService(PayEnums payEnums) {
         return Optional.ofNullable(strategies.get(payEnums))
-                .orElseThrow(() -> bizEx("策略【" + payEnums.name() + "】未定义"));
+                .orElseThrow(() -> bizEx("【" + payEnums.name() + "】策略未定义"));
     }
 }
