@@ -1,7 +1,6 @@
 package test.localoss;
 
 import basejpa.util.DSUtil;
-import lombok.Data;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -49,7 +48,6 @@ public class LocalService {
 
     }
 
-    @Data
     static class OssFile {
         private String relUrl;
         private String fullUrl;
