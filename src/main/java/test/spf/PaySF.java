@@ -9,12 +9,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class PaySPF {
+public class PaySF {
 
     private final Map<PayEnums, PayInterface> strategies;
 
     @Autowired
-    public PaySPF(ApplicationContext context) {
+    public PaySF(ApplicationContext context) {
         Map<String, Object> beans = context.getBeansWithAnnotation(PayService.class);
         this.strategies = beans.values().stream().filter(PayService.class::isInstance)
                 .map(PayInterface.class::cast)
