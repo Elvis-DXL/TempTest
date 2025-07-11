@@ -17,11 +17,11 @@ public class PaySF implements BaseThrowBizEx {
 
     @Autowired
     public PaySF(ApplicationContext context) {
-        Map<String, Object> beans = context.getBeansWithAnnotation(PayService.class);
-        this.strategies = beans.values().stream().filter(PayService.class::isInstance)
+        Map<String, Object> beans = context.getBeansWithAnnotation(PayStrategy.class);
+        this.strategies = beans.values().stream().filter(PayStrategy.class::isInstance)
                 .map(PayInterface.class::cast)
                 .collect(Collectors.toMap(
-                        item -> item.getClass().getAnnotation(PayService.class).value(),
+                        item -> item.getClass().getAnnotation(PayStrategy.class).value(),
                         Function.identity()
                 ));
     }

@@ -8,6 +8,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Service
-public @interface PayService {
+public @interface PayStrategy {
     PayEnums value();
 }
