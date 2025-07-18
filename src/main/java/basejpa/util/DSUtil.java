@@ -1,19 +1,14 @@
 package basejpa.util;
 
-import com.google.gson.Gson;
 import com.zx.core.base.form.OrderItem;
 import com.zx.core.tool.utils.JsonUtil;
-import org.hibernate.SQLQuery;
-import org.hibernate.transform.Transformers;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,10 +17,6 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.SecureRandom;
-import java.sql.Connection;
-import java.sql.JDBCType;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -39,7 +30,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 /**
@@ -290,13 +280,13 @@ public final class DSUtil {
     public static Double lngLatMeter(Double srcLng, Double srcLat, Double aimLng, Double aimLat) {
         return null == srcLng || null == srcLat || null == aimLng || null == aimLat ? null
                 : EARTH_RADIUS_METER * Math.acos(Math.cos(Math.toRadians(srcLat)) * Math.cos(Math.toRadians(aimLat))
-                * Math.cos(Math.toRadians(srcLng) - Math.toRadians(aimLng))
-                + Math.sin(Math.toRadians(srcLat)) * Math.sin(Math.toRadians(aimLat)));
+                                                 * Math.cos(Math.toRadians(srcLng) - Math.toRadians(aimLng))
+                                                 + Math.sin(Math.toRadians(srcLat)) * Math.sin(Math.toRadians(aimLat)));
     }
 
     public static Double lngLatMeter(String srcLng, String srcLat, String aimLng, String aimLat) {
         return EmptyTool.isEmpty(srcLng) || EmptyTool.isEmpty(srcLat)
-                || EmptyTool.isEmpty(aimLng) || EmptyTool.isEmpty(aimLat) ? null
+               || EmptyTool.isEmpty(aimLng) || EmptyTool.isEmpty(aimLat) ? null
                 : lngLatMeter(Double.parseDouble(srcLng), Double.parseDouble(srcLat),
                 Double.parseDouble(aimLng), Double.parseDouble(aimLat));
     }
@@ -973,300 +963,300 @@ public final class DSUtil {
         }
     }
 
-    public final static class DBTool {
-        private DBTool() {
-            throw new AssertionError("Tool classes do not allow instantiation");
-        }
-
-        public static SaveUpdate getSaveUpdate(DataSource dataSource) {
-            return new SaveUpdate(dataSource);
-        }
-
-        public final static class SaveUpdate {
-            private final DataSource dataSource;
-
-            private SaveUpdate(DataSource dataSource) {
-                trueThrow(null == dataSource, new NullPointerException("dataSource must not be null"));
-                this.dataSource = dataSource;
-            }
-
-            public <T> void saveObjSomeFields(T aim, String... fieldName) {
-                saveObjSomeFields(Collections.singletonList(aim), fieldName);
-            }
-
-            public <T> void updateSomeFieldsById(T aim, String... fieldName) {
-                updateSomeFieldsById(Collections.singletonList(aim), fieldName);
-            }
-
-            public <T> void saveObjSomeFields(List<T> aimList, String... fieldName) {
-                if (EmptyTool.isEmpty(aimList)) {
-                    return;
-                }
-                Class<?> clazz = aimList.get(0).getClass();
-                Table table = clazz.getAnnotation(Table.class);
-                trueThrow(null == table, new RuntimeException("实体对象没有javax.persistence.Table注解"));
-                String tableName = table.name();
-                List<Field> fields = classAllFields(clazz);
-                Map<String, Field> fieldMap = ListTool.listToMap(fields, Field::getName, it -> it);
-                Map<String, String> fieldColMap = consSaveFieldColMap(fields);
-                List<String> srcFields = new ArrayList<>(fieldColMap.keySet());
-                List<String> aimFieldList;
-                if (null != fieldName && fieldName.length != 0) {
-                    List<String> aim = Arrays.asList(fieldName);
-                    aimFieldList = srcFields.stream().filter(aim::contains).collect(Collectors.toList());
-                } else {
-                    aimFieldList = srcFields;
-                }
-                trueThrow(EmptyTool.isEmpty(aimFieldList), new RuntimeException("要保存的目标字段为空"));
-                StringBuilder sb = new StringBuilder("INSERT INTO ");
-                StringBuilder sb2 = new StringBuilder();
-                sb.append(tableName);
-                sb.append("(");
-                for (String it : aimFieldList) {
-                    sb.append(fieldColMap.get(it)).append(",");
-                    sb2.append("?,");
-                }
-                String str2 = sb2.toString();
-                str2 = str2.substring(0, str2.length() - 1);
-                String saveStr = sb.toString();
-                saveStr = saveStr.substring(0, saveStr.length() - 1);
-                saveStr = saveStr + ") VALUES (" + str2 + ")";
-                int count = 0;
-                int step = 1000;
-                Connection connection = null;
-                PreparedStatement ps = null;
-                try {
-                    connection = dataSource.getConnection();
-                    connection.setAutoCommit(false);
-                    ps = connection.prepareStatement(saveStr);
-                    for (T it : aimList) {
-                        int idx = 1;
-                        for (String item : aimFieldList) {
-                            Field colField = fieldMap.get(item);
-                            addPsParam(ps, idx, colField, it);
-                            idx++;
-                        }
-                        count++;
-                        ps.addBatch();
-                        if (count % step == 0) {
-                            ps.executeBatch();
-                            connection.commit();
-                        }
-                    }
-                    if (aimList.size() % step != 0) {
-                        ps.executeBatch();
-                        connection.commit();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException("数据保存入库失败");
-                } finally {
-                    IOTool.closeStream(connection, ps);
-                }
-            }
-
-            public <T> void updateSomeFieldsById(List<T> aimList, String... fieldName) {
-                if (EmptyTool.isEmpty(aimList)) {
-                    return;
-                }
-                Class<?> clazz = aimList.get(0).getClass();
-                Table table = clazz.getAnnotation(Table.class);
-                trueThrow(null == table, new RuntimeException("实体对象没有javax.persistence.Table注解"));
-                String tableName = table.name();
-                List<Field> fields = classAllFields(clazz);
-                Map<String, Field> fieldMap = ListTool.listToMap(fields, Field::getName, it -> it);
-                Map<String, String> fieldColMap = consUpdateFieldColMap(fields);
-                String idCol = mapGet(fieldColMap, "id_column");
-                trueThrow(null == idCol, new RuntimeException("实体对象没有标注主键javax.persistence.Id注解字段"));
-                Set<String> keySet = fieldColMap.keySet();
-                List<String> srcFields = new ArrayList<>(keySet);
-                srcFields.remove("id_column");
-                srcFields.remove("id_field");
-                List<String> aimFieldList;
-                if (null != fieldName && fieldName.length != 0) {
-                    List<String> aim = Arrays.asList(fieldName);
-                    aimFieldList = srcFields.stream().filter(aim::contains).collect(Collectors.toList());
-                } else {
-                    aimFieldList = srcFields;
-                }
-                trueThrow(EmptyTool.isEmpty(aimFieldList), new RuntimeException("要更新的目标字段为空"));
-                StringBuilder sb = new StringBuilder("UPDATE ");
-                sb.append(tableName).append(" SET ");
-                for (String it : aimFieldList) {
-                    sb.append(fieldColMap.get(it)).append("=?,");
-                }
-                String upStr = sb.toString();
-                upStr = upStr.substring(0, upStr.length() - 1);
-                upStr = upStr + " WHERE " + idCol + "=?";
-                int count = 0;
-                int step = 1000;
-                Connection connection = null;
-                PreparedStatement ps = null;
-                try {
-                    connection = dataSource.getConnection();
-                    connection.setAutoCommit(false);
-                    ps = connection.prepareStatement(upStr);
-                    for (T it : aimList) {
-                        int idx = 1;
-                        for (String item : aimFieldList) {
-                            Field colField = fieldMap.get(item);
-                            addPsParam(ps, idx, colField, it);
-                            idx++;
-                        }
-                        Field idField = fieldMap.get(fieldColMap.get("id_field"));
-                        addPsParam(ps, idx, idField, it);
-                        count++;
-                        ps.addBatch();
-                        if (count % step == 0) {
-                            ps.executeBatch();
-                            connection.commit();
-                        }
-                    }
-                    if (aimList.size() % step != 0) {
-                        ps.executeBatch();
-                        connection.commit();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException("数据更新入库失败");
-                } finally {
-                    IOTool.closeStream(connection, ps);
-                }
-            }
-
-            private Map<String, String> consSaveFieldColMap(List<Field> fields) {
-                Map<String, String> map = new HashMap<>();
-                for (Field it : fields) {
-                    Column column = it.getAnnotation(Column.class);
-                    String colName = null != column ? column.name() : getColNameByFieldName(it.getName());
-                    map.put(it.getName(), colName);
-                }
-                return map;
-            }
-
-            private Map<String, String> consUpdateFieldColMap(List<Field> fields) {
-                Map<String, String> map = new HashMap<>();
-                for (Field it : fields) {
-                    Column column = it.getAnnotation(Column.class);
-                    String colName = null != column ? column.name() : getColNameByFieldName(it.getName());
-                    Id id = it.getAnnotation(Id.class);
-                    if (null != id) {
-                        map.put("id_column", colName);
-                        map.put("id_field", it.getName());
-                    } else {
-                        map.put(it.getName(), colName);
-                    }
-                }
-                return map;
-            }
-
-            private String getColNameByFieldName(String fieldName) {
-                Matcher matcher = java.util.regex.Pattern.compile("[A-Z]").matcher(fieldName);
-                StringBuffer sb = new StringBuffer();
-                while (matcher.find()) {
-                    matcher.appendReplacement(sb, "_" + matcher.group(0).toLowerCase());
-                }
-                matcher.appendTail(sb);
-                return sb.toString();
-            }
-
-            private <T> void addPsParam(PreparedStatement ps, int idx, Field colField, T obj) {
-                try {
-                    colField.setAccessible(true);
-                    Object fieldVal = colField.get(obj);
-                    if (null == fieldVal) {
-                        ps.setNull(idx, JDBCType.NULL.getVendorTypeNumber());
-                        colField.setAccessible(false);
-                        return;
-                    }
-                    if (colField.getType().isEnum()) {
-                        Enumerated enumerated = colField.getAnnotation(Enumerated.class);
-                        EnumType enumType = null == enumerated ? EnumType.ORDINAL : enumerated.value();
-                        Enum fieldEnumVal = (Enum) fieldVal;
-                        if (EnumType.ORDINAL.equals(enumType)) {
-                            ps.setInt(idx, fieldEnumVal.ordinal());
-                        } else {
-                            ps.setString(idx, fieldEnumVal.name());
-                        }
-                    } else {
-                        ps.setObject(idx, colField.get(obj));
-                    }
-                    colField.setAccessible(false);
-                } catch (SQLException | IllegalAccessException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-
-        public static Select getSelect(EntityManager entityManager) {
-            return new Select(entityManager);
-        }
-
-        public final static class Select {
-            private final static Gson gson = new Gson();
-
-            private final EntityManager entityManager;
-
-            private Select(EntityManager entityManager) {
-                trueThrow(null == entityManager, new NullPointerException("entityManager must not be null"));
-                this.entityManager = entityManager;
-            }
-
-            public <T> List<T> getList(String sql, Class<T> clazz) {
-                return getList(sql, null, clazz);
-            }
-
-            public <T> T getSingle(String sql, Class<T> clazz) {
-                return getSingle(sql, null, clazz);
-            }
-
-            public <T> List<T> getList(String sql, Map<String, Object> parameterMap, Class<T> clazz) {
-                List resultList = null;
-                try {
-                    resultList = constructorQuery(sql, parameterMap).getResultList();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return new ArrayList<>();
-                }
-                List<T> result = new ArrayList<>();
-                resultList.forEach(it -> {
-                    result.add(objMapToObj(it, clazz));
-                });
-                return result;
-            }
-
-            public <T> T getSingle(String sql, Map<String, Object> parameterMap, Class<T> clazz) {
-                Object singleResult = null;
-                try {
-                    singleResult = constructorQuery(sql, parameterMap).getSingleResult();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-                if (null == singleResult) {
-                    return null;
-                }
-                return objMapToObj(singleResult, clazz);
-            }
-
-            private Query constructorQuery(String sql, Map<String, Object> parameterMap) {
-                Query query = entityManager.createNativeQuery(sql)
-                        .unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-                if (null == parameterMap || parameterMap.isEmpty()) {
-                    return query;
-                }
-                for (String key : parameterMap.keySet()) {
-                    query.setParameter(key, parameterMap.get(key));
-                }
-                return query;
-            }
-
-            private <T> T objMapToObj(Object objMap, Class<T> clazz) {
-                return gson.fromJson(gson.toJson(objMap), clazz);
-            }
-        }
-    }
+//    public final static class DBTool {
+//        private DBTool() {
+//            throw new AssertionError("Tool classes do not allow instantiation");
+//        }
+//
+//        public static SaveUpdate getSaveUpdate(DataSource dataSource) {
+//            return new SaveUpdate(dataSource);
+//        }
+//
+//        public final static class SaveUpdate {
+//            private final DataSource dataSource;
+//
+//            private SaveUpdate(DataSource dataSource) {
+//                trueThrow(null == dataSource, new NullPointerException("dataSource must not be null"));
+//                this.dataSource = dataSource;
+//            }
+//
+//            public <T> void saveObjSomeFields(T aim, String... fieldName) {
+//                saveObjSomeFields(Collections.singletonList(aim), fieldName);
+//            }
+//
+//            public <T> void updateSomeFieldsById(T aim, String... fieldName) {
+//                updateSomeFieldsById(Collections.singletonList(aim), fieldName);
+//            }
+//
+//            public <T> void saveObjSomeFields(List<T> aimList, String... fieldName) {
+//                if (EmptyTool.isEmpty(aimList)) {
+//                    return;
+//                }
+//                Class<?> clazz = aimList.get(0).getClass();
+//                Table table = clazz.getAnnotation(Table.class);
+//                trueThrow(null == table, new RuntimeException("实体对象没有javax.persistence.Table注解"));
+//                String tableName = table.name();
+//                List<Field> fields = classAllFields(clazz);
+//                Map<String, Field> fieldMap = ListTool.listToMap(fields, Field::getName, it -> it);
+//                Map<String, String> fieldColMap = consSaveFieldColMap(fields);
+//                List<String> srcFields = new ArrayList<>(fieldColMap.keySet());
+//                List<String> aimFieldList;
+//                if (null != fieldName && fieldName.length != 0) {
+//                    List<String> aim = Arrays.asList(fieldName);
+//                    aimFieldList = srcFields.stream().filter(aim::contains).collect(Collectors.toList());
+//                } else {
+//                    aimFieldList = srcFields;
+//                }
+//                trueThrow(EmptyTool.isEmpty(aimFieldList), new RuntimeException("要保存的目标字段为空"));
+//                StringBuilder sb = new StringBuilder("INSERT INTO ");
+//                StringBuilder sb2 = new StringBuilder();
+//                sb.append(tableName);
+//                sb.append("(");
+//                for (String it : aimFieldList) {
+//                    sb.append(fieldColMap.get(it)).append(",");
+//                    sb2.append("?,");
+//                }
+//                String str2 = sb2.toString();
+//                str2 = str2.substring(0, str2.length() - 1);
+//                String saveStr = sb.toString();
+//                saveStr = saveStr.substring(0, saveStr.length() - 1);
+//                saveStr = saveStr + ") VALUES (" + str2 + ")";
+//                int count = 0;
+//                int step = 1000;
+//                Connection connection = null;
+//                PreparedStatement ps = null;
+//                try {
+//                    connection = dataSource.getConnection();
+//                    connection.setAutoCommit(false);
+//                    ps = connection.prepareStatement(saveStr);
+//                    for (T it : aimList) {
+//                        int idx = 1;
+//                        for (String item : aimFieldList) {
+//                            Field colField = fieldMap.get(item);
+//                            addPsParam(ps, idx, colField, it);
+//                            idx++;
+//                        }
+//                        count++;
+//                        ps.addBatch();
+//                        if (count % step == 0) {
+//                            ps.executeBatch();
+//                            connection.commit();
+//                        }
+//                    }
+//                    if (aimList.size() % step != 0) {
+//                        ps.executeBatch();
+//                        connection.commit();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    throw new RuntimeException("数据保存入库失败");
+//                } finally {
+//                    IOTool.closeStream(connection, ps);
+//                }
+//            }
+//
+//            public <T> void updateSomeFieldsById(List<T> aimList, String... fieldName) {
+//                if (EmptyTool.isEmpty(aimList)) {
+//                    return;
+//                }
+//                Class<?> clazz = aimList.get(0).getClass();
+//                Table table = clazz.getAnnotation(Table.class);
+//                trueThrow(null == table, new RuntimeException("实体对象没有javax.persistence.Table注解"));
+//                String tableName = table.name();
+//                List<Field> fields = classAllFields(clazz);
+//                Map<String, Field> fieldMap = ListTool.listToMap(fields, Field::getName, it -> it);
+//                Map<String, String> fieldColMap = consUpdateFieldColMap(fields);
+//                String idCol = mapGet(fieldColMap, "id_column");
+//                trueThrow(null == idCol, new RuntimeException("实体对象没有标注主键javax.persistence.Id注解字段"));
+//                Set<String> keySet = fieldColMap.keySet();
+//                List<String> srcFields = new ArrayList<>(keySet);
+//                srcFields.remove("id_column");
+//                srcFields.remove("id_field");
+//                List<String> aimFieldList;
+//                if (null != fieldName && fieldName.length != 0) {
+//                    List<String> aim = Arrays.asList(fieldName);
+//                    aimFieldList = srcFields.stream().filter(aim::contains).collect(Collectors.toList());
+//                } else {
+//                    aimFieldList = srcFields;
+//                }
+//                trueThrow(EmptyTool.isEmpty(aimFieldList), new RuntimeException("要更新的目标字段为空"));
+//                StringBuilder sb = new StringBuilder("UPDATE ");
+//                sb.append(tableName).append(" SET ");
+//                for (String it : aimFieldList) {
+//                    sb.append(fieldColMap.get(it)).append("=?,");
+//                }
+//                String upStr = sb.toString();
+//                upStr = upStr.substring(0, upStr.length() - 1);
+//                upStr = upStr + " WHERE " + idCol + "=?";
+//                int count = 0;
+//                int step = 1000;
+//                Connection connection = null;
+//                PreparedStatement ps = null;
+//                try {
+//                    connection = dataSource.getConnection();
+//                    connection.setAutoCommit(false);
+//                    ps = connection.prepareStatement(upStr);
+//                    for (T it : aimList) {
+//                        int idx = 1;
+//                        for (String item : aimFieldList) {
+//                            Field colField = fieldMap.get(item);
+//                            addPsParam(ps, idx, colField, it);
+//                            idx++;
+//                        }
+//                        Field idField = fieldMap.get(fieldColMap.get("id_field"));
+//                        addPsParam(ps, idx, idField, it);
+//                        count++;
+//                        ps.addBatch();
+//                        if (count % step == 0) {
+//                            ps.executeBatch();
+//                            connection.commit();
+//                        }
+//                    }
+//                    if (aimList.size() % step != 0) {
+//                        ps.executeBatch();
+//                        connection.commit();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    throw new RuntimeException("数据更新入库失败");
+//                } finally {
+//                    IOTool.closeStream(connection, ps);
+//                }
+//            }
+//
+//            private Map<String, String> consSaveFieldColMap(List<Field> fields) {
+//                Map<String, String> map = new HashMap<>();
+//                for (Field it : fields) {
+//                    Column column = it.getAnnotation(Column.class);
+//                    String colName = null != column ? column.name() : getColNameByFieldName(it.getName());
+//                    map.put(it.getName(), colName);
+//                }
+//                return map;
+//            }
+//
+//            private Map<String, String> consUpdateFieldColMap(List<Field> fields) {
+//                Map<String, String> map = new HashMap<>();
+//                for (Field it : fields) {
+//                    Column column = it.getAnnotation(Column.class);
+//                    String colName = null != column ? column.name() : getColNameByFieldName(it.getName());
+//                    Id id = it.getAnnotation(Id.class);
+//                    if (null != id) {
+//                        map.put("id_column", colName);
+//                        map.put("id_field", it.getName());
+//                    } else {
+//                        map.put(it.getName(), colName);
+//                    }
+//                }
+//                return map;
+//            }
+//
+//            private String getColNameByFieldName(String fieldName) {
+//                Matcher matcher = java.util.regex.Pattern.compile("[A-Z]").matcher(fieldName);
+//                StringBuffer sb = new StringBuffer();
+//                while (matcher.find()) {
+//                    matcher.appendReplacement(sb, "_" + matcher.group(0).toLowerCase());
+//                }
+//                matcher.appendTail(sb);
+//                return sb.toString();
+//            }
+//
+//            private <T> void addPsParam(PreparedStatement ps, int idx, Field colField, T obj) {
+//                try {
+//                    colField.setAccessible(true);
+//                    Object fieldVal = colField.get(obj);
+//                    if (null == fieldVal) {
+//                        ps.setNull(idx, JDBCType.NULL.getVendorTypeNumber());
+//                        colField.setAccessible(false);
+//                        return;
+//                    }
+//                    if (colField.getType().isEnum()) {
+//                        Enumerated enumerated = colField.getAnnotation(Enumerated.class);
+//                        EnumType enumType = null == enumerated ? EnumType.ORDINAL : enumerated.value();
+//                        Enum fieldEnumVal = (Enum) fieldVal;
+//                        if (EnumType.ORDINAL.equals(enumType)) {
+//                            ps.setInt(idx, fieldEnumVal.ordinal());
+//                        } else {
+//                            ps.setString(idx, fieldEnumVal.name());
+//                        }
+//                    } else {
+//                        ps.setObject(idx, colField.get(obj));
+//                    }
+//                    colField.setAccessible(false);
+//                } catch (SQLException | IllegalAccessException e) {
+//                    e.printStackTrace();
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        }
+//
+//        public static Select getSelect(EntityManager entityManager) {
+//            return new Select(entityManager);
+//        }
+//
+//        public final static class Select {
+//            private final static Gson gson = new Gson();
+//
+//            private final EntityManager entityManager;
+//
+//            private Select(EntityManager entityManager) {
+//                trueThrow(null == entityManager, new NullPointerException("entityManager must not be null"));
+//                this.entityManager = entityManager;
+//            }
+//
+//            public <T> List<T> getList(String sql, Class<T> clazz) {
+//                return getList(sql, null, clazz);
+//            }
+//
+//            public <T> T getSingle(String sql, Class<T> clazz) {
+//                return getSingle(sql, null, clazz);
+//            }
+//
+//            public <T> List<T> getList(String sql, Map<String, Object> parameterMap, Class<T> clazz) {
+//                List resultList = null;
+//                try {
+//                    resultList = constructorQuery(sql, parameterMap).getResultList();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    return new ArrayList<>();
+//                }
+//                List<T> result = new ArrayList<>();
+//                resultList.forEach(it -> {
+//                    result.add(objMapToObj(it, clazz));
+//                });
+//                return result;
+//            }
+//
+//            public <T> T getSingle(String sql, Map<String, Object> parameterMap, Class<T> clazz) {
+//                Object singleResult = null;
+//                try {
+//                    singleResult = constructorQuery(sql, parameterMap).getSingleResult();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    return null;
+//                }
+//                if (null == singleResult) {
+//                    return null;
+//                }
+//                return objMapToObj(singleResult, clazz);
+//            }
+//
+//            private Query constructorQuery(String sql, Map<String, Object> parameterMap) {
+//                Query query = entityManager.createNativeQuery(sql)
+//                        .unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+//                if (null == parameterMap || parameterMap.isEmpty()) {
+//                    return query;
+//                }
+//                for (String key : parameterMap.keySet()) {
+//                    query.setParameter(key, parameterMap.get(key));
+//                }
+//                return query;
+//            }
+//
+//            private <T> T objMapToObj(Object objMap, Class<T> clazz) {
+//                return gson.fromJson(gson.toJson(objMap), clazz);
+//            }
+//        }
+//    }
 
     public final static class DESTool {
         private final Key key;

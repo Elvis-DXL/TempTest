@@ -1,10 +1,8 @@
 package basejpa.entity;
 
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
@@ -17,8 +15,8 @@ import java.io.Serializable;
 @MappedSuperclass
 public class BaseEntity implements Serializable {
     @Id
-    @GeneratedValue(generator = "generator")
-    @GenericGenerator(name = "generator", strategy = "native")
+//    @GeneratedValue(generator = "generator")
+//    @GenericGenerator(name = "generator", strategy = "native")
     @Column(name = "_id", columnDefinition = "bigint(22) COMMENT '主键'")
     protected Long id;
 }
