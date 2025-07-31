@@ -46,7 +46,7 @@ public class MysqlDict {
             LoopRowTableRenderPolicy policy = new LoopRowTableRenderPolicy();
             Configure config = Configure.builder().bind("columnList", policy).build();
             XWPFTemplate template = XWPFTemplate
-                    .compile(getClass().getClassLoader().getResourceAsStream(templateName),
+                    .compile(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(templateName)),
                             config);
             template.render(paramMap);
             FileOutputStream fos = new FileOutputStream(outFileUrl);
