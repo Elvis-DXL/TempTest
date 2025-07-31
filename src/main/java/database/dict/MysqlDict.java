@@ -33,11 +33,11 @@ public class MysqlDict {
         return obj;
     }
 
-    public void get(String outFileUrl) {
+    public void writeOut(String outFileDirUrl) {
         List<Table> tables = this.getTables();
         List<Column> columns = this.getColumns();
         Map<String, Object> paramMap = this.obtainParamMap(tables, columns);
-        this.dealInfoOutFile(outFileUrl, paramMap);
+        this.dealInfoOutFile(outFileDirUrl, paramMap);
     }
 
     private void dealInfoOutFile(String outFileUrl, Map<String, Object> paramMap) {
@@ -49,7 +49,8 @@ public class MysqlDict {
                     .compile(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(templateName)),
                             config);
             template.render(paramMap);
-            FileOutputStream fos = new FileOutputStream(outFileUrl);
+            FileOutputStream fos = new FileOutputStream(outFileUrl.concat("/").concat(this.tableSchema)
+                    .concat("数据字典.docx"));
             template.write(fos);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
