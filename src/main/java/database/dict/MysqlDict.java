@@ -66,6 +66,7 @@ public class MysqlDict {
             Map<String, Object> tableMap = new HashMap<>();
             tableList.add(tableMap);
             tableMap.put("tableName", table.getName());
+            tableMap.put("condition", null != table.getComment() && table.getComment().length() != 0);
             tableMap.put("tableComment", table.getComment());
             List<Map<String, Object>> columnList = new ArrayList<>();
             tableMap.put("columnList", columnList);
